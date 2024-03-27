@@ -371,6 +371,6 @@ MonoBehaviour:
   groundCheck: {fileID: 4174407928902415766}
   groundMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   groundRadius: 0.3
   playerTilemap: {fileID: 0}
