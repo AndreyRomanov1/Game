@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour
     private bool IsGrounded => Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
+    private MovementDirection direction = MovementDirection.Right;
+
     private void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
@@ -33,9 +36,15 @@ public class Player : MonoBehaviour
     private void MovementLogic()
     {
         var moveHorizontal = Input.GetAxis("Horizontal");
-        var moveVertical = Input.GetAxis("Vertical");
-        var movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
+        direction = moveHorizontal switch
+        {
+            > 0 => MovementDirection.Right,
+            < 0 => MovementDirection.Left,
+            _ => direction
+        };
+
+        var movement = new Vector3((int)direction, 0);
         // что бы скорость была стабильной в любом случае
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
         transform.Translate(movement * (speed * Time.fixedDeltaTime));
