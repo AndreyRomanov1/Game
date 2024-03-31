@@ -1,4 +1,6 @@
+using System;
 using DefaultNamespace;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,15 +8,23 @@ public class Player : MonoBehaviour
     public float speed = 10f;
     public float jumpForce = 900f;
 
+    //TODO: Понять почему gameSpeed работает только при static и можно ли это изменить
+    public float gameSpeed = GameController.GameSpeed;
+
     public SpriteRenderer sprite;
     public Rigidbody2D physic;
 
-    public Transform groundCheck;
+    public Transform groundCheck1;
+    public Transform groundCheck2;
     public LayerMask groundMask;
 
     public float groundRadius = 0.3f;
     public GameObject playerTilemap;
-    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundMask);
+
+    private bool isTimeFrozen = false;
+
+    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask) ||
+                               Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
@@ -25,16 +35,49 @@ public class Player : MonoBehaviour
         physic = GetComponent<Rigidbody2D>();
     }
 
+    //TODO: Понять, нормально ли управлять прыжком из Update и можно ли это изменить
+    private void Update()
+    {
+        JumpToCursorLogic();
+    }
 
     private void FixedUpdate()
     {
+        // JumpToCursorLogic();
         MovementLogic();
-        JumpLogic();
         CharacterReversal();
+    }
+
+    //TODO: исправить проблему ускорения при приземлении
+    private void JumpToCursorLogic()
+    {
+        if (!IsGrounded)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
+        {
+            gameSpeed *= 0.01f;
+            isTimeFrozen = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
+        {
+            gameSpeed /= 0.01f;
+            isTimeFrozen = false;
+
+            var cursorPosition = Camera.main.WorldToScreenPoint(transform.position);
+            var jumpVector = (Input.mousePosition - cursorPosition).normalized;
+            var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
+
+            if (vectorAngle is > 20 and < 160)
+                physic.AddForce(jumpVector * jumpForce);
+        }
     }
 
     private void MovementLogic()
     {
+        if (!IsGrounded) return;
+
         var moveHorizontal = Input.GetAxis("Horizontal");
 
         direction = moveHorizontal switch
@@ -47,7 +90,7 @@ public class Player : MonoBehaviour
         var movement = new Vector3((int)direction, 0);
         // что бы скорость была стабильной в любом случае
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
-        transform.Translate(movement * (speed * Time.fixedDeltaTime));
+        transform.Translate(movement * (gameSpeed * speed * Time.fixedDeltaTime));
     }
 
     private void JumpLogic()
@@ -65,10 +108,14 @@ public class Player : MonoBehaviour
 
     private void CharacterReversal()
     {
+        if (!IsGrounded) return;
+
         var direction = Input.GetAxis("Horizontal");
-        if (direction < 0)
-            sprite.flipX = true;
-        else if (direction > 0)
-            sprite.flipX = false;
+        sprite.flipX = direction switch
+        {
+            < 0 => true,
+            > 0 => false,
+            _ => sprite.flipX
+        };
     }
 }
