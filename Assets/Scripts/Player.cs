@@ -93,7 +93,6 @@ public class Player : MonoBehaviour, IDamageble
         // что бы скорость была стабильной в любом случае
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
         
-        Debug.Log($"Player {gameController.GameSpeed}");
         transform.Translate(movement * (gameController.GameSpeed * speed * Time.fixedDeltaTime));
     }
 

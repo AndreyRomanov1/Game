@@ -20,10 +20,25 @@ public class Bullet : MonoBehaviour, IShooted
         this.gameController = gameController;
     }
     
-    void FixedUpdate()
+    void Update()
     {
-        Debug.Log($"Bullet {gameController.GameSpeed}");
-        transform.Translate(transform.right * (gameController.GameSpeed * speed * Time.deltaTime));
+        var transformThis = transform;
+        var displacement = transformThis.right * (gameController.GameSpeed * speed * Time.deltaTime);
+        var newPos = transformThis.position + displacement;
+            
+        if (!Physics.Linecast(transformThis.position, newPos, out var hitted))
+            transform.Translate(displacement);
+        else
+        {
+            Debug.Log("Linecast");
+            transform.Translate(displacement);
+            CollisionLogic(hitted.transform.GameObject());
+        }
+    }
+
+    void CollisionLogic(GameObject other)
+    {
+        Destroy(this.GameObject());
     }
 }
 
