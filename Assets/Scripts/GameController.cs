@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public static float GameSpeed = 1f;
+    public float GameSpeed = 1f;
 }

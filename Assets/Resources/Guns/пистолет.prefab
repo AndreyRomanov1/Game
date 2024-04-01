@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3243598785315075728}
   - component: {fileID: 674611619266271213}
+  - component: {fileID: -6392008394106851532}
   m_Layer: 0
   m_Name: "\u043F\u0438\u0441\u0442\u043E\u043B\u0435\u0442"
   m_TagString: Untagged
@@ -169,3 +170,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-6392008394106851532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393465235544274999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7716f5a293832248a7ca0d41ca33946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 2124877345654037562, guid: 4712bb077aedae843826c41dc00ccb89, type: 3}
+  bulletSpeed: 10

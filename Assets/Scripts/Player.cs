@@ -1,15 +1,15 @@
 using System;
 using DefaultNamespace;
+using DefaultNamespace.Interfaces;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageble
 {
     public float speed = 10f;
     public float jumpForce = 900f;
 
     //TODO: Понять почему gameSpeed работает только при static и можно ли это изменить
-    public float gameSpeed = GameController.GameSpeed;
 
     public SpriteRenderer sprite;
     public Rigidbody2D physic;
@@ -28,11 +28,13 @@ public class Player : MonoBehaviour
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
+    private GameController gameController;
 
     private void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
+        gameController = FindObjectOfType<GameController>();
     }
 
     //TODO: Понять, нормально ли управлять прыжком из Update и можно ли это изменить
@@ -56,13 +58,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
         {
-            gameSpeed *= 0.01f;
+            gameController.GameSpeed *= 0.01f;
             isTimeFrozen = true;
         }
 
         if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
         {
-            gameSpeed /= 0.01f;
+            gameController.GameSpeed /= 0.01f;
             isTimeFrozen = false;
 
             var cursorPosition = Camera.main.WorldToScreenPoint(transform.position);
@@ -90,7 +92,9 @@ public class Player : MonoBehaviour
         var movement = new Vector3((int)direction, 0);
         // что бы скорость была стабильной в любом случае
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
-        transform.Translate(movement * (gameSpeed * speed * Time.fixedDeltaTime));
+        
+        Debug.Log($"Player {gameController.GameSpeed}");
+        transform.Translate(movement * (gameController.GameSpeed * speed * Time.fixedDeltaTime));
     }
 
     private void JumpLogic()
@@ -117,5 +121,10 @@ public class Player : MonoBehaviour
             > 0 => false,
             _ => sprite.flipX
         };
+    }
+
+    public void TakeDamage(float damage)
+    {
+        return;
     }
 }
