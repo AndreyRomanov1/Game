@@ -5,11 +5,11 @@ namespace DefaultNamespace.Interfaces
 {
     public interface IShooted
     {
-        public void Shoot(Vector3 position, UnityEngine.Quaternion rotation, float speed, GameController gameController);
+        public void Shoot(Vector3 position, UnityEngine.Quaternion rotation, float speed, GameController gameController, LayerMask mask);
 
-        public void Shoot(Transform trasformPerent, float speed, GameController gameController)
+        public void Shoot(Transform trasformPerent, float speed, GameController gameController, LayerMask mask)
         {
-            Shoot(trasformPerent.position, trasformPerent.rotation, speed, gameController);
+            Shoot(trasformPerent.position, trasformPerent.rotation, speed, gameController, mask);
         }
     }
 }

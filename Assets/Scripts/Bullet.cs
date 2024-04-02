@@ -8,33 +8,30 @@ using Vector3 = System.Numerics.Vector3;
 
 public class Bullet : MonoBehaviour, IShooted
 {
-    public LayerMask mask;
-    
     private float speed;
     private GameController gameController;
+    private LayerMask mask;
+
     
-    public void Shoot(UnityEngine.Vector3 position, Quaternion rotation, float speed, GameController gameController)
+    public void Shoot(UnityEngine.Vector3 position, Quaternion rotation, float speed, GameController gameController, LayerMask mask)
     {
         var transformThis = transform;
         transformThis.position = position;
         transformThis.rotation = rotation;
         this.speed = speed;
         this.gameController = gameController;
+        this.mask = mask;
     }
     
+    //TODO: можно переписать на корутину
     void Update()
     {
-        var transformThis = transform;
-        var displacement = transformThis.right * (gameController.GameSpeed * speed * Time.deltaTime);
-        var newPos = transformThis.position + displacement;
+        var lastPos = transform.position;
+        var displacement = transform.right * (gameController.GameSpeed * speed * Time.deltaTime);
+        transform.Translate(displacement);
 
-        // Debug.Log(Physics2D.Linecast(transformThis.position, newPos).transform.GameObject());
-        if (Linecast2D(transformThis.position, newPos, out var hitted))
-            transform.Translate(displacement);
-        else
+        if (FindObjectOnLine(lastPos, transform.position, out var hitted))
         {
-            // Debug.Log("Linecast");
-            transform.Translate(displacement);
             CollisionLogic(hitted);
         }
     }
@@ -45,10 +42,10 @@ public class Bullet : MonoBehaviour, IShooted
     }
     
     //TODO: можно переписать на расширения класса Physics2D
-    bool Linecast2D(UnityEngine.Vector3 startPosition, UnityEngine.Vector3 endPosition, out GameObject result)
+    bool FindObjectOnLine(UnityEngine.Vector3 startPosition, UnityEngine.Vector3 endPosition, out GameObject result)
     {
         result = Physics2D.Linecast(startPosition, endPosition, mask).transform.GameObject();
-        return result is null;
+        return result is not null;
     }
 }
 

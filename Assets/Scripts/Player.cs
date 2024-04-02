@@ -45,7 +45,7 @@ public class Player : MonoBehaviour, IDamageble
 
     private void FixedUpdate()
     {
-        //MovementLogic();
+        MovementLogic();
         CharacterReversal();
     }
 
