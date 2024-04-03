@@ -9,7 +9,7 @@ public class Player : MonoBehaviour, IDamageble
     public float speed = 10f;
     public float jumpForce = 900f;
 
-    //TODO: Понять почему gameSpeed работает только при static и можно ли это изменить
+    // TODO: Понять почему gameSpeed работает только при static и можно ли это изменить
 
     public SpriteRenderer sprite;
     public Rigidbody2D physic;

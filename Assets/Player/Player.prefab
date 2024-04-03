@@ -396,8 +396,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e25599582d8d842b1007f525736db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
-  jumpForce: 1200
+  speed: 7
+  jumpForce: 900
   sprite: {fileID: 5454921412195991889}
   physic: {fileID: 1050005576099303880}
   groundCheck1: {fileID: 4174407928902415766}

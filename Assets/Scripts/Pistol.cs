@@ -12,7 +12,7 @@ public class Pistol : MonoBehaviour
     public float bulletSpeed = 20;
     public float rateOfFire = 1;
     public LayerMask mask;
-    
+
     private GameController gameController;
     private float timeBetweenShots;
 
@@ -39,7 +39,7 @@ public class Pistol : MonoBehaviour
             }
         }
     }
-    
+
     // void Update()
     // {
     //     if (Input.GetMouseButton((int)MouseButton.LeftMouse))
@@ -48,7 +48,7 @@ public class Pistol : MonoBehaviour
 
     private void Shoot()
     {
-        var currentBullet = Instantiate(bullet).GetComponent<IShooted>();
+        var currentBullet = Instantiate(bullet).GetComponent<Bullet>();
         currentBullet.Shoot(transform, bulletSpeed, gameController, mask);
     }
 }
