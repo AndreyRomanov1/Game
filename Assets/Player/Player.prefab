@@ -397,7 +397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  jumpForce: 900
+  jumpBoost: 100
+  maxJumpForce: 10
+  minJumpForce: 2
   sprite: {fileID: 5454921412195991889}
   physic: {fileID: 1050005576099303880}
   groundCheck1: {fileID: 4174407928902415766}

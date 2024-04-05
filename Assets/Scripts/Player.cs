@@ -3,14 +3,15 @@ using DefaultNamespace;
 using DefaultNamespace.Interfaces;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDamageble
 {
     public float speed = 10f;
-    public float jumpForce = 900f;
-
-    // TODO: Понять почему gameSpeed работает только при static и можно ли это изменить
-
+    public float jumpBoost = 900f;
+    public float maxJumpForce = 10;
+    public float minJumpForce = 2;
+    
     public SpriteRenderer sprite;
     public Rigidbody2D physic;
 
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour, IDamageble
     public GameObject playerTilemap;
 
     private bool isTimeFrozen = false;
+    private Vector3 defaultCursorPosition = default;
 
     private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask) ||
                                Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
@@ -42,23 +44,41 @@ public class Player : MonoBehaviour, IDamageble
     {
         JumpToCursorLogic();
     }
-
+    
+    //TODO: Игра ломается при множественном нажатии пробела
+    
     private void FixedUpdate()
     {
         MovementLogic();
         CharacterReversal();
+        
+        // JumpLogic();
     }
 
+    private void JumpLogic()
+    {
+        if (Input.GetAxis("Jump") > 0 && IsGrounded)
+            physic.AddForce(Vector3.up * jumpBoost);
+
+        // Обратите внимание что я делаю на основе Vector3.up 
+        // а не на основе transform.up. Если персонаж упал или 
+        // если персонаж -- шар, то его личный "верх" может 
+        // любое направление. Влево, вправо, вниз...
+        // Но нам нужен скачек только в абсолютный вверх, 
+        // потому и Vector3.up
+    }
+    
     //TODO: исправить проблему ускорения при приземлении
     private void JumpToCursorLogic()
     {
         if (!IsGrounded)
             return;
-
+        
         if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
         {
             gameController.GameSpeed *= 0.01f;
             isTimeFrozen = true;
+            defaultCursorPosition = Input.mousePosition;
         }
 
         if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
@@ -66,13 +86,36 @@ public class Player : MonoBehaviour, IDamageble
             gameController.GameSpeed /= 0.01f;
             isTimeFrozen = false;
 
-            var cursorPosition = Camera.main.WorldToScreenPoint(transform.position);
-            var jumpVector = (Input.mousePosition - cursorPosition).normalized;
+            // var jumpVector = VectorFromPlayer();
+            var jumpVector = VectorFromBaseCursorPosition();
+            
+            
             var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
 
             if (vectorAngle is > 20 and < 160)
-                physic.AddForce(jumpVector * jumpForce);
+                physic.AddForce(jumpVector * jumpBoost);
+
+            defaultCursorPosition = default;
         }
+    }
+    
+
+    private Vector3 VectorFromPlayer()
+    {
+        var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return (cursorPosition - transform.position).normalized;
+    }
+
+    private Vector3 VectorFromBaseCursorPosition()
+    {
+        if (defaultCursorPosition == default) return default;
+            
+        var jumpVector = Input.mousePosition - defaultCursorPosition;
+        if (jumpVector.magnitude > maxJumpForce)
+            jumpVector = jumpVector.normalized * maxJumpForce;
+        if (jumpVector.magnitude < minJumpForce)
+            jumpVector = jumpVector.normalized * minJumpForce;
+        return jumpVector;
     }
 
     private void MovementLogic()
@@ -93,19 +136,6 @@ public class Player : MonoBehaviour, IDamageble
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
         
         transform.Translate(movement * (gameController.GameSpeed * speed * Time.fixedDeltaTime));
-    }
-
-    private void JumpLogic()
-    {
-        if (Input.GetAxis("Jump") > 0 && IsGrounded)
-            physic.AddForce(Vector3.up * jumpForce);
-
-        // Обратите внимание что я делаю на основе Vector3.up 
-        // а не на основе transform.up. Если персонаж упал или 
-        // если персонаж -- шар, то его личный "верх" может 
-        // любое направление. Влево, вправо, вниз...
-        // Но нам нужен скачек только в абсолютный вверх, 
-        // потому и Vector3.up
     }
 
     private void CharacterReversal()
