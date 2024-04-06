@@ -1,9 +1,4 @@
-using System;
-using DefaultNamespace;
-using DefaultNamespace.Interfaces;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDamageble
 {
@@ -11,7 +6,7 @@ public class Player : MonoBehaviour, IDamageble
     public float jumpBoost = 900f;
     public float maxJumpForce = 10;
     public float minJumpForce = 2;
-    
+
     public SpriteRenderer sprite;
     public Rigidbody2D physic;
 
@@ -44,14 +39,14 @@ public class Player : MonoBehaviour, IDamageble
     {
         JumpToCursorLogic();
     }
-    
+
     //TODO: Игра ломается при множественном нажатии пробела
-    
+
     private void FixedUpdate()
     {
         MovementLogic();
         CharacterReversal();
-        
+
         // JumpLogic();
     }
 
@@ -67,13 +62,13 @@ public class Player : MonoBehaviour, IDamageble
         // Но нам нужен скачек только в абсолютный вверх, 
         // потому и Vector3.up
     }
-    
+
     //TODO: исправить проблему ускорения при приземлении
     private void JumpToCursorLogic()
     {
         if (!IsGrounded)
             return;
-        
+
         if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
         {
             gameController.GameSpeed *= 0.01f;
@@ -88,8 +83,8 @@ public class Player : MonoBehaviour, IDamageble
 
             // var jumpVector = VectorFromPlayer();
             var jumpVector = VectorFromBaseCursorPosition();
-            
-            
+
+
             var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
 
             if (vectorAngle is > 20 and < 160)
@@ -98,7 +93,7 @@ public class Player : MonoBehaviour, IDamageble
             defaultCursorPosition = default;
         }
     }
-    
+
 
     private Vector3 VectorFromPlayer()
     {
@@ -109,7 +104,7 @@ public class Player : MonoBehaviour, IDamageble
     private Vector3 VectorFromBaseCursorPosition()
     {
         if (defaultCursorPosition == default) return default;
-            
+
         var jumpVector = Input.mousePosition - defaultCursorPosition;
         if (jumpVector.magnitude > maxJumpForce)
             jumpVector = jumpVector.normalized * maxJumpForce;
@@ -134,7 +129,7 @@ public class Player : MonoBehaviour, IDamageble
         var movement = new Vector3((int)direction, 0);
         // что бы скорость была стабильной в любом случае
         // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
-        
+
         transform.Translate(movement * (gameController.GameSpeed * speed * Time.fixedDeltaTime));
     }
 

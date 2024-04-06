@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using DefaultNamespace.Interfaces;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Button = UnityEngine.UI.Button;
 
 public class Pistol : MonoBehaviour
 {

@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using DefaultNamespace.Interfaces;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -38,8 +34,7 @@ public class Bullet : MonoBehaviour
         if (FindObjectOnLine(lastPos, transform.position, out var hitted))
             CollisionLogic(hitted);
     }
-    
-    
+
 
     void CollisionLogic(GameObject other)
     {
