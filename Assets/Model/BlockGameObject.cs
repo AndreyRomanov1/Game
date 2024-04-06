@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace src.Model
+namespace Model
 {
     public class BlockGameObject
     {

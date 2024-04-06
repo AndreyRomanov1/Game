@@ -1,6 +1,5 @@
+using Model;
 using UnityEngine;
-using src.Model; 
-
 
 public class Block : MonoBehaviour
 {

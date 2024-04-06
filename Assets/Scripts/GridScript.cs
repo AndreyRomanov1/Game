@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using src.Model;
+using Model;
 using UnityEngine;
 using Random = System.Random;
 
