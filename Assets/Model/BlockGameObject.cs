@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Model
-{
     public class BlockGameObject
     {
         public readonly BlockDirections EntranceDirection;
@@ -62,4 +60,3 @@ namespace Model
             };
         }
     }
-}

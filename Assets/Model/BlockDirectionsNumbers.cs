@@ -1,9 +1,6 @@
-﻿namespace Model
-{
-    public enum BlockDirectionsNumbers
+﻿    public enum BlockDirectionsNumbers
     {
         First,
         Second,
         Third
     }
-}

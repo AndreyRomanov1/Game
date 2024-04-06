@@ -9,18 +9,16 @@ public class Pistol : MonoBehaviour
     public float rateOfFire = 1;
     public LayerMask mask;
 
-    private GameController gameController;
     private float timeBetweenShots;
 
     private void Start()
     {
-        gameController = FindObjectOfType<GameController>();
         timeBetweenShots = 1 / rateOfFire;
 
         StartCoroutine(CheckShot());
     }
 
-    IEnumerator CheckShot()
+    private IEnumerator CheckShot()
     {
         while (true)
         {
@@ -30,9 +28,7 @@ public class Pistol : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenShots);
             }
             else
-            {
                 yield return new WaitForFixedUpdate();
-            }
         }
     }
 
@@ -45,6 +41,6 @@ public class Pistol : MonoBehaviour
     private void Shoot()
     {
         var currentBullet = Instantiate(bullet).GetComponent<Bullet>();
-        currentBullet.Shoot(transform, bulletSpeed, gameController, mask);
+        currentBullet.Shoot(transform, bulletSpeed, mask);
     }
 }

@@ -1,6 +1,3 @@
-﻿namespace Model
-{
-    public static class Model
+﻿    public static class Model
     {
     }
-}

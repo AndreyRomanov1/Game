@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Model;
 using UnityEngine;
 using Random = System.Random;
 
@@ -13,6 +12,8 @@ public class GridScript : MonoBehaviour
     public Block FirstBlock;
     public Block LastExistingBlock;
     private readonly Random random = new();
+    public float GameSpeed = 1f;
+
 
     private readonly Dictionary<BlockDirections, Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>> Directions = new()
     {

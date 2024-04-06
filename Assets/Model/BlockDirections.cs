@@ -1,6 +1,4 @@
-﻿namespace Model
-{
-    public enum BlockDirections
+﻿    public enum BlockDirections
     {
         Up,
         Right,
@@ -8,4 +6,3 @@
     }
 
     
-}

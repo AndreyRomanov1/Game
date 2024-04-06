@@ -16,21 +16,18 @@ public class Player : MonoBehaviour
 
     public float groundRadius = 0.3f;
 
-    private bool isTimeFrozen = false;
-    private Vector3 defaultCursorPosition = default;
+    private bool isReadyToJump;
+    private Vector3 defaultCursorPosition;
 
-    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask) 
+    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask)
                                || Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
-    private GameController gameController;
 
     private void Start()
     {
-        sprite = GetComponent<SpriteRenderer>();
-        physic = GetComponent<Rigidbody2D>();
-        gameController = FindObjectOfType<GameController>();
+        InitPlayerComponent();
     }
 
     //TODO: Понять, нормально ли управлять прыжком из Update и можно ли это изменить
@@ -49,6 +46,13 @@ public class Player : MonoBehaviour
         // JumpLogic();
     }
 
+    private void InitPlayerComponent()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+        physic = GetComponent<Rigidbody2D>();
+    }
+    
+
     private void JumpLogic()
     {
         if (Input.GetAxis("Jump") > 0 && IsGrounded)
@@ -58,23 +62,20 @@ public class Player : MonoBehaviour
     //TODO: исправить проблему ускорения при приземлении
     private void JumpToCursorLogic()
     {
-
-        Debug.Log("jump");
         if (!IsGrounded)
             return;
-        Debug.Log("ground");
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
+        if (Input.GetKeyDown(KeyCode.Space) && !isReadyToJump)
         {
-            gameController.GameSpeed *= 0.01f;
-            isTimeFrozen = true;
+            CurrentGame.isSlowGame = true;
+            isReadyToJump = true;
             defaultCursorPosition = Input.mousePosition;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
+        if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
         {
-            gameController.GameSpeed /= 0.01f;
-            isTimeFrozen = false;
+            CurrentGame.isSlowGame = false;
+            isReadyToJump = false;
 
             // var jumpVector = VectorFromPlayer();
             var jumpVector = VectorFromBaseCursorPosition();
@@ -110,7 +111,7 @@ public class Player : MonoBehaviour
 
     private void MovementLogic()
     {
-        if (!IsGrounded) 
+        if (!IsGrounded)
             return;
 
         var moveHorizontal = Input.GetAxis("Horizontal");
@@ -123,15 +124,13 @@ public class Player : MonoBehaviour
         };
 
         var movement = new Vector3((int)direction, 0);
-        // что бы скорость была стабильной в любом случае
-        // и учитывая что мы вызываем из FixedUpdate мы умножаем на fixedDeltaTime
-
-        transform.Translate(movement * (gameController.GameSpeed * speed * Time.fixedDeltaTime));
+        transform.Translate(movement * (CurrentGame.GameSpeed * speed * Time.fixedDeltaTime));
     }
 
     private void CharacterReversal()
     {
-        if (!IsGrounded) return;
+        if (!IsGrounded)
+            return;
 
         var direction = Input.GetAxis("Horizontal");
         sprite.flipX = direction switch
@@ -140,10 +139,5 @@ public class Player : MonoBehaviour
             > 0 => false,
             _ => sprite.flipX
         };
-    }
-
-    public void TakeDamage(float damage)
-    {
-        return;
     }
 }
