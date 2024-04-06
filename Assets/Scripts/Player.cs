@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
     private bool isTimeFrozen = false;
     private Vector3 defaultCursorPosition = default;
 
-    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask) ||
-                               Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
+    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask) 
+                               || Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
@@ -53,20 +53,16 @@ public class Player : MonoBehaviour
     {
         if (Input.GetAxis("Jump") > 0 && IsGrounded)
             physic.AddForce(Vector3.up * jumpBoost);
-
-        // Обратите внимание что я делаю на основе Vector3.up 
-        // а не на основе transform.up. Если персонаж упал или 
-        // если персонаж -- шар, то его личный "верх" может 
-        // любое направление. Влево, вправо, вниз...
-        // Но нам нужен скачек только в абсолютный вверх, 
-        // потому и Vector3.up
     }
 
     //TODO: исправить проблему ускорения при приземлении
     private void JumpToCursorLogic()
     {
+
+        Debug.Log("jump");
         if (!IsGrounded)
             return;
+        Debug.Log("ground");
 
         if (Input.GetKeyDown(KeyCode.Space) && !isTimeFrozen)
         {
@@ -114,7 +110,8 @@ public class Player : MonoBehaviour
 
     private void MovementLogic()
     {
-        if (!IsGrounded) return;
+        if (!IsGrounded) 
+            return;
 
         var moveHorizontal = Input.GetAxis("Horizontal");
 
