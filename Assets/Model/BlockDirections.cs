@@ -1,4 +1,4 @@
-﻿namespace src.Model
+﻿namespace Model
 {
     public enum BlockDirections
     {

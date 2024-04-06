@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 5454921412195991889}
   - component: {fileID: 5755202422368954587}
   - component: {fileID: 1050005576099303880}
-  - component: {fileID: 2648409396064795683}
+  - component: {fileID: 5734155427851769236}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -352,7 +352,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &2648409396064795683
+--- !u!114 &5734155427851769236
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e25599582d8d842b1007f525736db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 10
   jumpForce: 900
   sprite: {fileID: 5454921412195991889}
   physic: {fileID: 1050005576099303880}
@@ -373,4 +373,3 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   groundRadius: 0.3
-  playerTilemap: {fileID: 0}
