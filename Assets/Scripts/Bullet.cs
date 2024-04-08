@@ -4,52 +4,58 @@ using System.Collections.Generic;
 using DefaultNamespace.Interfaces;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Bullet : MonoBehaviour
+namespace DefaultNamespace
 {
-    private float speed;
-    private GameController gameController;
-    private LayerMask mask;
-
-    private Vector3 dir;
-
-
-    public void Shoot(Vector3 position, Vector3 eulerAngles, float speed, GameController gameController, LayerMask mask)
+    public class Bullet : MonoBehaviour
     {
-        transform.position = position;
-        transform.rotation = Quaternion.Euler(0f, 0f, eulerAngles.z);
-        this.speed = speed;
-        this.gameController = gameController;
-        this.mask = mask;
-    }
+        private float speed;
+        private GameController gameController;
+        private LayerMask mask;
 
-    public void Shoot(Transform transformParent, float speed, GameController gameController, LayerMask mask)
-    {
-        Shoot(transformParent.position, transformParent.eulerAngles, speed, gameController, mask);
-    }
+        private Vector3 dir;
 
-    //TODO: можно переписать на корутину
-    void FixedUpdate()
-    {
-        var lastPos = transform.position;
 
-        transform.Translate(transform.right * (gameController.GameSpeed * speed * Time.fixedDeltaTime), Space.World);
+        public void Shoot(Vector3 position, Vector3 eulerAngles, float speed, GameController gameController,
+            LayerMask mask)
+        {
+            transform.position = position;
+            transform.rotation = Quaternion.Euler(0f, 0f, eulerAngles.z);
+            this.speed = speed;
+            this.gameController = gameController;
+            this.mask = mask;
+        }
 
-        if (FindObjectOnLine(lastPos, transform.position, out var hitted))
-            CollisionLogic(hitted);
-    }
-    
-    
+        public void Shoot(Transform transformParent, float speed, GameController gameController, LayerMask mask)
+        {
+            Shoot(transformParent.position, transformParent.eulerAngles, speed, gameController, mask);
+        }
 
-    void CollisionLogic(GameObject other)
-    {
-        Destroy(this.GameObject());
-    }
+        //TODO: можно переписать на корутину
+        void FixedUpdate()
+        {
+            var lastPos = transform.position;
 
-    //TODO: можно переписать на расширения класса Physics2D
-    bool FindObjectOnLine(Vector3 startPosition, Vector3 endPosition, out GameObject result)
-    {
-        result = Physics2D.Linecast(startPosition, endPosition, mask).transform.GameObject();
-        return result is not null;
+            transform.Translate(transform.right * (gameController.GameSpeed * speed * Time.fixedDeltaTime),
+                Space.World);
+
+            if (Tools.FindObjectOnLine(lastPos, transform.position, mask, out var hitted))
+                CollisionLogic(hitted);
+        }
+
+
+
+        void CollisionLogic(GameObject other)
+        {
+            Destroy(this.GameObject());
+        }
+
+        //TODO: можно переписать на расширения класса Physics2D
+        // bool FindObjectOnLine(Vector3 startPosition, Vector3 endPosition, int mask, out GameObject result)
+        // {
+        //     result = Physics2D.Linecast(startPosition, endPosition, mask).transform.GameObject();
+        //     return result is not null;
+        // }
     }
 }
