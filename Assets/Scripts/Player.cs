@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -61,28 +63,37 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Space))
-            JumpModel(trajectory.ShowTrajectory);
+            JumpModel(trajectory.ShowTrajectory, DrawArrow);
 
         if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
         {
             CurrentGame.isSlowGame = false;
             isReadyToJump = false;
-            JumpModel(physic.AddForce);
+            JumpModel(physic.AddForce, Run);
 
             defaultCursorPosition = default;
             trajectory.ClearTrajectory();
         }
     }
 
-    private void JumpModel(Action<Vector2> function)
+    private void JumpModel(Action<Vector2> jumpAction, Action<float> runAction)
     {
         // var jumpVector = VectorFromPlayer();
         var jumpVector = VectorFromBaseCursorPosition();
-
+        Debug.Log(jumpVector);
         var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
-
-        if (vectorAngle is > 20 and < 160)
-            function(jumpVector * jumpBoost);
+        
+        switch (vectorAngle)
+        {
+            case > 20 and < 160:
+                jumpAction(jumpVector * jumpBoost);
+                break;
+            case > 160:
+            case < -140:
+            case <= 20 and > -40:
+                runAction(jumpVector.x);
+                break;
+        }
     }
     
     private Vector3 VectorFromPlayer()
@@ -101,6 +112,33 @@ public class Player : MonoBehaviour
         if (jumpVector.magnitude < minJumpForce)
             jumpVector = jumpVector.normalized * minJumpForce;
         return jumpVector;
+    }
+
+    private void Run(float distance)
+    {
+        distance = Math.Min(distance, 5f);
+        Debug.Log(distance);
+        StartCoroutine(Running(distance));
+    }
+
+    private void DrawArrow(float lenght)
+    {
+        
+    }
+
+    private IEnumerator Running(float distance)
+    {
+        isReadyToJump = false;
+        var startPosition = transform.position;
+        var currentPosition = startPosition;
+        while (currentPosition.x - startPosition.x < distance || Math.Abs(currentPosition.y - startPosition.y) > 10e-9)
+        {
+            transform.Translate(speed, 0, 0);
+            currentPosition = transform.position;
+            yield return new WaitForFixedUpdate();
+        }
+        isReadyToJump = true;
+        yield break;
     }
 
     private void CharacterReversalForCursor()
