@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
-    private TrajectoryRender Trajectory;
+    private TrajectoryRender trajectory;
 
     private void Start()
     {
@@ -34,35 +35,16 @@ public class Player : MonoBehaviour
     private void Update()
     {
         JumpToCursorLogic();
+        CharacterReversalForCursor();
     }
 
     //TODO: Игра ломается при множественном нажатии пробела
-
-    private void FixedUpdate()
-    {
-        // MovementLogic();
-        // CharacterReversal();
-
-        CharacterReversalForCursor();
-        
-        //MovementLogic();
-        //CharacterReversal();
-        
-        // JumpLogic();
-    }
 
     private void InitPlayerComponent()
     {
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
-        Trajectory = GetComponentInChildren<TrajectoryRender>();
-    }
-    
-
-    private void JumpLogic()
-    {
-        if (Input.GetAxis("Jump") > 0 && IsGrounded)
-            physic.AddForce(Vector3.up * jumpBoost);
+        trajectory = GetComponentInChildren<TrajectoryRender>();
     }
 
     //TODO: исправить проблему ускорения при приземлении
@@ -78,41 +60,31 @@ public class Player : MonoBehaviour
             defaultCursorPosition = Input.mousePosition;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
         if (Input.GetKey(KeyCode.Space))
-        {
-            JumpModel(Trajectory.ShowTrajectory);
-        }
+            JumpModel(trajectory.ShowTrajectory);
 
-        if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
+        if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
         {
             CurrentGame.isSlowGame = false;
             isReadyToJump = false;
-
-            // var jumpVector = VectorFromPlayer();
-            var jumpVector = VectorFromBaseCursorPosition();
-            
-            var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
             JumpModel(physic.AddForce);
 
             defaultCursorPosition = default;
-            Trajectory.ClearTrajectory();
+            trajectory.ClearTrajectory();
         }
     }
-
 
     private void JumpModel(Action<Vector2> function)
     {
         // var jumpVector = VectorFromPlayer();
         var jumpVector = VectorFromBaseCursorPosition();
-        
+
         var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
 
         if (vectorAngle is > 20 and < 160)
             function(jumpVector * jumpBoost);
     }
-
-
+    
     private Vector3 VectorFromPlayer()
     {
         var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -131,6 +103,18 @@ public class Player : MonoBehaviour
         return jumpVector;
     }
 
+    private void CharacterReversalForCursor()
+    {
+        var directionVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        sprite.flipX = directionVector.x switch
+        {
+            < 0 => true,
+            > 0 => false,
+            _ => sprite.flipX
+        };
+    }
+
+    // Old movement logic:
     private void MovementLogic()
     {
         if (!IsGrounded)
@@ -163,19 +147,9 @@ public class Player : MonoBehaviour
         };
     }
 
-    private void CharacterReversalForCursor()
+    private void JumpLogic()
     {
-        var directionVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        sprite.flipX = directionVector.x switch
-        {
-            < 0 => true,
-            > 0 => false,
-            _ => sprite.flipX
-        };
-    }
-
-    public void TakeDamage(float damage)
-    {
-        return;
+        if (Input.GetAxis("Jump") > 0 && IsGrounded)
+            physic.AddForce(Vector3.up * jumpBoost);
     }
 }

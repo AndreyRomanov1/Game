@@ -1,26 +1,18 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour
 {
     private float speed;
     private LayerMask mask;
-
     private Vector3 dir;
-
-
-    private void Shoot(Vector3 position0, Vector3 eulerAngles, float speed0, LayerMask mask0)
-    {
-        transform.position = position0;
-        transform.rotation = Quaternion.Euler(0f, 0f, eulerAngles.z);
-        speed = speed0;
-        mask = mask0;
-    }
 
     public void Shoot(Transform transformParent, float speed0, LayerMask mask0)
     {
-        Shoot(transformParent.position, transformParent.eulerAngles, speed0, mask0);
+        transform.position = transformParent.position;
+        transform.rotation = Quaternion.Euler(0f, 0f, transformParent.eulerAngles.z);
+        speed = speed0;
+        mask = mask0;
     }
 
     // TODO: можно переписать на корутину
@@ -30,15 +22,9 @@ public class Bullet : MonoBehaviour
 
         transform.Translate(transform.right * (CurrentGame.GameSpeed * speed * Time.fixedDeltaTime), Space.World);
 
-        if (FindObjectOnLine(lastPos, transform.position, out var collision))
+        if (Tools.FindObjectOnLine(lastPos, transform.position, mask, out var collision))
             CollisionLogic(collision);
     }
-
-            if (Tools.FindObjectOnLine(lastPos, transform.position, mask, out var hitted))
-                CollisionLogic(hitted);
-        }
-
-
 
     private void CollisionLogic(GameObject other)
     {
