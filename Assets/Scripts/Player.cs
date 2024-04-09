@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
         InitPlayerComponent();
     }
 
-    //TODO: Понять, нормально ли управлять прыжком из Update и можно ли это изменить
     private void Update()
     {
         JumpToCursorLogic();
@@ -79,8 +78,7 @@ public class Player : MonoBehaviour
 
             // var jumpVector = VectorFromPlayer();
             var jumpVector = VectorFromBaseCursorPosition();
-
-
+            
             var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
 
             if (vectorAngle is > 20 and < 160)
