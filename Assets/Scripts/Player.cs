@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
+    private TrajectoryRender Trajectory;
 
     private void Start()
     {
@@ -39,9 +40,14 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovementLogic();
-        CharacterReversal();
+        // MovementLogic();
+        // CharacterReversal();
 
+        CharacterReversalForCursor();
+        
+        //MovementLogic();
+        //CharacterReversal();
+        
         // JumpLogic();
     }
 
@@ -49,6 +55,7 @@ public class Player : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
+        Trajectory = GetComponentInChildren<TrajectoryRender>();
     }
     
 
@@ -72,6 +79,12 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
+        if (Input.GetKey(KeyCode.Space))
+        {
+            JumpModel(Trajectory.ShowTrajectory);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && isTimeFrozen)
         {
             CurrentGame.isSlowGame = false;
             isReadyToJump = false;
@@ -80,12 +93,23 @@ public class Player : MonoBehaviour
             var jumpVector = VectorFromBaseCursorPosition();
             
             var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
-
-            if (vectorAngle is > 20 and < 160)
-                physic.AddForce(jumpVector * jumpBoost);
+            JumpModel(physic.AddForce);
 
             defaultCursorPosition = default;
+            Trajectory.ClearTrajectory();
         }
+    }
+
+
+    private void JumpModel(Action<Vector2> function)
+    {
+        // var jumpVector = VectorFromPlayer();
+        var jumpVector = VectorFromBaseCursorPosition();
+        
+        var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
+
+        if (vectorAngle is > 20 and < 160)
+            function(jumpVector * jumpBoost);
     }
 
 
@@ -137,5 +161,21 @@ public class Player : MonoBehaviour
             > 0 => false,
             _ => sprite.flipX
         };
+    }
+
+    private void CharacterReversalForCursor()
+    {
+        var directionVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        sprite.flipX = directionVector.x switch
+        {
+            < 0 => true,
+            > 0 => false,
+            _ => sprite.flipX
+        };
+    }
+
+    public void TakeDamage(float damage)
+    {
+        return;
     }
 }

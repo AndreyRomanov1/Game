@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour
 {
@@ -33,6 +34,11 @@ public class Bullet : MonoBehaviour
             CollisionLogic(collision);
     }
 
+            if (Tools.FindObjectOnLine(lastPos, transform.position, mask, out var hitted))
+                CollisionLogic(hitted);
+        }
+
+
 
     private void CollisionLogic(GameObject other)
     {
@@ -40,9 +46,9 @@ public class Bullet : MonoBehaviour
     }
 
     // TODO: можно переписать на расширения класса Physics2D
-    private bool FindObjectOnLine(Vector3 startPosition, Vector3 endPosition, out GameObject result)
-    {
-        result = Physics2D.Linecast(startPosition, endPosition, mask).transform.GameObject();
-        return result is not null;
-    }
+    // private bool FindObjectOnLine(Vector3 startPosition, Vector3 endPosition, out GameObject result)
+    // {
+    //     result = Physics2D.Linecast(startPosition, endPosition, mask).transform.GameObject();
+    //     return result is not null;
+    // }
 }
