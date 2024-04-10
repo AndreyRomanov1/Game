@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public float speed = 10f;
     public float jumpBoost = 900f;
+    public float riftBoost = 50f;
     public float maxJumpForce = 10;
     public float minJumpForce = 2;
 
@@ -17,13 +16,20 @@ public class Player : MonoBehaviour
     public Transform groundCheck2;
     public LayerMask groundMask;
 
-    public float groundRadius = 0.3f;
+    private float currentTime = 0f;
+    private const float JumpDurationTime = 1f;
+    private const float RiftDurationTime = 1.5f;
 
-    private bool isReadyToJump;
+
+    private bool IsReadyToJump =>
+        playerState is not (PlayerState.CrouchedToJump or PlayerState.Jump or PlayerState.Rift);
+
     private Vector3 defaultCursorPosition;
 
-    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, groundRadius, groundMask)
-                               || Physics2D.OverlapCircle(groundCheck2.position, groundRadius, groundMask);
+    private PlayerState playerState = PlayerState.Nothing;
+
+    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position,0.1f, groundMask)
+                                || Physics2D.OverlapCircle(groundCheck2.position, 0.1f, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
     private MovementDirection direction = MovementDirection.Right;
@@ -36,8 +42,18 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(IsGrounded);
+        currentTime += Time.deltaTime;
+        if (playerState == PlayerState.Jump && (currentTime >= JumpDurationTime || physic.velocity.magnitude < 0.01f))
+            playerState = PlayerState.Nothing;
+        if (playerState == PlayerState.Rift && (currentTime >= RiftDurationTime || physic.velocity.magnitude < 0.01f))
+            playerState = PlayerState.Nothing;
+
+        if (IsGrounded && IsReadyToJump)
+            physic.velocity = Vector2.zero;
         JumpToCursorLogic();
         CharacterReversalForCursor();
+        
     }
 
     //TODO: Игра ломается при множественном нажатии пробела
@@ -55,90 +71,73 @@ public class Player : MonoBehaviour
         if (!IsGrounded)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isReadyToJump)
+        if (Input.GetKeyDown(KeyCode.Space) && IsReadyToJump)
         {
             CurrentGame.isSlowGame = true;
-            isReadyToJump = true;
+            playerState = PlayerState.CrouchedToJump;
             defaultCursorPosition = Input.mousePosition;
         }
 
-        if (Input.GetKey(KeyCode.Space))
-            JumpModel(trajectory.ShowTrajectory, DrawArrow);
+        if (Input.GetKey(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
+            trajectory.ShowTrajectory(GetJumpVector().vector * jumpBoost);
 
-        if (Input.GetKeyUp(KeyCode.Space) && isReadyToJump)
+        if (Input.GetKeyUp(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
         {
+            var (state, vector) = GetJumpVector();
+            physic.AddForce(vector * jumpBoost);
+            playerState = state;
+            currentTime = 0f;
             CurrentGame.isSlowGame = false;
-            isReadyToJump = false;
-            JumpModel(physic.AddForce, Run);
-
             defaultCursorPosition = default;
             trajectory.ClearTrajectory();
         }
     }
 
-    private void JumpModel(Action<Vector2> jumpAction, Action<float> runAction)
+    private (PlayerState state, Vector3 vector) GetJumpVector()
+    {
+        var jumpVector = VectorFromBaseCursorPosition();
+        var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
+        return vectorAngle switch
+        {
+            > 20 and < 160 => (PlayerState.Jump, jumpVector),
+            >= 160 or < -170 => (PlayerState.Rift, new Vector2(-1, 0).normalized * riftBoost),
+            <= 20 and > -10 => (PlayerState.Rift, new Vector2(1, 0).normalized * riftBoost),
+            _ => (PlayerState.Nothing, Vector3.zero)
+        };
+    }
+
+    private void JumpModel(Action<Vector2> jumpAction)
     {
         // var jumpVector = VectorFromPlayer();
         var jumpVector = VectorFromBaseCursorPosition();
-        Debug.Log(jumpVector);
         var vectorAngle = Mathf.Atan2(jumpVector.y, jumpVector.x) * Mathf.Rad2Deg;
-        
+
         switch (vectorAngle)
         {
+            case < -10 and > -170:
+                break;
             case > 20 and < 160:
                 jumpAction(jumpVector * jumpBoost);
                 break;
-            case > 160:
-            case < -140:
-            case <= 20 and > -40:
-                runAction(jumpVector.x);
+            case >= 160:
+            case <= 20:
+                jumpAction(new Vector2(vectorAngle is > 90 or < -90 ? -1 : 1, 0).normalized * (jumpBoost * 50));
                 break;
         }
-    }
-    
-    private Vector3 VectorFromPlayer()
-    {
-        var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        return (cursorPosition - transform.position).normalized;
     }
 
     private Vector3 VectorFromBaseCursorPosition()
     {
-        if (defaultCursorPosition == default) return default;
+        if (defaultCursorPosition == default)
+            return default;
 
         var jumpVector = Input.mousePosition - defaultCursorPosition;
+        jumpVector = jumpVector.normalized * Mathf.Pow(jumpVector.magnitude, 0.7f);
         if (jumpVector.magnitude > maxJumpForce)
             jumpVector = jumpVector.normalized * maxJumpForce;
         if (jumpVector.magnitude < minJumpForce)
             jumpVector = jumpVector.normalized * minJumpForce;
         return jumpVector;
-    }
-
-    private void Run(float distance)
-    {
-        distance = Math.Min(distance, 5f);
-        Debug.Log(distance);
-        StartCoroutine(Running(distance));
-    }
-
-    private void DrawArrow(float lenght)
-    {
-        
-    }
-
-    private IEnumerator Running(float distance)
-    {
-        isReadyToJump = false;
-        var startPosition = transform.position;
-        var currentPosition = startPosition;
-        while (currentPosition.x - startPosition.x < distance || Math.Abs(currentPosition.y - startPosition.y) > 10e-9)
-        {
-            transform.Translate(speed, 0, 0);
-            currentPosition = transform.position;
-            yield return new WaitForFixedUpdate();
-        }
-        isReadyToJump = true;
-        yield break;
     }
 
     private void CharacterReversalForCursor()
@@ -189,5 +188,11 @@ public class Player : MonoBehaviour
     {
         if (Input.GetAxis("Jump") > 0 && IsGrounded)
             physic.AddForce(Vector3.up * jumpBoost);
+    }
+
+    private Vector3 VectorFromPlayer()
+    {
+        var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return (cursorPosition - transform.position).normalized;
     }
 }
