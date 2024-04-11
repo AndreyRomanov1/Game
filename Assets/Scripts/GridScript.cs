@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
@@ -42,14 +43,28 @@ public class GridScript : MonoBehaviour
         InitStartBlock();
         GenerateNextLevelBlock();
         InitPlayer();
+
+        StartCoroutine(UpdateCoroutine());
     }
 
-    private void Update()
+    private IEnumerator UpdateCoroutine()
     {
-        ChangeIfNeedPlayerBlock();
-        if (PlayerBlock.exitBlock == LastExistingBlock || PlayerBlock.exitBlock.exitBlock == LastExistingBlock)
-            GenerateNextLevelBlock();
+        while (true)
+        {
+            ChangeIfNeedPlayerBlock();
+            if (PlayerBlock.exitBlock == LastExistingBlock || PlayerBlock.exitBlock.exitBlock == LastExistingBlock)
+                GenerateNextLevelBlock();
+            
+            yield return null;
+        }
     }
+
+    // private void Update()
+    // {
+    //     ChangeIfNeedPlayerBlock();
+    //     if (PlayerBlock.exitBlock == LastExistingBlock || PlayerBlock.exitBlock.exitBlock == LastExistingBlock)
+    //         GenerateNextLevelBlock();
+    // }
 
     private void ChangeIfNeedPlayerBlock()
     {

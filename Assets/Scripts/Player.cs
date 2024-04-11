@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -38,23 +40,42 @@ public class Player : MonoBehaviour
     private void Start()
     {
         InitPlayerComponent();
+        StartCoroutine(UpdateCoroutine());
     }
 
-    private void Update()
+    private IEnumerator UpdateCoroutine()
     {
-        Debug.Log(IsGrounded);
-        currentTime += Time.deltaTime;
-        if (playerState == PlayerState.Jump && (currentTime >= JumpDurationTime || physic.velocity.magnitude < 0.01f))
-            playerState = PlayerState.Nothing;
-        if (playerState == PlayerState.Rift && (currentTime >= RiftDurationTime || physic.velocity.magnitude < 0.01f))
-            playerState = PlayerState.Nothing;
+        while (true)
+        {
+            currentTime += Time.deltaTime;
+            if (playerState == PlayerState.Jump && (currentTime >= JumpDurationTime || physic.velocity.magnitude < 0.01f))
+                playerState = PlayerState.Nothing;
+            if (playerState == PlayerState.Rift && (currentTime >= RiftDurationTime || physic.velocity.magnitude < 0.01f))
+                playerState = PlayerState.Nothing;
 
-        if (IsGrounded && IsReadyToJump)
-            physic.velocity = Vector2.zero;
-        JumpToCursorLogic();
-        CharacterReversalForCursor();
-        
+            if (IsGrounded && IsReadyToJump)
+                physic.velocity = Vector2.zero;
+            JumpToCursorLogic();
+            CharacterReversalForCursor();
+
+            yield return null;
+        }
     }
+    
+    // private void Update()
+    // {
+    //     currentTime += Time.deltaTime;
+    //     if (playerState == PlayerState.Jump && (currentTime >= JumpDurationTime || physic.velocity.magnitude < 0.01f))
+    //         playerState = PlayerState.Nothing;
+    //     if (playerState == PlayerState.Rift && (currentTime >= RiftDurationTime || physic.velocity.magnitude < 0.01f))
+    //         playerState = PlayerState.Nothing;
+    //
+    //     if (IsGrounded && IsReadyToJump)
+    //         physic.velocity = Vector2.zero;
+    //     JumpToCursorLogic();
+    //     CharacterReversalForCursor();
+    //     
+    // }
 
     //TODO: Игра ломается при множественном нажатии пробела
 
