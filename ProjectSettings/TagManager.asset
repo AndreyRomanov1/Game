@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Block
   - EmptyBlock
+  - GroundCheck
   layers:
   - Default
   - TransparentFX
@@ -18,9 +19,6 @@ TagManager:
   - Block
   - Ground
   - Player
-  - 
-  - 
-  - 
   - 
   - 
   - 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 
@@ -12,11 +13,15 @@ public class Player : MonoBehaviour
     private const float MaxRiftForce = 4;
     private const float MinRiftForce = 1;
 
-    public SpriteRenderer sprite;
-    public Rigidbody2D physic;
+    private SpriteRenderer sprite;
+    private Rigidbody2D physic;
 
-    public Transform groundCheck1;
-    public Transform groundCheck2;
+    // public Transform groundCheck1;
+    // public Transform groundCheck2;
+    private Transform[] groundCheckers;
+    private Transform leftWallCheck;
+    private Transform rightWallCheck;
+
     public LayerMask groundMask;
 
     private const float JumpDurationTime = 0.001f;
@@ -30,8 +35,17 @@ public class Player : MonoBehaviour
 
     private PlayerState playerState = PlayerState.Nothing;
 
-    private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, 0.2f, groundMask)
-                               || Physics2D.OverlapCircle(groundCheck2.position, 0.2f, groundMask);
+    private bool IsGrounded => groundCheckers.Any(groundCheck =>
+        Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundMask));
+
+    private bool IsTouchedLeftWall =>
+        Physics2D.OverlapCircle(leftWallCheck.position, 0.2f, groundMask);
+
+    private bool IsTouchedRightWall =>
+        Physics2D.OverlapCircle(rightWallCheck.position, 0.2f, groundMask);
+
+    // private bool IsGrounded => Physics2D.OverlapCircle(groundCheck1.position, 0.2f, groundMask)
+    //                            || Physics2D.OverlapCircle(groundCheck2.position, 0.2f, groundMask);
     // private bool IsMoveBlocked => Physics2D.
 
     private TrajectoryRender trajectory;
@@ -44,6 +58,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator UpdateCoroutine()
     {
+        yield return null;
         while (true)
         {
             MovementLogic();
@@ -57,15 +72,50 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
         trajectory = GetComponentInChildren<TrajectoryRender>();
+        groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
+            .Select(x => x.transform)
+            .ToArray();
+        leftWallCheck = GameObject.Find("LeftWallCheck").transform;
+        rightWallCheck = GameObject.Find("RightWallCheck").transform;
     }
 
-    // TODO: исправить проблему ускорения при приземлении
     // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх). Влево такое не замечал, но тоже возможно
     private void MovementLogic()
     {
-        if (!IsGrounded)
+        if (IsGrounded)
+        {
+            JumpFromGroundLogic();
             return;
+        }
 
+        if (IsTouchedRightWall || IsTouchedLeftWall)
+            JumpFromWallLogic();
+
+
+        // if (Input.GetKeyDown(KeyCode.Space) && IsReadyToMovement)
+        // {
+        //     CurrentGame.isSlowGame = true;
+        //     playerState = PlayerState.CrouchedToJump;
+        //     // defaultCursorPosition = Input.mousePosition;
+        // }
+        //
+        // if (Input.GetKey(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
+        //     trajectory.ShowTrajectory(GetMovementVector().vector);
+        //
+        // if (Input.GetKeyUp(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
+        // {
+        //     var (state, vector) = GetMovementVector();
+        //     physic.AddForce(vector);
+        //     playerState = state;
+        //     StartCoroutine(StopJumpOrRift());
+        //     CurrentGame.isSlowGame = false;
+        //     // defaultCursorPosition = default;
+        //     trajectory.ClearTrajectory();
+        // }
+    }
+
+    private void JumpFromGroundLogic()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && IsReadyToMovement)
         {
             CurrentGame.isSlowGame = true;
@@ -88,6 +138,10 @@ public class Player : MonoBehaviour
         }
     }
     
+    private void JumpFromWallLogic()
+    {
+    }
+
     private (PlayerState state, Vector3 vector) GetMovementVector()
     {
         var vector = GetPositionDirectionVector();
@@ -135,12 +189,20 @@ public class Player : MonoBehaviour
         if (playerState == PlayerState.Rift)
         {
             yield return new WaitForSeconds(RiftDurationTime);
-            physic.velocity= new Vector2(0, physic.velocity.y); 
+            physic.velocity = new Vector2(0, physic.velocity.y);
         }
+
         if (playerState == PlayerState.Jump)
         {
             // TODO: Нужно как-то чётко отслеживать, прыгает ли игрок или уже приземлился. Просто смотреть на землю плохо работает
+            var lastIsGroundState = IsGrounded;
+            while (lastIsGroundState || !IsGrounded)
+            {
+                lastIsGroundState = IsGrounded;
+                yield return new WaitForFixedUpdate();
+            }
         }
+
         playerState = PlayerState.Nothing;
     }
 
