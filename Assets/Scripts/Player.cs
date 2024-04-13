@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
     }
 
     // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх). Влево такое не замечал, но тоже возможно
+    // TODO: похоже причина бага в неправильном занулении горизонтальной составляющей вектора скорости, персонаж может остановиться и в полете
     private void MovementLogic()
     {
         if (IsGrounded)
@@ -114,6 +115,7 @@ public class Player : MonoBehaviour
         // }
     }
 
+    // TODO: оптимизировать функции прыжка с земли и со стены, убрав повторяющейся код 
     private void JumpFromGroundLogic()
     {
         if (Input.GetKeyDown(KeyCode.Space) && IsReadyToMovement)
@@ -140,6 +142,50 @@ public class Player : MonoBehaviour
     
     private void JumpFromWallLogic()
     {
+        var velocity = physic.velocity;
+        velocity = new Vector2(velocity.x, velocity.y * 0.1f);
+        physic.velocity = velocity;
+        
+        if (Input.GetKeyDown(KeyCode.Space) && IsReadyToMovement)
+        {
+            CurrentGame.isSlowGame = true;
+            playerState = PlayerState.CrouchedToJump;
+            // defaultCursorPosition = Input.mousePosition;
+        }
+
+        if (Input.GetKey(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
+            trajectory.ShowTrajectory(GetWallMovementVector().vector);
+
+        if (Input.GetKeyUp(KeyCode.Space) && playerState == PlayerState.CrouchedToJump)
+        {
+            var (state, vector) = GetWallMovementVector();
+            physic.AddForce(vector);
+            playerState = state;
+            StartCoroutine(StopJumpOrRift());
+            CurrentGame.isSlowGame = false;
+            // defaultCursorPosition = default;
+            trajectory.ClearTrajectory();
+        }
+    }
+
+    private (PlayerState state, Vector3 vector) GetWallMovementVector()
+    {
+        var vector = GetPositionDirectionVector();
+        var vectorAngle = VectorAngle(vector);
+        PlayerState state;
+        if ((IsTouchedLeftWall && vectorAngle is > -70 and < 70) ||
+            (IsTouchedRightWall && vectorAngle is < -110 or > 110))
+        {
+            vector = GetJumpVector(vector);
+            state = PlayerState.Jump;
+        }
+        else
+        {
+            state = PlayerState.Nothing;
+            vector = Vector3.zero;
+        }
+
+        return (state, vector);
     }
 
     private (PlayerState state, Vector3 vector) GetMovementVector()
@@ -195,12 +241,15 @@ public class Player : MonoBehaviour
         if (playerState == PlayerState.Jump)
         {
             // TODO: Нужно как-то чётко отслеживать, прыгает ли игрок или уже приземлился. Просто смотреть на землю плохо работает
-            var lastIsGroundState = IsGrounded;
-            while (lastIsGroundState || !IsGrounded)
-            {
-                lastIsGroundState = IsGrounded;
+            // var lastIsGroundState = IsGrounded;
+            // while (lastIsGroundState || !IsGrounded)
+            // {
+            //     lastIsGroundState = IsGrounded;
+            //     yield return new WaitForFixedUpdate();
+            // }
+
+            while (!IsGrounded && !IsTouchedLeftWall && !IsTouchedRightWall)
                 yield return new WaitForFixedUpdate();
-            }
         }
 
         playerState = PlayerState.Nothing;
