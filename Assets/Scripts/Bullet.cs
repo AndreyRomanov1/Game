@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
         StartCoroutine(FixedUpdateCoroutine());
     }
 
-    public void Destroy()
+    private void Destroy()
     {
         Destroy(this.GameObject());
     }
@@ -45,6 +45,7 @@ public class Bullet : MonoBehaviour
     
     private void CollisionLogic(GameObject other)
     {
+        other.GetComponent<IDamageable>()?.TakeDamage(1f);
         Destroy();
     }
 
