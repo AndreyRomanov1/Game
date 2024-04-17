@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TrajectoryRender : MonoBehaviour
+public class TrajectoryRenderScript : MonoBehaviour
 {
     public int count = 10;
     public float deltaTime = 0.1f;

@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class BulletScript : MonoBehaviour
 {
     private float _speed;
     private LayerMask _mask;

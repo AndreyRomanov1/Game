@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Pivot : MonoBehaviour
+public class PivotScript : MonoBehaviour
 {
     // public float BaseAngle = 60f;
     // private Camera mainCamera;

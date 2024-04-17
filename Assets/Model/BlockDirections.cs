@@ -2,7 +2,10 @@
     {
         Up,
         Right,
-        Down
+        Down,
+        Start,
+        End,
+        Base
     }
 
     

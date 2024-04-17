@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Pistol : MonoBehaviour
+public class PistolScript : MonoBehaviour
 {
     public GameObject bullet;
     public float bulletSpeed = 20;
@@ -41,7 +41,7 @@ public class Pistol : MonoBehaviour
 
     private void Shoot()
     {
-        var currentBullet = Instantiate(bullet).GetComponent<Bullet>();
+        var currentBullet = Instantiate(bullet).GetComponent<BulletScript>();
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask);
     }
 }

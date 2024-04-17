@@ -17,19 +17,6 @@ using UnityEngine;
             Prefab = prefab;
         }
 
-        public BlockGameObject(BlockDirections entranceDirection,
-            BlockDirectionsNumbers entranceNumber,
-            BlockDirections exitDirection,
-            BlockDirectionsNumbers exitNumber,
-            GameObject prefab)
-        {
-            EntranceDirection = entranceDirection;
-            EntranceNumber = entranceNumber;
-            ExitDirection = exitDirection;
-            ExitNumber = exitNumber;
-            Prefab = prefab;
-        }
-
         private (BlockDirections, BlockDirectionsNumbers, BlockDirections, BlockDirectionsNumbers, int) ParsePrefabName(
             string prefabName)
         {
@@ -45,6 +32,9 @@ using UnityEngine;
                 "Down" => BlockDirections.Down,
                 "Right" => BlockDirections.Right,
                 "Up" => BlockDirections.Up,
+                "Start" => BlockDirections.Start,
+                "End" => BlockDirections.End,
+                "Base" => BlockDirections.Base,
                 _ => throw new ArgumentOutOfRangeException(nameof(strDirection), strDirection, null)
             };
         }
@@ -53,6 +43,7 @@ using UnityEngine;
         {
             return strDirectionNumber switch
             {
+                "0" => BlockDirectionsNumbers.Zero,
                 "1" => BlockDirectionsNumbers.First,
                 "2" => BlockDirectionsNumbers.Second,
                 "3" => BlockDirectionsNumbers.Third,

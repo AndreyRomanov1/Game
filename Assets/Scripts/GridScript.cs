@@ -1,167 +1,156 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class GridScript : MonoBehaviour
 {
-    public GameObject playerPrefab;
-    public const int BlockWidth = 64;
-    public const int BlockHeight = 48;
-    public Player player;
-    public Block PlayerBlock;
-    public Block FirstBlock;
-    public Block LastExistingBlock;
+    public BlockScript playerBlockScript;
+    public BlockScript firstBlockScript;
+    public BlockScript lastExistingBlockScript;
     private readonly Random random = new();
-    public float GameSpeed = 1f;
+    public string pathToBlocks;
 
 
-    private readonly Dictionary<BlockDirections, Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>> Directions = new()
+    private BlockGameObject startBlock;
+    private BlockGameObject endBlock;
+
+    private readonly Dictionary<BlockDirections, Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>> directions =
+        new()
+        {
+            [BlockDirections.Down] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
+            {
+                [BlockDirectionsNumbers.First] = new(),
+                [BlockDirectionsNumbers.Second] = new(),
+                [BlockDirectionsNumbers.Third] = new()
+            },
+            [BlockDirections.Up] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
+            {
+                [BlockDirectionsNumbers.First] = new(),
+                [BlockDirectionsNumbers.Second] = new(),
+                [BlockDirectionsNumbers.Third] = new()
+            },
+            [BlockDirections.Right] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
+            {
+                [BlockDirectionsNumbers.First] = new(),
+                [BlockDirectionsNumbers.Second] = new()
+            }
+        };
+
+    public void InitGrid(string pathToBlocks0)
     {
-        [BlockDirections.Down] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
-        {
-            [BlockDirectionsNumbers.First] = new(),
-            [BlockDirectionsNumbers.Second] = new(),
-            [BlockDirectionsNumbers.Third] = new()
-        },
-        [BlockDirections.Up] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
-        {
-            [BlockDirectionsNumbers.First] = new(),
-            [BlockDirectionsNumbers.Second] = new(),
-            [BlockDirectionsNumbers.Third] = new()
-        },
-        [BlockDirections.Right] = new Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>
-        {
-            [BlockDirectionsNumbers.First] = new(),
-            [BlockDirectionsNumbers.Second] = new()
-        }
-    };
-
-    private void Start()
-    {
+        this.pathToBlocks = pathToBlocks0;
         LoadBlockPrefabs();
         InitStartBlock();
         GenerateNextLevelBlock();
-        InitPlayer();
+    }
 
+
+    private void Start()
+    {
         StartCoroutine(UpdateCoroutine());
     }
 
     private IEnumerator UpdateCoroutine()
     {
+        yield return new WaitForFixedUpdate();
         while (true)
         {
             ChangeIfNeedPlayerBlock();
-            if (PlayerBlock.exitBlock == LastExistingBlock || PlayerBlock.exitBlock.exitBlock == LastExistingBlock)
+            if (playerBlockScript.exitBlockScript == lastExistingBlockScript || playerBlockScript.exitBlockScript.exitBlockScript == lastExistingBlockScript)
                 GenerateNextLevelBlock();
-            
-            yield return null;
+
+            yield return new WaitForFixedUpdate();
         }
     }
 
-    // private void Update()
-    // {
-    //     ChangeIfNeedPlayerBlock();
-    //     if (PlayerBlock.exitBlock == LastExistingBlock || PlayerBlock.exitBlock.exitBlock == LastExistingBlock)
-    //         GenerateNextLevelBlock();
-    // }
-
     private void ChangeIfNeedPlayerBlock()
     {
-        var playerPos = player.transform.position;
-        var playerBlockPos = PlayerBlock.transform.position;
-        if (playerPos.x > playerBlockPos.x + BlockWidth
-            && PlayerBlock.exitDirection == BlockDirections.Right)
-            PlayerBlock = PlayerBlock.exitBlock;
-        if (playerPos.x < playerBlockPos.x - BlockWidth
-            && PlayerBlock.entranceDirection == BlockDirections.Right)
-            PlayerBlock = PlayerBlock.entranceBlock;
-        if (playerPos.y > playerBlockPos.y + BlockHeight)
-            if (PlayerBlock.exitDirection == BlockDirections.Up)
-                PlayerBlock = PlayerBlock.exitBlock;
-            else if (PlayerBlock.entranceDirection == BlockDirections.Up)
-                PlayerBlock = PlayerBlock.entranceBlock;
-        if (playerPos.y < playerBlockPos.y - BlockHeight)
-            if (PlayerBlock.exitDirection == BlockDirections.Down)
-                PlayerBlock = PlayerBlock.exitBlock;
-            else if (PlayerBlock.entranceDirection == BlockDirections.Down)
-                PlayerBlock = PlayerBlock.entranceBlock;
+        var playerPosition = CurrentGame.Player.transform.position;
+        var playerBlockPosition = playerBlockScript.transform.position;
+        if (playerPosition.x > playerBlockPosition.x + Model.BlockWidth
+            && playerBlockScript.exitDirection == BlockDirections.Right)
+            playerBlockScript = playerBlockScript.exitBlockScript;
+        if (playerPosition.x < playerBlockPosition.x - Model.BlockWidth
+            && playerBlockScript.entranceDirection == BlockDirections.Right)
+            playerBlockScript = playerBlockScript.entranceBlockScript;
+        if (playerPosition.y > playerBlockPosition.y + Model.BlockHeight)
+            if (playerBlockScript.exitDirection == BlockDirections.Up)
+                playerBlockScript = playerBlockScript.exitBlockScript;
+            else if (playerBlockScript.entranceDirection == BlockDirections.Up)
+                playerBlockScript = playerBlockScript.entranceBlockScript;
+        if (playerPosition.y < playerBlockPosition.y - Model.BlockHeight)
+            if (playerBlockScript.exitDirection == BlockDirections.Down)
+                playerBlockScript = playerBlockScript.exitBlockScript;
+            else if (playerBlockScript.entranceDirection == BlockDirections.Down)
+                playerBlockScript = playerBlockScript.entranceBlockScript;
     }
 
     private void InitStartBlock()
     {
-        var prefabList = Directions[BlockDirections.Right][BlockDirectionsNumbers.First];
-        if (prefabList.Count == 0)
+        // var prefabList = Directions[BlockDirections.Right][BlockDirectionsNumbers.First];
+        if (startBlock == null)
         {
             Debug.Log($"Не могу создать начальный блок");
             return;
         }
 
-        var prefab = prefabList[random.Next(prefabList.Count)];
-        var blockScript = Instantiate(prefab.Prefab, transform, true).GetComponent<Block>();
+        var blockScript = Instantiate(startBlock.Prefab, transform, true).GetComponent<BlockScript>();
         blockScript.Init(this, Vector3.zero, null, BlockDirections.Right, BlockDirectionsNumbers.First,
-            prefab.ExitDirection, prefab.ExitNumber);
-        PlayerBlock = blockScript;
-        FirstBlock = blockScript;
-        LastExistingBlock = blockScript;
+            startBlock.ExitDirection, startBlock.ExitNumber);
+        playerBlockScript = blockScript;
+        firstBlockScript = blockScript;
+        lastExistingBlockScript = blockScript;
+        Debug.Log("Начальный блок сгенерирован");
     }
 
     private void GenerateNextLevelBlock()
     {
-        var prefabList = Directions[LastExistingBlock.exitDirection][LastExistingBlock.exitNumber];
-        if (prefabList.Count == 0)
+        BlockGameObject nextBlockPrefab;
+        if (lastExistingBlockScript.exitDirection == BlockDirections.End)
+            nextBlockPrefab = endBlock;
+        else
         {
-            Debug.Log($"Нет подходящих блоков: {LastExistingBlock.exitDirection} {LastExistingBlock.exitNumber}");
-            return;
+            var prefabList = directions[lastExistingBlockScript.exitDirection][lastExistingBlockScript.exitNumber];
+            nextBlockPrefab = prefabList.Count == 0 ? endBlock : prefabList[random.Next(prefabList.Count)];
         }
 
-        var nextBlockPosition = LastExistingBlock.transform.position + GetDirectionToNextBlock();
-        var nextBlockPrefab = prefabList[random.Next(prefabList.Count)];
-        var nextBlockScript = Instantiate(nextBlockPrefab.Prefab, transform, true).GetComponent<Block>();
-        nextBlockScript.Init(this, nextBlockPosition, LastExistingBlock, LastExistingBlock.entranceDirection,
-            LastExistingBlock.entranceNumber,
+        var nextBlockPosition = lastExistingBlockScript.transform.position + GetDirectionToNextBlock();
+        var nextBlockScript = Instantiate(nextBlockPrefab.Prefab, transform, true).GetComponent<BlockScript>();
+        nextBlockScript.Init(this, nextBlockPosition, lastExistingBlockScript, lastExistingBlockScript.entranceDirection,
+            lastExistingBlockScript.entranceNumber,
             nextBlockPrefab.ExitDirection, nextBlockPrefab.ExitNumber);
 
-        LastExistingBlock.exitBlock = nextBlockScript;
-        LastExistingBlock = nextBlockScript;
+        lastExistingBlockScript.exitBlockScript = nextBlockScript;
+        lastExistingBlockScript = nextBlockScript;
     }
 
     private Vector3 GetDirectionToNextBlock()
     {
-        var x = LastExistingBlock.exitDirection == BlockDirections.Right ? BlockWidth : 0;
-        var y = LastExistingBlock.exitDirection == BlockDirections.Up
-            ? BlockHeight
-            : LastExistingBlock.exitDirection == BlockDirections.Down
-                ? -BlockHeight
+        var x = lastExistingBlockScript.exitDirection == BlockDirections.Right ? Model.BlockWidth : 0;
+        var y = lastExistingBlockScript.exitDirection == BlockDirections.Up
+            ? Model.BlockHeight
+            : lastExistingBlockScript.exitDirection == BlockDirections.Down
+                ? -Model.BlockHeight
                 : 0;
         return new Vector3(x, y);
     }
 
 
-    private void InitPlayer()
-    {
-        player = Instantiate(playerPrefab).GetComponent<Player>();
-    }
-
     private void LoadBlockPrefabs()
     {
-        var paths = new[]
+        var prefabs = Resources.LoadAll<GameObject>($"Levels/{pathToBlocks}");
+        Debug.Log($"Из Levels/{pathToBlocks} загружено {prefabs.Length} блоков");
+        foreach (var prefab in prefabs)
         {
-            "DownEntrance/1", //"DownEntrance/2", "DownEntrance/3",
-            "UpEntrance/1", //"UpEntrance/2", "UpEntrance/3",
-            "RightEntrance/1", //"RightEntrance/2"
-        };
-        foreach (var path in paths)
-        {
-            var prefabs = Resources.LoadAll<GameObject>($"BlockPrefabs/{path}");
-            foreach (var prefab in prefabs)
-            {
-                var g = new BlockGameObject(prefab);
-                if (g.Number != 0)
-                    Directions[g.EntranceDirection][g.EntranceNumber].Add(g);
-            }
+            var block = new BlockGameObject(prefab);
+            if (block.EntranceDirection == BlockDirections.Start)
+                startBlock = block;
+            else if (block.EntranceDirection == BlockDirections.End)
+                endBlock = block;
+            else if (block.Number != 0 && block.EntranceDirection != BlockDirections.Base)
+                directions[block.EntranceDirection][block.EntranceNumber].Add(block);
         }
-
-        // emptyPrefabs = Resources.LoadAll<GameObject>($"BlockPrefabs/Empty");
     }
 }
