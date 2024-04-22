@@ -7,19 +7,21 @@ public class BulletScript : MonoBehaviour
     private float _speed;
     private LayerMask _mask;
     private float _lifetime;
+    private float damage;
 
-    public void Shoot(Transform transformParent, float speed0, float lifetime, LayerMask mask0)
+    public void Shoot(Transform transformParent, float speed0, float lifetime, LayerMask mask0, float weaponDamage = 20f)
     {
         transform.position = transformParent.position;
         transform.rotation = Quaternion.Euler(0f, 0f, transformParent.eulerAngles.z);
         _speed = speed0;
         _lifetime = lifetime;
         _mask = mask0;
+        damage = weaponDamage;
 
         StartCoroutine(FixedUpdateCoroutine());
     }
 
-    public void Destroy()
+    private void Destroy()
     {
         Destroy(this.GameObject());
     }
@@ -45,6 +47,7 @@ public class BulletScript : MonoBehaviour
     
     private void CollisionLogic(GameObject other)
     {
+        other.GetComponent<IDamageable>()?.TakeDamage(damage);
         Destroy();
     }
 
