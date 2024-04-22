@@ -42,6 +42,16 @@ public class PlayerScript : MonoBehaviour
         StartCoroutine(MovementStateController());
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Block"))
+        {
+            Debug.Log("COLLISION");
+        }
+        
+    }
+
+
     private void Print() =>
         Debug.Log(
             $"{playerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
@@ -52,7 +62,7 @@ public class PlayerScript : MonoBehaviour
         while (true)
         {
             MovementLogic();
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
     }
 
@@ -136,6 +146,7 @@ public class PlayerScript : MonoBehaviour
         }
         else
             vector = Vector2.zero;
+
         if (vector.magnitude < 1e-3)
             state = PlayerState.Nothing;
         return (state, vector);
@@ -144,7 +155,6 @@ public class PlayerScript : MonoBehaviour
     private (PlayerState state, Vector2 vector) GetMovementVector()
     {
         var vector = GetPositionDirectionVector();
-        Debug.Log(vector);
         var vectorAngle = VectorAngle(vector);
         PlayerState state;
         switch (vectorAngle)
@@ -166,7 +176,6 @@ public class PlayerScript : MonoBehaviour
 
         if (vector.magnitude < 1e-3)
             state = PlayerState.Nothing;
-        Debug.Log(vector);
 
         return (state, vector);
     }
@@ -191,6 +200,7 @@ public class PlayerScript : MonoBehaviour
 
     private IEnumerator MovementStateController()
     {
+        yield return new WaitForFixedUpdate();
         while (true)
         {
             if (playerState == PlayerState.Rift)
@@ -223,10 +233,10 @@ public class PlayerScript : MonoBehaviour
 
                 Debug.Log("1 Начало прыжка");
                 while (IsGrounded || IsTouchedLeftWall || IsTouchedRightWall)
-                    yield return new WaitForFixedUpdate(); // Ждём, пока достаточно далеко отлетим от стены
+                    yield return null; // Ждём, пока достаточно далеко отлетим от стены
                 Debug.Log("2 Оторвал ноги от земли или стены");
                 while (!IsGrounded && !IsTouchedLeftWall && !IsTouchedRightWall)
-                    yield return new WaitForFixedUpdate(); // Когда коснёмся поверхности, обнуляем X у скорости
+                    yield return null; // Когда коснёмся поверхности, обнуляем X у скорости
                 Debug.Log("3 Коснулся земли или стены");
                 physic.velocity = new Vector2(0, physic.velocity.y);
                 if (IsGrounded)
@@ -239,7 +249,7 @@ public class PlayerScript : MonoBehaviour
                 Print();
             }
 
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
     }
 
