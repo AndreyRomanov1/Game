@@ -46,9 +46,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Block"))
         {
-            Debug.Log("COLLISION");
+            // Debug.Log("COLLISION");
         }
-        
     }
 
 
