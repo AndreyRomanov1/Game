@@ -86,7 +86,7 @@ public class PlayerScript : MonoBehaviour
         else if (playerState == PlayerState.CrouchedToJump)
         {
             var (state, vector) = GetMovementVector();
-            sprite.flipX = vector.x <= 0;
+            // sprite.flipX = vector.x <= 0;
 
             if (Input.GetKey(KeyCode.Space))
                 trajectory.ShowTrajectory(vector);
@@ -112,7 +112,7 @@ public class PlayerScript : MonoBehaviour
             physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
 
             var (state, vector) = GetWallMovementVector();
-            sprite.flipX = vector.x <= 0;
+            // sprite.flipX = vector.x <= 0;
 
             if (Input.GetKey(KeyCode.Space))
                 trajectory.ShowTrajectory(vector);
