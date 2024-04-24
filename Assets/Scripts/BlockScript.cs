@@ -1,7 +1,4 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 public class BlockScript : MonoBehaviour
@@ -13,10 +10,14 @@ public class BlockScript : MonoBehaviour
     public BlockDirections exitDirection;
     public BlockDirectionsNumbers exitNumber;
 
-    [FormerlySerializedAs("entranceBlock")]
     public BlockScript entranceBlockScript;
 
-    [FormerlySerializedAs("exitBlock")] public BlockScript exitBlockScript;
+    public BlockScript exitBlockScript;
+
+    public Tilemap tilemap;
+    private const string EnemySpawnTileName = "tileset-sliced_119_1";
+    private const string SomeEnemiesSpawnTileName = "tileset-sliced_119_3"; // TODO Поменять когда изменятся текстуры
+    private const string BarrelSpawnTileName = "tileset-sliced_119";
 
     public void Init(GridScript generator0, Vector3 position0, BlockScript entranceBlock0,
         BlockDirections entranceDirection0, BlockDirectionsNumbers entranceNumber0,
@@ -31,25 +32,40 @@ public class BlockScript : MonoBehaviour
         exitNumber = exitNumber0;
     }
 
-    public Tilemap tilemap;
-    public string EnemySpawnTileName = "tileset-sliced_119";
-
     public void Start()
     {
         tilemap = GetComponent<Tilemap>();
+        SpawnEnemiesOnNeedTile();
+    }
+
+    private void SpawnEnemiesOnNeedTile()
+    {
         var bounds = tilemap.cellBounds;
         for (var x = bounds.xMin; x < bounds.xMax; x++)
         for (var y = bounds.yMin; y < bounds.yMax; y++)
         {
-            var pos = new Vector3Int(x, y, 0);
-            var tile = tilemap.GetTile(pos);
-            if (tile != null && tile.name == EnemySpawnTileName)
+            var tilePosition = new Vector3Int(x, y, 0);
+            var tile = tilemap.GetTile(tilePosition);
+            if (tile == null)
+                continue;
+            switch (tile.name)
             {
-                var tileWorldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                var p = Resources.Load<GameObject>("Enemies/Barrel");
-                var e = Instantiate(p, transform, true);
-                e.transform.position = tileWorldPos;
+                case EnemySpawnTileName:
+                    break;
+                case SomeEnemiesSpawnTileName:
+                    break;
+                case BarrelSpawnTileName:
+                    var prefab = Resources.Load<GameObject>("Enemies/Barrel");
+                    var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
+                    SpawnEnemy(prefab, position);
+                    break;
             }
         }
+    }
+
+    private void SpawnEnemy(GameObject prefab, Vector2 position)
+    {
+        var enemy = Instantiate(prefab, transform, true);
+        enemy.transform.position = position;
     }
 }

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
@@ -46,10 +44,9 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Block"))
         {
-            // Debug.Log("COLLISION");
+            Debug.Log("COLLISION");
         }
     }
-
 
     private void Print() =>
         Debug.Log(
@@ -65,7 +62,6 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // TODO: Игра ломается при множественном нажатии пробела
     private void InitPlayerComponent()
     {
         sprite = GetComponent<SpriteRenderer>();
@@ -109,7 +105,6 @@ public class PlayerScript : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space) && (IsTouchedLeftWall || IsTouchedRightWall))
                 playerState = PlayerState.CrouchedToJumpFromWall;
-            Print();
         }
         else if (playerState == PlayerState.CrouchedToJumpFromWall)
         {
@@ -121,7 +116,6 @@ public class PlayerScript : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
                 trajectory.ShowTrajectory(vector);
-            Print();
 
             if (Input.GetKeyUp(KeyCode.Space))
             {
