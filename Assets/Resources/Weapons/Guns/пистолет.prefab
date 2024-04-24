@@ -184,6 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 2124877345654037562, guid: 4712bb077aedae843826c41dc00ccb89, type: 3}
   bulletSpeed: 20
+  rateOfFire: 1
+  bulletLifetime: 10
   mask:
     serializedVersion: 2
-    m_Bits: 251
+    m_Bits: 315
