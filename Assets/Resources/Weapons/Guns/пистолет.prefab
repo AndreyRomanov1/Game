@@ -25,13 +25,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3898648471392389893}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.01592761, w: 0.99987316}
-  m_LocalPosition: {x: 47.90605, y: -1.2023779, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 47.90605, y: 0.58, z: 0}
   m_LocalScale: {x: 98.356064, y: 0.0576245, z: 3.1579714}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3243598785315075728}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -70}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5643869313723042129
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 4393465235544274999}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18, y: -0.46, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.19865076, y: 0.2323327, z: 0.316659}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,6 +186,7 @@ MonoBehaviour:
   bulletSpeed: 20
   rateOfFire: 1
   bulletLifetime: 10
+  damage: 20
   mask:
     serializedVersion: 2
     m_Bits: 256

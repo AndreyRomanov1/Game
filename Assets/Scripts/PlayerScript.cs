@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour
     private Transform leftWallCheck;
     private Transform rightWallCheck;
     public LayerMask groundMask;
+    public GameObject currentGun;
 
     private const float RiftDurationTime = 0.8f;
     public PlayerState playerState = PlayerState.Nothing;
@@ -32,6 +33,17 @@ public class PlayerScript : MonoBehaviour
         Physics2D.OverlapCircle(rightWallCheck.position, 0.2f, groundMask);
 
     private TrajectoryRenderScript trajectory;
+    private GameObject gunPosition;
+
+    public void SetGun(GameObject gun)
+    {
+        while (gunPosition.transform.childCount > 0)
+        {
+            Destroy(gunPosition.transform.GetChild(0));
+        }
+
+        Instantiate(gun, gunPosition.transform);
+    }
 
     private void Start()
     {
@@ -72,6 +84,13 @@ public class PlayerScript : MonoBehaviour
             .ToArray();
         leftWallCheck = GameObject.Find("LeftWallCheck").transform;
         rightWallCheck = GameObject.Find("RightWallCheck").transform;
+
+        gunPosition = transform.Find("bone_1").Find("bone_9")
+            .Find("Pivot").Find("GG плечо").Find("bone_1").
+            Find("GG локоть").Find("bone_1").Find("Gun position").gameObject;
+        
+        //TODO:Вынести создание пушки из PlayerScript
+        SetGun(currentGun);
     }
 
     // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх). Влево такое не замечал, но тоже возможно

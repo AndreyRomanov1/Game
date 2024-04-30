@@ -8,6 +8,7 @@ public class PistolScript : MonoBehaviour
     public float bulletSpeed = 20;
     public float rateOfFire = 1;
     public float bulletLifetime = 10;
+    public float damage = 20f;
     public LayerMask mask;
 
     private float timeBetweenShots;
@@ -42,6 +43,6 @@ public class PistolScript : MonoBehaviour
     private void Shoot()
     {
         var currentBullet = Instantiate(bullet).GetComponent<BulletScript>();
-        currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask);
+        currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage);
     }
 }
