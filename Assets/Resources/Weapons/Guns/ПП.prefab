@@ -101,7 +101,7 @@ MonoBehaviour:
   bulletSpeed: 20
   rateOfFire: 10
   bulletLifetime: 10
-  damage: 2
+  damage: 8
   mask:
     serializedVersion: 2
     m_Bits: 256

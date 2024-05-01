@@ -23,6 +23,8 @@ public class PlayerScript : MonoBehaviour
     private const float RiftDurationTime = 0.8f;
     public PlayerState playerState = PlayerState.Nothing;
 
+    public PlayerState state { set => playerState = value; }
+
     private bool IsGrounded => groundCheckers
         .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundMask));
 
