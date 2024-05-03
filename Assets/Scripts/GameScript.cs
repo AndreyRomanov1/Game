@@ -11,6 +11,6 @@ public class GameScript : MonoBehaviour
     public GameObject LoadByName(string name0) => Resources.Load<GameObject>(name0);
     public GameObject CreateByGameObject(GameObject obj) => Instantiate(obj);
     public GameObject CreateGrid() => CreateByGameObject(LoadByName("Grid"));
-    public GameObject CreatePlayer() => CreateByGameObject(LoadByName("Player"));
+    public GameObject CreatePlayer() => CreateByGameObject(LoadByName("Player/Player"));
     public void Destroy(GameObject gObject) => Object.Destroy(gObject);
 }

@@ -22,9 +22,17 @@ public class PlayerScript : MonoBehaviour
     public GameObject currentGun;
 
     private const float RiftDurationTime = 0.8f;
-    public PlayerState playerState = PlayerState.Nothing;
+    private PlayerState playerState = PlayerState.Nothing;
 
-    public PlayerState state { set => playerState = value; }
+    public PlayerState PlayerState
+    {
+        get => playerState;
+        set
+        {
+            PlayAnimation(playerState, value);
+            playerState = value;
+        }
+    }
 
     private bool IsGrounded => groundCheckers
         .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundMask));
@@ -48,6 +56,51 @@ public class PlayerScript : MonoBehaviour
         Instantiate(gun, gunPosition.transform);
     }
 
+    private void PlayAnimation(PlayerState oldState, PlayerState newState)
+    {
+        switch (newState)
+        {
+            case PlayerState.Jump:
+                switch (oldState)
+                {
+                    case PlayerState.CrouchedToJump:
+                        animator.Play("jump");
+                        break;
+                    case PlayerState.CrouchedToJumpFromLeftWall:
+                        animator.Play("jump from left wall");
+                        break;
+                    case PlayerState.CrouchedToJumpFromRightWall:
+                        animator.Play("jump from right wall");
+                        break;
+                    default:
+                        Debug.Log("Прыжок не из состояний подготовки к прыжку");
+                        break;
+                }
+
+                break;
+            case PlayerState.Rift:
+                if (oldState == PlayerState.CrouchedToJump)
+                    animator.Play("rift");
+                break;
+            case PlayerState.CrouchedToJump:
+                if (oldState == PlayerState.Nothing)
+                    animator.Play("preparing for jump");
+                break;
+            case PlayerState.HangingOnLeftWall:
+                if (oldState == PlayerState.Jump)
+                    animator.Play("lending on left wall");
+                break;
+            case PlayerState.HangingOnRightWall:
+                if (oldState == PlayerState.Jump)
+                    animator.Play("landing on right wall");
+                break;
+            case PlayerState.Nothing:
+                if (oldState == PlayerState.Jump)
+                    animator.Play("lending on ground");
+                break;
+        }
+    }
+
     private void Start()
     {
         InitPlayerComponent();
@@ -65,7 +118,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Print() =>
         Debug.Log(
-            $"{playerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
+            $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
     private IEnumerator UpdateCoroutine()
     {
@@ -82,7 +135,7 @@ public class PlayerScript : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        
+
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
@@ -91,9 +144,9 @@ public class PlayerScript : MonoBehaviour
         rightWallCheck = GameObject.Find("RightWallCheck").transform;
 
         gunPosition = transform.Find("bone_1").Find("bone_9")
-            .Find("Pivot").Find("GG плечо").Find("bone_1").
-            Find("GG локоть").Find("bone_1").Find("Gun position").gameObject;
-        
+            .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
+            .gameObject;
+
         //TODO:Вынести создание пушки из PlayerScript
         SetGun(currentGun);
     }
@@ -102,15 +155,15 @@ public class PlayerScript : MonoBehaviour
     // TODO: похоже причина бага в неправильном занулении горизонтальной составляющей вектора скорости, персонаж может остановиться и в полете
     private void MovementLogic()
     {
-        if (playerState == PlayerState.Nothing)
+        if (PlayerState == PlayerState.Nothing)
         {
             if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
             {
                 animator.Play("preparing for jump");
-                playerState = PlayerState.CrouchedToJump;
+                PlayerState = PlayerState.CrouchedToJump;
             }
         }
-        else if (playerState == PlayerState.CrouchedToJump)
+        else if (PlayerState == PlayerState.CrouchedToJump)
         {
             var (state, vector) = GetMovementVector();
             // sprite.flipX = vector.x <= 0;
@@ -122,19 +175,21 @@ public class PlayerScript : MonoBehaviour
             {
                 animator.Play("jump");
                 physic.AddForce(vector);
-                playerState = state;
+                PlayerState = state;
                 trajectory.ClearTrajectory();
             }
         }
-        else if (playerState is PlayerState.HangingOnRightWall or PlayerState.HangingOnLeftWall)
+        else if (PlayerState is PlayerState.HangingOnRightWall or PlayerState.HangingOnLeftWall)
         {
             var velocity = physic.velocity;
             physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
 
-            if (Input.GetKeyDown(KeyCode.Space) && (IsTouchedLeftWall || IsTouchedRightWall))
-                playerState = PlayerState.CrouchedToJumpFromWall;
+            if (Input.GetKeyDown(KeyCode.Space) && IsTouchedLeftWall)
+                PlayerState = PlayerState.CrouchedToJumpFromLeftWall;
+            else if (Input.GetKeyDown(KeyCode.Space) && IsTouchedRightWall)
+                PlayerState = PlayerState.CrouchedToJumpFromRightWall;
         }
-        else if (playerState == PlayerState.CrouchedToJumpFromWall)
+        else if (PlayerState is PlayerState.CrouchedToJumpFromLeftWall or PlayerState.CrouchedToJumpFromRightWall)
         {
             var velocity = physic.velocity;
             physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
@@ -148,7 +203,7 @@ public class PlayerScript : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 physic.AddForce(vector);
-                playerState = state;
+                PlayerState = state;
                 trajectory.ClearTrajectory();
             }
         }
@@ -159,7 +214,7 @@ public class PlayerScript : MonoBehaviour
     {
         var vector = GetPositionDirectionVector();
         var vectorAngle = VectorAngle(vector);
-        var state = playerState;
+        var state = PlayerState;
         if (vectorAngle is > -70 and < 70 or < -110 or > 110)
         {
             vector = GetJumpVector(vector);
@@ -224,31 +279,31 @@ public class PlayerScript : MonoBehaviour
         yield return new WaitForFixedUpdate();
         while (true)
         {
-            if (playerState == PlayerState.Rift)
+            if (PlayerState == PlayerState.Rift)
             {
                 Print();
 
                 yield return new WaitForSeconds(RiftDurationTime);
                 if (!IsGrounded)
-                    playerState = PlayerState.Jump;
+                    PlayerState = PlayerState.Jump;
                 else
                 {
                     physic.velocity = new Vector2(0, physic.velocity.y);
-                    playerState = PlayerState.Nothing;
+                    PlayerState = PlayerState.Nothing;
                 }
 
                 Print();
             }
 
-            if (playerState is PlayerState.HangingOnLeftWall or PlayerState.HangingOnRightWall)
+            if (PlayerState is PlayerState.HangingOnLeftWall or PlayerState.HangingOnRightWall)
             {
                 if (IsGrounded)
-                    playerState = PlayerState.Nothing;
+                    PlayerState = PlayerState.Nothing;
                 else if (!IsTouchedLeftWall && !IsTouchedRightWall)
-                    playerState = PlayerState.Jump;
+                    PlayerState = PlayerState.Jump;
             }
 
-            if (playerState == PlayerState.Jump)
+            if (PlayerState == PlayerState.Jump)
             {
                 Print();
 
@@ -261,11 +316,11 @@ public class PlayerScript : MonoBehaviour
                 Debug.Log("3 Коснулся земли или стены");
                 physic.velocity = new Vector2(0, physic.velocity.y);
                 if (IsGrounded)
-                    playerState = PlayerState.Nothing;
+                    PlayerState = PlayerState.Nothing;
                 else if (IsTouchedLeftWall)
-                    playerState = PlayerState.HangingOnLeftWall;
+                    PlayerState = PlayerState.HangingOnLeftWall;
                 else if (IsTouchedRightWall)
-                    playerState = PlayerState.HangingOnRightWall;
+                    PlayerState = PlayerState.HangingOnRightWall;
                 Debug.Log("4 Конец прыжка");
                 Print();
             }

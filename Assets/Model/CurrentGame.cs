@@ -8,7 +8,7 @@ public static class CurrentGame
     public static GridScript Grid;
     public static PlayerScript Player;
     public static float GameSpeed => IsSlowGame ? 0.01f : 1f;
-    public static bool IsSlowGame => Player.playerState == PlayerState.CrouchedToJump;
+    public static bool IsSlowGame => Player.PlayerState == PlayerState.CrouchedToJump;
     // Здоровье, сколько прошёл блоков от начала забега. Список сгенерированных блоков 
 
     public static void ResetGame(string pathToLevelBlocks)
