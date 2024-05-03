@@ -821,7 +821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2114717017327982363, guid: c59eaf20a2ed734439808125956965af, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.32258245
+      value: 0.13813049
       objectReference: {fileID: 0}
     - target: {fileID: -2114717017327982363, guid: c59eaf20a2ed734439808125956965af, type: 3}
       propertyPath: m_LocalRotation.x
@@ -829,11 +829,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2114717017327982363, guid: c59eaf20a2ed734439808125956965af, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.94654137
+      value: -0.990414
       objectReference: {fileID: 0}
     - target: {fileID: -2114717017327982363, guid: c59eaf20a2ed734439808125956965af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -217.638
+      value: -164.121
       objectReference: {fileID: 0}
     - target: {fileID: 3066730703658395778, guid: c59eaf20a2ed734439808125956965af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -924,7 +924,7 @@ PrefabInstance:
       addedObject: {fileID: 2065986391380913877}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: c59eaf20a2ed734439808125956965af, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7569576133415743081}
+      addedObject: {fileID: 4461436287432537355}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: c59eaf20a2ed734439808125956965af, type: 3}
 --- !u!4 &3836609314797396035 stripped
 Transform:
@@ -1030,7 +1030,7 @@ MonoBehaviour:
     m_Bits: 256
   currentGun: {fileID: 2635800586428807801, guid: 1eabdbf8a0d2a0c4088d8d352d170221, type: 3}
   playerState: 0
---- !u!95 &7569576133415743081
+--- !u!95 &4461436287432537355
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0

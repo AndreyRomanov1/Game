@@ -13,6 +13,7 @@ public class PlayerScript : MonoBehaviour
 
     private SpriteRenderer sprite;
     private Rigidbody2D physic;
+    private Animator animator;
 
     private Transform[] groundCheckers;
     private Transform leftWallCheck;
@@ -80,6 +81,8 @@ public class PlayerScript : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
@@ -102,7 +105,10 @@ public class PlayerScript : MonoBehaviour
         if (playerState == PlayerState.Nothing)
         {
             if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
+            {
+                animator.Play("preparing for jump");
                 playerState = PlayerState.CrouchedToJump;
+            }
         }
         else if (playerState == PlayerState.CrouchedToJump)
         {
@@ -114,6 +120,7 @@ public class PlayerScript : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.Space))
             {
+                animator.Play("jump");
                 physic.AddForce(vector);
                 playerState = state;
                 trajectory.ClearTrajectory();
