@@ -1029,7 +1029,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   currentGun: {fileID: 2635800586428807801, guid: 1eabdbf8a0d2a0c4088d8d352d170221, type: 3}
-  playerState: 0
 --- !u!95 &4461436287432537355
 Animator:
   serializedVersion: 5
