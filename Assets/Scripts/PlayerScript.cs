@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviour
     private const float MinRiftForce = 0.7f;
 
     private SpriteRenderer sprite;
+    private GameObject playerPivot;
     private Rigidbody2D physic;
     private Animator animator;
 
@@ -54,6 +55,12 @@ public class PlayerScript : MonoBehaviour
         }
 
         Instantiate(gun, gunPosition.transform);
+    }
+
+    public void FlipPlayer()
+    {
+        var currentFlip = playerPivot.transform.localRotation.y;
+        playerPivot.transform.localRotation.Set(0, currentFlip + 180, 0, 0);
     }
 
     private void PlayAnimation(PlayerState oldState, PlayerState newState)
@@ -135,6 +142,7 @@ public class PlayerScript : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerPivot = transform.Find("bone_1").gameObject;
 
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
