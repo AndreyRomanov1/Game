@@ -12,7 +12,7 @@ public class PlayerScript : MonoBehaviour
     private const float MinRiftForce = 0.7f;
 
     private SpriteRenderer sprite;
-    private GameObject playerPivot;
+    private GameObject tools;
     private Rigidbody2D physic;
     private Animator animator;
 
@@ -56,12 +56,23 @@ public class PlayerScript : MonoBehaviour
 
         Instantiate(gun, gunPosition.transform);
     }
-
+    
     public void FlipPlayer()
     {
-        var currentFlip = playerPivot.transform.localRotation.y;
-        playerPivot.transform.localRotation.Set(0, currentFlip + 180, 0, 0);
+        var direction = transform.localEulerAngles.y == 0 ? Directions.Left : Directions.Right;
+        FlipPlayerToDirection(direction);
     }
+
+    public void FlipPlayerToDirection(Directions flipDirection)
+    {
+        // Debug.Log(flipDirection);
+        var angle = 180 * (int)flipDirection;
+        transform.localEulerAngles = new Vector3(0, angle, 0);
+        tools.transform.localEulerAngles = new Vector3(0, angle, 0);
+        // Debug.Log(playerPivot.transform.rotation.y);
+    }
+
+    
 
     private void PlayAnimation(PlayerState oldState, PlayerState newState)
     {
@@ -77,6 +88,7 @@ public class PlayerScript : MonoBehaviour
                         animator.Play("jump from left wall");
                         break;
                     case PlayerState.CrouchedToJumpFromRightWall:
+                        FlipPlayer();
                         animator.Play("jump from right wall");
                         break;
                     default:
@@ -142,7 +154,7 @@ public class PlayerScript : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        playerPivot = transform.Find("bone_1").gameObject;
+        tools = transform.Find("Tools").gameObject;
 
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
@@ -177,7 +189,11 @@ public class PlayerScript : MonoBehaviour
             // sprite.flipX = vector.x <= 0;
 
             if (Input.GetKey(KeyCode.Space))
+            {
+                // Debug.Log(vector);
+                FlipPlayerToDirection(vector.x >= 0? Directions.Right: Directions.Left);
                 trajectory.ShowTrajectory(vector);
+            }
 
             if (Input.GetKeyUp(KeyCode.Space))
             {
