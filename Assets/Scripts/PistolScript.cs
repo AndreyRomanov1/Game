@@ -27,9 +27,6 @@ public class PistolScript : MonoBehaviour
             StartCoroutine(ShootBySignal());
         else
             StartCoroutine(WaitForEvent());
-            
-        
-
     }
 
     private IEnumerator ShootByClick()
