@@ -10,7 +10,7 @@ public class Enemy1Script : MonoBehaviour
     public GameObject gunPosition;
     public GameObject gunPrefab;
 
-    private GameObject gun;
+    private PistolScript gun;
     private GameObject player;
 
     private readonly float shootingDistance = 15f;
@@ -21,7 +21,7 @@ public class Enemy1Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gun = Instantiate(gunPrefab, gunPosition.transform);
+        gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<PistolScript>();
         player = CurrentGame.Player.gameObject;
         
         StartCoroutine(PlayerSearch());
@@ -35,6 +35,7 @@ public class Enemy1Script : MonoBehaviour
             if (IsPlayerOnLine())
                 break;
             yield return new WaitForFixedUpdate();
+            // Debug.Log("Не на линии");
         }
 
         StartCoroutine(StartShooting());
@@ -43,12 +44,14 @@ public class Enemy1Script : MonoBehaviour
     private IEnumerator StartShooting()
     {
         yield return new WaitForSeconds(delayBeforeFiring);
+        Debug.Log("Start shoot");
 
         while (IsPlayerOnLine(out var hit))
         {
             var currentVectorRotation = transform.rotation.z;
             var expectedVectorRotation = Mathf.Atan2(hit.normal.y, hit.normal.x) * Mathf.Rad2Deg;
             var shootingError = expectedVectorRotation - currentVectorRotation;
+            Debug.Log(shootingError);
             
             if (Math.Abs(shootingError) <= permissibleShootingError)
                 Shoot();
@@ -77,5 +80,7 @@ public class Enemy1Script : MonoBehaviour
     }
 
     private void Shoot()
-    {}
+    {
+        gun.ShootSignal();
+    }
 }

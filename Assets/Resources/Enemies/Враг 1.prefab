@@ -182,7 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pivot: {fileID: 6335911871094508133}
   gunPosition: {fileID: 9147767704844029976}
-  gun: {fileID: 4393465235544274999, guid: 48e5772503f27a94fa2a02c697c48792, type: 3}
+  gunPrefab: {fileID: 4393465235544274999, guid: 48e5772503f27a94fa2a02c697c48792, type: 3}
 --- !u!1001 &4142873457353983807
 PrefabInstance:
   m_ObjectHideFlags: 0
