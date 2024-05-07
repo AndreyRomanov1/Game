@@ -15,6 +15,7 @@ public static class CurrentGame
     {
         GridGameObject = Model.Game.CreateGrid();
         PlayerGameObject = Model.Game.CreatePlayer();
+        
         Grid = GridGameObject.GetComponent<GridScript>();
         Player = PlayerGameObject.GetComponent<PlayerScript>();
         Grid.InitGrid(pathToLevelBlocks);
