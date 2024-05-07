@@ -20,30 +20,26 @@ public class LevelSelectionCanvasScript : MonoBehaviour
     {
         canvas = GetComponent<Canvas>();
         InitButtons();
+        ShowCanvas();
     }
 
     private void InitButtons()
     {
         startLevelButton = GameObject.Find("StartLevelButton").GetComponent<Button>();
-        startLevelButton.onClick.AddListener(StartLevelButtonOnClick);
+        startLevelButton.onClick.AddListener(() => OnClick("StartBlocks"));
+        buttons.Add(startLevelButton);
         infinityLevelButton = GameObject.Find("InfinityLevelButton").GetComponent<Button>();
-        infinityLevelButton.onClick.AddListener(InfinityLevelButtonOnClick);
+        infinityLevelButton.onClick.AddListener(() => OnClick("InfinityBlocks"));
+        buttons.Add(infinityLevelButton);
     }
 
-    private void StartLevelButtonOnClick()
+    private void OnClick(string pathToLevelBlocks)
     {
+        Debug.Log(pathToLevelBlocks);
         HideCanvas();
-        Debug.Log("StartLevelButtonOnClick");
-        Model.StartNewGame("StartBlocks");
+        Model.StartNewGame(pathToLevelBlocks);
     }
 
-    private void InfinityLevelButtonOnClick()
-    {
-        HideCanvas();
-        Debug.Log("InfinityLevelButtonOnClick");
-        Model.StartNewGame("InfinityBlocks");
-    }
-
-    public void HideCanvas() => canvas.enabled = false;
-    public void ShowCanvas() => canvas.enabled = true;
+    private void HideCanvas() => canvas.gameObject.SetActive(false);
+    private void ShowCanvas() => canvas.gameObject.SetActive(true);
 }

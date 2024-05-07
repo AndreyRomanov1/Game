@@ -16,7 +16,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
     private float HP;
 
-    private SpriteRenderer sprite;
     private GameObject tools;
     private Rigidbody2D physic;
     private Animator animator;
@@ -34,7 +33,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
     public PlayerState PlayerState
     {
         get => playerState;
-        set
+        private set
         {
             PlayAnimation(playerState, value);
             playerState = value;
@@ -53,7 +52,36 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private TrajectoryRenderScript trajectory;
     private GameObject gunPosition;
 
-    public void SetGun(GameObject gun)
+    private void Start()
+    {
+        InitPlayerComponent();
+        StartCoroutine(UpdateCoroutine());
+        StartCoroutine(MovementStateController());
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Block"))
+        {
+            // Debug.Log("COLLISION");
+        }
+    }
+
+    private void Print() =>
+        Debug.Log(
+            $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
+
+    private IEnumerator UpdateCoroutine()
+    {
+        yield return new WaitForFixedUpdate();
+        while (true)
+        {
+            MovementLogic();
+            yield return null;
+        }
+    }
+
+    private void SetGun(GameObject gun)
     {
         while (gunPosition.transform.childCount > 0)
         {
@@ -62,14 +90,14 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
         Instantiate(gun, gunPosition.transform);
     }
-    
-    public void FlipPlayer()
+
+    private void FlipPlayer()
     {
         var direction = transform.localEulerAngles.y == 0 ? Directions.Left : Directions.Right;
         FlipPlayerToDirection(direction);
     }
 
-    public void FlipPlayerToDirection(Directions flipDirection)
+    private void FlipPlayerToDirection(Directions flipDirection)
     {
         // Debug.Log(flipDirection);
         var angle = 180 * (int)flipDirection;
@@ -77,8 +105,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
         tools.transform.localEulerAngles = new Vector3(0, angle, 0);
         // Debug.Log(playerPivot.transform.rotation.y);
     }
-
-    
 
     private void PlayAnimation(PlayerState oldState, PlayerState newState)
     {
@@ -126,46 +152,14 @@ public class PlayerScript : MonoBehaviour, IDamageable
         }
     }
 
-    private void Start()
-    {
-        InitPlayerComponent();
-        StartCoroutine(UpdateCoroutine());
-        StartCoroutine(MovementStateController());
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Block"))
-        {
-            Debug.Log("COLLISION");
-        }
-    }
-
-    private void Print() =>
-        Debug.Log(
-            $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
-
-    private IEnumerator UpdateCoroutine()
-    {
-        yield return new WaitForFixedUpdate();
-        while (true)
-        {
-            MovementLogic();
-            yield return null;
-        }
-    }
-
     private void InitPlayerComponent()
     {
         HP = MaxHP;
-
-        sprite = GetComponent<SpriteRenderer>();
+        
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         tools = transform.Find("Tools").gameObject;
-
-
-        // Debug.Log(tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar"));
+        
         HPBar = tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar").GetComponent<Image>();
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
@@ -186,64 +180,68 @@ public class PlayerScript : MonoBehaviour, IDamageable
     // TODO: похоже причина бага в неправильном занулении горизонтальной составляющей вектора скорости, персонаж может остановиться и в полете
     private void MovementLogic()
     {
-        if (PlayerState == PlayerState.Nothing)
+        switch (PlayerState)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
+            case PlayerState.Nothing:
             {
-                animator.Play("preparing for jump");
-                PlayerState = PlayerState.CrouchedToJump;
+                if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
+                {
+                    animator.Play("preparing for jump");
+                    PlayerState = PlayerState.CrouchedToJump;
+                }
+
+                break;
             }
-        }
-        else if (PlayerState == PlayerState.CrouchedToJump)
-        {
-            var (state, vector) = GetMovementVector();
-            // sprite.flipX = vector.x <= 0;
-
-            if (Input.GetKey(KeyCode.Space))
+            case PlayerState.CrouchedToJump:
             {
-                // Debug.Log(vector);
-                FlipPlayerToDirection(vector.x >= 0? Directions.Right: Directions.Left);
-                trajectory.ShowTrajectory(vector);
+                var (state, vector) = GetMovementVector();
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    FlipPlayerToDirection(vector.x >= 0 ? Directions.Right : Directions.Left);
+                    trajectory.ShowTrajectory(vector);
+                }
+
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    animator.Play("jump");
+                    physic.AddForce(vector);
+                    PlayerState = state;
+                    trajectory.ClearTrajectory();
+                }
+
+                break;
             }
-
-            if (Input.GetKeyUp(KeyCode.Space))
+            case PlayerState.HangingOnRightWall or PlayerState.HangingOnLeftWall:
             {
-                animator.Play("jump");
-                physic.AddForce(vector);
-                PlayerState = state;
-                trajectory.ClearTrajectory();
+                var velocity = physic.velocity;
+                physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
+
+                if (Input.GetKeyDown(KeyCode.Space) && IsTouchedLeftWall)
+                    PlayerState = PlayerState.CrouchedToJumpFromLeftWall;
+                else if (Input.GetKeyDown(KeyCode.Space) && IsTouchedRightWall)
+                    PlayerState = PlayerState.CrouchedToJumpFromRightWall;
+                break;
             }
-        }
-        else if (PlayerState is PlayerState.HangingOnRightWall or PlayerState.HangingOnLeftWall)
-        {
-            var velocity = physic.velocity;
-            physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
-
-            if (Input.GetKeyDown(KeyCode.Space) && IsTouchedLeftWall)
-                PlayerState = PlayerState.CrouchedToJumpFromLeftWall;
-            else if (Input.GetKeyDown(KeyCode.Space) && IsTouchedRightWall)
-                PlayerState = PlayerState.CrouchedToJumpFromRightWall;
-        }
-        else if (PlayerState is PlayerState.CrouchedToJumpFromLeftWall or PlayerState.CrouchedToJumpFromRightWall)
-        {
-            var velocity = physic.velocity;
-            physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
-
-            var (state, vector) = GetWallMovementVector();
-            // sprite.flipX = vector.x <= 0;
-
-            if (Input.GetKey(KeyCode.Space))
-                trajectory.ShowTrajectory(vector);
-
-            if (Input.GetKeyUp(KeyCode.Space))
+            case PlayerState.CrouchedToJumpFromLeftWall or PlayerState.CrouchedToJumpFromRightWall:
             {
-                physic.AddForce(vector);
-                PlayerState = state;
-                trajectory.ClearTrajectory();
+                var velocity = physic.velocity;
+                physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
+
+                var (state, vector) = GetWallMovementVector();
+                if (Input.GetKey(KeyCode.Space))
+                    trajectory.ShowTrajectory(vector);
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    physic.AddForce(vector);
+                    PlayerState = state;
+                    trajectory.ClearTrajectory();
+                }
+
+                break;
             }
         }
     }
-    // TODO: оптимизировать функции прыжка с земли и со стены, убрав повторяющейся код 
 
     private (PlayerState state, Vector2 vector) GetWallMovementVector()
     {
@@ -366,7 +364,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
     private Vector2 GetPositionDirectionVector()
     {
-        var cam = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var cam = (Vector2)CurrentGame.PlayerCamera.ScreenToWorldPoint(Input.mousePosition);
         var position = (Vector2)transform.position;
         return cam - position;
     }
