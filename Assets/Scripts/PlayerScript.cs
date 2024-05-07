@@ -382,7 +382,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        // CurrentGame.KillGame();
-        // Model.StartGame();
+        CurrentGame.KillGame();
+        Model.StartGame();
     }
 }
