@@ -129,11 +129,12 @@ public class GridScript : MonoBehaviour
     private Vector3 GetDirectionToNextBlock()
     {
         var x = lastExistingBlockScript.exitDirection == BlockDirections.Right ? Model.BlockWidth : 0;
-        var y = lastExistingBlockScript.exitDirection == BlockDirections.Up
-            ? Model.BlockHeight
-            : lastExistingBlockScript.exitDirection == BlockDirections.Down
-                ? -Model.BlockHeight
-                : 0;
+        var y = lastExistingBlockScript.exitDirection switch
+        {
+            BlockDirections.Up => Model.BlockHeight,
+            BlockDirections.Down => -Model.BlockHeight,
+            _ => 0
+        };
         return new Vector3(x, y);
     }
 
