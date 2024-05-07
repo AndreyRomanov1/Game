@@ -1,4 +1,6 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,27 +12,59 @@ public class PistolScript : MonoBehaviour
     public float rateOfFire = 1;
     public float bulletLifetime = 10;
     public float damage = 20f;
+    public LayerMask baseMask;
+
     public LayerMask mask;
-    
     private bool isNeedShoot = false;
     private float timeBetweenShots;
+    private Coroutine currentMode;
 
     public void ShootSignal() => isNeedShoot = true;
 
     private void Start()
     {
         timeBetweenShots = 1 / rateOfFire;
+        DetectMode();
+    }
 
-        if (weaponType == WeaponState.Player)
-            StartCoroutine(ShootByClick());
-        else if (weaponType == WeaponState.Enemy)
-            StartCoroutine(ShootBySignal());
-        else
-            StartCoroutine(WaitForEvent());
+    private void DetectMode()
+    {
+        var parentLayer = transform.parent.gameObject.layer;
+        if (parentLayer == LayerMask.NameToLayer("Player"))
+            SetMode(WeaponState.Player);
+        else if (parentLayer == LayerMask.NameToLayer("Enemies"))
+            SetMode(WeaponState.Enemy);
+        else if (parentLayer == LayerMask.NameToLayer("Default"))
+            SetMode(WeaponState.Nothing);
+
+        
+    }
+
+    public void SetMode(WeaponState mode)
+    {
+        if (currentMode is not null)
+            StopCoroutine(currentMode);
+        weaponType = mode;
+        mask = baseMask;
+        switch (weaponType)
+        {
+            case WeaponState.Player:
+                mask |= LayerMask.GetMask("Enemies");
+                currentMode = StartCoroutine(ShootByClick());
+                break;
+            case WeaponState.Enemy:
+                mask |= LayerMask.GetMask("Player");
+                currentMode = StartCoroutine(ShootBySignal());
+                break;
+            case WeaponState.Nothing:
+                currentMode = StartCoroutine(WaitForEvent());
+                break;
+        }
     }
 
     private IEnumerator ShootByClick()
     {
+        Debug.Log("Персонаж готов стрелять");
         while (true)
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouse))
