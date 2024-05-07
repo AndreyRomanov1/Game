@@ -9,19 +9,20 @@ public class Enemy1Script : MonoBehaviour
     public GameObject pivot;
     public GameObject gunPosition;
     public GameObject gunPrefab;
+    public LayerMask detectedLayers;
 
-    private GameObject gun;
+    private PistolScript gun;
     private GameObject player;
 
-    private readonly float shootingDistance = 15f;
+    private readonly float shootingDistance = 1000f;
     private readonly float delayBeforeFiring = 2f;
     private readonly float handSwingSpeed = 1f;
-    private readonly float permissibleShootingError = 5f;
+    private readonly float permissibleShootingError = 1f;
 
     // Start is called before the first frame update
     void Start()
     {
-        gun = Instantiate(gunPrefab, gunPosition.transform);
+        gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<PistolScript>();
         player = CurrentGame.Player.gameObject;
         
         StartCoroutine(PlayerSearch());
@@ -35,6 +36,7 @@ public class Enemy1Script : MonoBehaviour
             if (IsPlayerOnLine())
                 break;
             yield return new WaitForFixedUpdate();
+            // Debug.Log("Не на линии");
         }
 
         StartCoroutine(StartShooting());
@@ -43,19 +45,27 @@ public class Enemy1Script : MonoBehaviour
     private IEnumerator StartShooting()
     {
         yield return new WaitForSeconds(delayBeforeFiring);
+        Debug.Log("Start shoot");
 
         while (IsPlayerOnLine(out var hit))
         {
-            var currentVectorRotation = transform.rotation.z;
-            var expectedVectorRotation = Mathf.Atan2(hit.normal.y, hit.normal.x) * Mathf.Rad2Deg;
+            var hitLine = hit.transform.position - pivot.transform.position;
+            var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
+            var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
+            // expectedVectorRotation = expectedVectorRotation > 0 ? expectedVectorRotation : expectedVectorRotation + 180;
+            
+            
             var shootingError = expectedVectorRotation - currentVectorRotation;
+            Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
             
             if (Math.Abs(shootingError) <= permissibleShootingError)
                 Shoot();
             else
             {
                 var rotation = shootingError > permissibleShootingError ? handSwingSpeed : - handSwingSpeed;
-                transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
+                pivot.transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
+                // pivot.transform.rotation.Set(0f, 0f, currentVectorRotation + rotation, 0f);
+                // Debug.Log($"{pivot.transform.rotation}: {currentVectorRotation} + {rotation}");
             }
 
             yield return new WaitForFixedUpdate();
@@ -64,18 +74,19 @@ public class Enemy1Script : MonoBehaviour
         StartCoroutine(PlayerSearch());
     }
 
-    private bool IsPlayerOnLine()
-    { 
-        var hit = Physics2D.Linecast(gunPosition.transform.position, player.transform.position);
-        return hit.transform.gameObject == player && hit.distance <= shootingDistance;
-    }
+    private bool IsPlayerOnLine() => IsPlayerOnLine(out var a);
     
     private bool IsPlayerOnLine(out RaycastHit2D hit)
-    { 
-        hit = Physics2D.Linecast(gunPosition.transform.position, player.transform.position);
-        return hit.transform.gameObject == player && hit.distance <= shootingDistance;
+    {
+        var startPoint = pivot.transform.position;
+        var vector = (player.transform.position - startPoint).normalized;
+        hit = Physics2D.Raycast(startPoint, vector, detectedLayers);
+        // Debug.Log(hit.point);
+        return hit.transform is not null && hit.transform.gameObject == player && hit.distance <= shootingDistance;
     }
 
     private void Shoot()
-    {}
+    {
+        gun.ShootSignal();
+    }
 }
