@@ -39,8 +39,6 @@ public static class Model
     private static void LoadClouds()
     {
         var test = Game.LoadByName("clouds/TestCloud");
-        Debug.Log(test);
-        Debug.Log(test.transform.position);
         Clouds.Add(test);
     }
 }

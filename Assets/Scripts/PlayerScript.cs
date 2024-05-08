@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
 public class PlayerScript : MonoBehaviour, IDamageable
@@ -59,7 +57,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
         InitPlayerComponent();
         StartCoroutine(UpdateCoroutine());
         StartCoroutine(MovementStateController());
-        
+
         SetDialogueCloud(Model.Clouds[0]);
     }
 
@@ -159,11 +157,11 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private void InitPlayerComponent()
     {
         HP = MaxHP;
-        
+
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         tools = transform.Find("Tools").gameObject;
-        
+
         HPBar = tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar").GetComponent<Image>();
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
@@ -381,10 +379,9 @@ public class PlayerScript : MonoBehaviour, IDamageable
     public void SetDialogueCloud(GameObject cloud)
     {
         var c = Instantiate(cloud, dialoguesAnchor.transform);
-        Debug.Log(c);
     }
-    
-    
+
+
     public void TakeDamage(float damage)
     {
         HP -= damage;
