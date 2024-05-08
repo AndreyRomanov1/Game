@@ -346,9 +346,10 @@ public class PlayerScript : MonoBehaviour, IDamageable
                 Print();
 
                 Debug.Log("1 Начало прыжка");
-                while (IsGrounded || IsTouchedLeftWall || IsTouchedRightWall)
+                var k = 0;
+                for (; k < 25 && (IsGrounded || IsTouchedLeftWall || IsTouchedRightWall); k++)
                     yield return null; // Ждём, пока достаточно далеко отлетим от стены
-                Debug.Log("2 Оторвал ноги от земли или стены");
+                Debug.Log($"2 Оторвал ноги от земли или стены. Был возле стены {k} тиков");
                 while (!IsGrounded && !IsTouchedLeftWall && !IsTouchedRightWall)
                     yield return null; // Когда коснёмся поверхности, обнуляем X у скорости
                 Debug.Log("3 Коснулся земли или стены");
