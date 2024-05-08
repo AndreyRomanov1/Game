@@ -30931,5 +30931,6 @@ MonoBehaviour:
   entranceNumber: 0
   exitDirection: 0
   exitNumber: 0
-  entranceBlock: {fileID: 0}
-  exitBlock: {fileID: 0}
+  entranceBlockScript: {fileID: 0}
+  exitBlockScript: {fileID: 0}
+  tilemap: {fileID: 0}

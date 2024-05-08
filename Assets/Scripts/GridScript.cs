@@ -15,6 +15,7 @@ public class GridScript : MonoBehaviour
 
     private BlockGameObject startBlock;
     private BlockGameObject endBlock;
+    private bool stopGeneration;
 
     private readonly Dictionary<BlockDirections, Dictionary<BlockDirectionsNumbers, List<BlockGameObject>>> directions =
         new()
@@ -46,7 +47,6 @@ public class GridScript : MonoBehaviour
         GenerateNextLevelBlock();
     }
 
-
     private void Start()
     {
         StartCoroutine(UpdateCoroutine());
@@ -58,7 +58,9 @@ public class GridScript : MonoBehaviour
         while (true)
         {
             ChangeIfNeedPlayerBlock();
-            if (playerBlockScript.exitBlockScript == lastExistingBlockScript || playerBlockScript.exitBlockScript.exitBlockScript == lastExistingBlockScript)
+            if (!stopGeneration
+                && (playerBlockScript.exitBlockScript == lastExistingBlockScript
+                    || playerBlockScript.exitBlockScript.exitBlockScript == lastExistingBlockScript))
                 GenerateNextLevelBlock();
 
             yield return new WaitForFixedUpdate();
@@ -107,18 +109,23 @@ public class GridScript : MonoBehaviour
 
     private void GenerateNextLevelBlock()
     {
-        BlockGameObject nextBlockPrefab;
         if (lastExistingBlockScript.exitDirection == BlockDirections.End)
-            nextBlockPrefab = endBlock;
-        else
         {
-            var prefabList = directions[lastExistingBlockScript.exitDirection][lastExistingBlockScript.exitNumber];
-            nextBlockPrefab = prefabList.Count == 0 ? endBlock : prefabList[random.Next(prefabList.Count)];
+            stopGeneration = true;
+            return;
         }
+
+        var prefabList = directions[lastExistingBlockScript.exitDirection][lastExistingBlockScript.exitNumber];
+        var nextBlockPrefab = prefabList.Count == 0 
+            ? endBlock 
+            : prefabList[random.Next(prefabList.Count)];
+        if (nextBlockPrefab == endBlock)
+            stopGeneration = true;
 
         var nextBlockPosition = lastExistingBlockScript.transform.position + GetDirectionToNextBlock();
         var nextBlockScript = Instantiate(nextBlockPrefab.Prefab, transform, true).GetComponent<BlockScript>();
-        nextBlockScript.Init(this, nextBlockPosition, lastExistingBlockScript, lastExistingBlockScript.entranceDirection,
+        nextBlockScript.Init(this, nextBlockPosition, lastExistingBlockScript,
+            lastExistingBlockScript.entranceDirection,
             lastExistingBlockScript.entranceNumber,
             nextBlockPrefab.ExitDirection, nextBlockPrefab.ExitNumber);
 

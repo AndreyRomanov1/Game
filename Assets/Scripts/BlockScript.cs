@@ -16,8 +16,8 @@ public class BlockScript : MonoBehaviour
 
     public Tilemap tilemap;
     private const string EnemySpawnTileName = "tileset-sliced_119_1";
-    private const string SomeEnemiesSpawnTileName = "tileset-sliced_119_3"; // TODO Поменять когда изменятся текстуры
-    private const string BarrelSpawnTileName = "tileset-sliced_119";
+    private const string SomeEnemiesSpawnTileName = "камень с врагами"; // TODO Поменять когда изменятся текстуры
+    private const string BarrelSpawnTileName = "камень с бочкой";
 
     public void Init(GridScript generator0, Vector3 position0, BlockScript entranceBlock0,
         BlockDirections entranceDirection0, BlockDirectionsNumbers entranceNumber0,
@@ -51,14 +51,26 @@ public class BlockScript : MonoBehaviour
             switch (tile.name)
             {
                 case EnemySpawnTileName:
+                {
+                    var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
+                    var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
+                    SpawnEnemy(prefab, position);
                     break;
+                }
                 case SomeEnemiesSpawnTileName:
+                {
+                    var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
+                    var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
+                    SpawnEnemy(prefab, position);
                     break;
+                }
                 case BarrelSpawnTileName:
+                {
                     var prefab = Resources.Load<GameObject>("Enemies/Barrel");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
                     SpawnEnemy(prefab, position);
                     break;
+                }
             }
         }
     }

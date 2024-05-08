@@ -6,7 +6,7 @@ using Image = UnityEngine.UI.Image;
 public class PlayerScript : MonoBehaviour, IDamageable
 {
     private const float JumpBoost = 240f;
-    private const float MaxJumpForce = 4;
+    private const float MaxJumpForce = 5;
     private const float MinJumpForce = 0.7f;
     private const float RiftBoost = 300f;
     private const float MaxRiftForce = 4;
@@ -58,7 +58,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
         StartCoroutine(UpdateCoroutine());
         StartCoroutine(MovementStateController());
 
-        SetDialogueCloud(Model.Clouds[0]);
+        SetDialogueCloud(Model.Clouds[0]); // Тестовое облако
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -171,7 +171,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
         rightWallCheck = GameObject.Find("RightWallCheck").transform;
 
         dialoguesAnchor = GameObject.Find("DialoguesAnchor");
-        Debug.Log(dialoguesAnchor);
 
         gunPosition = transform.Find("bone_1").Find("bone_9")
             .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
@@ -252,14 +251,8 @@ public class PlayerScript : MonoBehaviour, IDamageable
     {
         var vector = GetPositionDirectionVector();
         var vectorAngle = VectorAngle(vector);
-        var state = PlayerState;
-        if (vectorAngle is > -70 and < 70 or < -110 or > 110)
-        {
-            vector = GetJumpVector(vector);
-            state = PlayerState.Jump;
-        }
-        else
-            vector = Vector2.zero;
+        vector = GetJumpVector(vector);
+        var state = PlayerState.Jump;
 
         if (vector.magnitude < 1e-3)
             state = PlayerState.Nothing;
