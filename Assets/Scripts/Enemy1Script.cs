@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Enemy1Script : MonoBehaviour
+public class Enemy1Script : MonoBehaviour, IDamageable
 {
     public GameObject pivot;
     public GameObject gunPosition;
@@ -13,17 +13,23 @@ public class Enemy1Script : MonoBehaviour
 
     private PistolScript gun;
     private GameObject player;
+    private SpriteRenderer healthIndicator;
 
-    private readonly float shootingDistance = 1000f;
+    private readonly float shootingDistance = 15f;
     private readonly float delayBeforeFiring = 2f;
     private readonly float handSwingSpeed = 1f;
     private readonly float permissibleShootingError = 1f;
+
+    private float HP;
+    private float maxHP = 50;
 
     // Start is called before the first frame update
     void Start()
     {
         gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<PistolScript>();
         player = CurrentGame.Player.gameObject;
+        healthIndicator = transform.Find("нимб").GetComponent<SpriteRenderer>();
+        HP = maxHP;
         
         StartCoroutine(PlayerSearch());
     }
@@ -52,8 +58,6 @@ public class Enemy1Script : MonoBehaviour
             var hitLine = hit.transform.position - pivot.transform.position;
             var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
             var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
-            // expectedVectorRotation = expectedVectorRotation > 0 ? expectedVectorRotation : expectedVectorRotation + 180;
-            
             
             var shootingError = expectedVectorRotation - currentVectorRotation;
             Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
@@ -80,13 +84,27 @@ public class Enemy1Script : MonoBehaviour
     {
         var startPoint = pivot.transform.position;
         var vector = (player.transform.position - startPoint).normalized;
-        hit = Physics2D.Raycast(startPoint, vector, detectedLayers);
-        // Debug.Log(hit.point);
-        return hit.transform is not null && hit.transform.gameObject == player && hit.distance <= shootingDistance;
+        hit = Physics2D.Raycast(startPoint, vector, shootingDistance, detectedLayers);
+        // Debug.Log(LayerMask.LayerToName(hit.transform.gameObject.layer));
+        return hit.transform is not null && hit.transform.gameObject == player;
     }
 
     private void Shoot()
     {
         gun.ShootSignal();
+    }
+
+    public void TakeDamage(float damage)
+    {
+        HP -= damage;
+        if (HP <= 0)
+            Die();
+        var colorValue = (HP / maxHP);
+        healthIndicator.color = new Color(1f, colorValue, colorValue);
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }

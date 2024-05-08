@@ -2,8 +2,10 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour, IDamageable
 {
     private const float JumpBoost = 240f;
     private const float MaxJumpForce = 4;
@@ -11,11 +13,15 @@ public class PlayerScript : MonoBehaviour
     private const float RiftBoost = 300f;
     private const float MaxRiftForce = 4;
     private const float MinRiftForce = 0.7f;
+    private const float MaxHP = 200f;
+
+    private float HP;
     private const float RiftDurationTime = 0.8f;
 
     private GameObject tools;
     private Rigidbody2D physic;
     private Animator animator;
+    private Image HPBar;
 
     private Transform[] groundCheckers;
     private Transform leftWallCheck;
@@ -152,10 +158,13 @@ public class PlayerScript : MonoBehaviour
 
     private void InitPlayerComponent()
     {
+        HP = MaxHP;
+        
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         tools = transform.Find("Tools").gameObject;
-
+        
+        HPBar = tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar").GetComponent<Image>();
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
@@ -373,5 +382,20 @@ public class PlayerScript : MonoBehaviour
     {
         var c = Instantiate(cloud, dialoguesAnchor.transform);
         Debug.Log(c);
+    }
+    
+    
+    public void TakeDamage(float damage)
+    {
+        HP -= damage;
+        if (HP <= 0)
+            Die();
+        HPBar.fillAmount = HP / MaxHP;
+    }
+
+    private void Die()
+    {
+        CurrentGame.KillGame();
+        Model.StartGame();
     }
 }
