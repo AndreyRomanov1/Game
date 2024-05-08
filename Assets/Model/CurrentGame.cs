@@ -21,6 +21,8 @@ public static class CurrentGame
         Player = Model.Game.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         Grid.InitGrid(pathToLevelBlocks);
+        Debug.Log(Model.Clouds.Count);
+        Debug.Log(Model.Clouds[0]);
     }
 
     public static void KillGame()

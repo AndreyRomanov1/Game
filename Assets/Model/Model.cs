@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public static class Model
 {
@@ -9,6 +11,7 @@ public static class Model
     public static GameScript Game;
     public static LevelSelectionCanvasScript LevelSelectionCanvas;
     public static GameState GameState;
+    public static readonly List<GameObject> Clouds = new();
 
     // Сколько блоков было пройдено всего, максимальная длинна в блоках забега, список оружий игрока, флаг пройдено ли обучение, различная статистика
 
@@ -16,6 +19,8 @@ public static class Model
     {
         UICamera = Game.CreateByGameObject(Game.LoadByName("Cameras/UICamera")).GetComponent<Camera>();
         GameState = GameState.StartGameMenu;
+
+        LoadClouds();        
         ShowLevelSelectionUI();
     }
 
@@ -29,5 +34,13 @@ public static class Model
     {
         UICamera.gameObject.SetActive(false);
         CurrentGame.ResetGame(pathToLevelBlocks);
+    }
+
+    private static void LoadClouds()
+    {
+        var test = Game.LoadByName("clouds/TestCloud");
+        Debug.Log(test);
+        Debug.Log(test.transform.position);
+        Clouds.Add(test);
     }
 }

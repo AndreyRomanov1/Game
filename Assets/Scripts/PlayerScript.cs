@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerScript : MonoBehaviour
     private const float RiftBoost = 300f;
     private const float MaxRiftForce = 4;
     private const float MinRiftForce = 0.7f;
+    private const float RiftDurationTime = 0.8f;
 
     private GameObject tools;
     private Rigidbody2D physic;
@@ -20,8 +22,8 @@ public class PlayerScript : MonoBehaviour
     private Transform rightWallCheck;
     public LayerMask groundMask;
     public GameObject currentGun;
+    public GameObject dialoguesAnchor;
 
-    private const float RiftDurationTime = 0.8f;
     private PlayerState playerState = PlayerState.Nothing;
 
     public PlayerState PlayerState
@@ -51,6 +53,8 @@ public class PlayerScript : MonoBehaviour
         InitPlayerComponent();
         StartCoroutine(UpdateCoroutine());
         StartCoroutine(MovementStateController());
+        
+        SetDialogueCloud(Model.Clouds[0]);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -159,6 +163,9 @@ public class PlayerScript : MonoBehaviour
         leftWallCheck = GameObject.Find("LeftWallCheck").transform;
         rightWallCheck = GameObject.Find("RightWallCheck").transform;
 
+        dialoguesAnchor = GameObject.Find("DialoguesAnchor");
+        Debug.Log(dialoguesAnchor);
+
         gunPosition = transform.Find("bone_1").Find("bone_9")
             .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
             .gameObject;
@@ -167,7 +174,7 @@ public class PlayerScript : MonoBehaviour
         SetGun(currentGun);
     }
 
-    // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх). Влево такое не замечал, но тоже возможно
+    // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх).
     // TODO: похоже причина бага в неправильном занулении горизонтальной составляющей вектора скорости, персонаж может остановиться и в полете
     private void MovementLogic()
     {
@@ -361,4 +368,10 @@ public class PlayerScript : MonoBehaviour
     }
 
     private static float VectorAngle(Vector2 vector) => Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+
+    public void SetDialogueCloud(GameObject cloud)
+    {
+        var c = Instantiate(cloud, dialoguesAnchor.transform);
+        Debug.Log(c);
+    }
 }
