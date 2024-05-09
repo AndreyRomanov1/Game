@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
 
@@ -13,8 +16,9 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private const float MinRiftForce = 0.7f;
     private const float MaxHP = 200f;
 
-    private float HP;
-    private const float RiftDurationTime = 0.8f;
+    private float HP = MaxHP;
+    private const float MaxRiftDurationTime = 1.2f;
+    private float riftDurationTime = MaxRiftDurationTime;
 
     private GameObject tools;
     private Rigidbody2D physic;
@@ -29,6 +33,8 @@ public class PlayerScript : MonoBehaviour, IDamageable
     public GameObject dialoguesAnchor;
 
     private PlayerState playerState = PlayerState.Nothing;
+
+    private Dictionary<(PlayerState oldState, PlayerState newState), Action> stateTransitionAnimations = new();
 
     public PlayerState PlayerState
     {
@@ -56,9 +62,9 @@ public class PlayerScript : MonoBehaviour, IDamageable
     {
         InitPlayerComponent();
         StartCoroutine(UpdateCoroutine());
-        StartCoroutine(MovementStateController());
+        StartCoroutine(MovementStateCoroutine());
 
-        SetDialogueCloud(Model.Clouds[0]); // Тестовое облако
+        // SetDialogueCloud(Model.Clouds[0]); // Тестовое облако
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -101,69 +107,47 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
     private void FlipPlayerToDirection(Directions flipDirection)
     {
-        // Debug.Log(flipDirection);
         var angle = 180 * (int)flipDirection;
         transform.localEulerAngles = new Vector3(0, angle, 0);
         tools.transform.localEulerAngles = new Vector3(0, angle, 0);
-        // Debug.Log(playerPivot.transform.rotation.y);
     }
 
     private void PlayAnimation(PlayerState oldState, PlayerState newState)
     {
-        switch (newState)
-        {
-            case PlayerState.Jump:
-                switch (oldState)
-                {
-                    case PlayerState.CrouchedToJump:
-                        animator.Play("jump");
-                        break;
-                    case PlayerState.CrouchedToJumpFromLeftWall:
-                        animator.Play("jump from left wall");
-                        break;
-                    case PlayerState.CrouchedToJumpFromRightWall:
-                        FlipPlayer();
-                        animator.Play("jump from right wall");
-                        break;
-                    default:
-                        Debug.Log("Прыжок не из состояний подготовки к прыжку");
-                        break;
-                }
-
-                break;
-            case PlayerState.Rift:
-                if (oldState == PlayerState.CrouchedToJump)
-                    animator.Play("rift");
-                break;
-            case PlayerState.CrouchedToJump:
-                if (oldState == PlayerState.Nothing)
-                    animator.Play("preparing for jump");
-                break;
-            case PlayerState.HangingOnLeftWall:
-                if (oldState == PlayerState.Jump)
-                    animator.Play("lending on left wall");
-                break;
-            case PlayerState.HangingOnRightWall:
-                if (oldState == PlayerState.Jump)
-                    animator.Play("landing on right wall");
-                break;
-            case PlayerState.Nothing:
-                if (oldState == PlayerState.Jump)
-                    animator.Play("lending on ground");
-                break;
-        }
+        if (stateTransitionAnimations.TryGetValue((oldState, newState), out var action))
+            action();
+        else
+            Debug.Log($"Анимация не найдена: {oldState} => {newState}");
     }
 
     private void InitPlayerComponent()
     {
-        HP = MaxHP;
-
         physic = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        stateTransitionAnimations = new Dictionary<(PlayerState oldState, PlayerState newState), Action>
+        {
+            [(PlayerState.Nothing, PlayerState.CrouchedToJump)] = () => animator.Play("preparing for jump"),
+            [(PlayerState.CrouchedToJump, PlayerState.Rift)] = () => animator.Play("rift"),
+            [(PlayerState.CrouchedToJump, PlayerState.Jump)] = () => animator.Play("jump"),
+            [(PlayerState.CrouchedToJumpFromLeftWall, PlayerState.Jump)] = () => animator.Play("jump from left wall"),
+            [(PlayerState.CrouchedToJumpFromRightWall, PlayerState.Jump)] = () =>
+            {
+                FlipPlayer();
+                animator.Play("jump from right wall");
+            },
+            [(PlayerState.Jump, PlayerState.HangingOnLeftWall)] = () => animator.Play("lending on left wall"),
+            [(PlayerState.Jump, PlayerState.HangingOnRightWall)] = () => animator.Play("landing on right wall"),
+            [(PlayerState.Jump, PlayerState.Nothing)] = () => animator.Play("lending on ground"),
+            [(PlayerState.HangingOnLeftWall, PlayerState.Nothing)] = () => animator.Play("lending on ground"),
+            [(PlayerState.HangingOnRightWall, PlayerState.Nothing)] = () => animator.Play("lending on ground"),
+        };
         tools = transform.Find("Tools").gameObject;
 
+        HP = MaxHP;
         HPBar = tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar").GetComponent<Image>();
+        
         trajectory = GetComponentInChildren<TrajectoryRenderScript>();
+        
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
             .ToArray();
@@ -176,8 +160,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
             .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
             .gameObject;
 
-        //TODO:Вынести создание пушки из PlayerScript
-        SetGun(currentGun);
+        SetGun(currentGun); //TODO:Вынести создание пушки из PlayerScript
     }
 
     // TODO: БАГ: иногда при прыжке в право игрок подпрыгивает на месте(только вверх).
@@ -190,7 +173,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
             {
                 if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
                 {
-                    animator.Play("preparing for jump");
+                    // animator.Play("preparing for jump");
                     PlayerState = PlayerState.CrouchedToJump;
                 }
 
@@ -208,7 +191,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
 
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
-                    animator.Play("jump");
+                    // animator.Play("jump");
                     physic.AddForce(vector);
                     PlayerState = state;
                     trajectory.ClearTrajectory();
@@ -250,7 +233,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private (PlayerState state, Vector2 vector) GetWallMovementVector()
     {
         var vector = GetPositionDirectionVector();
-        var vectorAngle = VectorAngle(vector);
         vector = GetJumpVector(vector);
         var state = PlayerState.Jump;
 
@@ -296,16 +278,17 @@ public class PlayerScript : MonoBehaviour, IDamageable
         return vector * JumpBoost;
     }
 
-    private static Vector2 GetRiftVector(Vector2 vector)
+    private Vector2 GetRiftVector(Vector2 vector)
     {
         if (vector.magnitude > MaxRiftForce)
             vector = vector.normalized * MaxRiftForce;
         else if (vector.magnitude < MinRiftForce)
             vector = Vector2.zero;
+        riftDurationTime = MaxRiftDurationTime * (vector.magnitude / MaxRiftForce); 
         return vector * RiftBoost;
     }
 
-    private IEnumerator MovementStateController()
+    private IEnumerator MovementStateCoroutine()
     {
         yield return new WaitForFixedUpdate();
         while (true)
@@ -313,8 +296,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
             if (PlayerState == PlayerState.Rift)
             {
                 Print();
-
-                yield return new WaitForSeconds(RiftDurationTime);
+                yield return new WaitForSeconds(riftDurationTime);
                 if (!IsGrounded)
                     PlayerState = PlayerState.Jump;
                 else
@@ -322,7 +304,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
                     physic.velocity = new Vector2(0, physic.velocity.y);
                     PlayerState = PlayerState.Nothing;
                 }
-
                 Print();
             }
 
@@ -375,7 +356,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
         var c = Instantiate(cloud, dialoguesAnchor.transform);
     }
 
-
     public void TakeDamage(float damage)
     {
         HP -= damage;
@@ -384,7 +364,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
         HPBar.fillAmount = HP / MaxHP;
     }
 
-    private void Die()
+    private static void Die()
     {
         CurrentGame.KillGame();
         Model.StartGame();
