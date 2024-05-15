@@ -42,7 +42,7 @@ public class MovementStatePlayer
 
                 Debug.Log("1 Начало прыжка");
                 var k = 0;
-                for (; k < 25 && (player.IsGrounded || player.IsTouchedLeftWall || player.IsTouchedRightWall); k++)
+                for (; k < 15 && (player.IsGrounded || player.IsTouchedLeftWall || player.IsTouchedRightWall); k++)
                     yield return null; // Ждём, пока достаточно далеко отлетим от стены
                 Debug.Log($"2 Оторвал ноги от земли или стены. Был возле стены {k} тиков");
                 while (!player.IsGrounded && !player.IsTouchedLeftWall && !player.IsTouchedRightWall)
