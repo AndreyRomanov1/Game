@@ -17,7 +17,7 @@ public static class Model
 
     public static void StartGame()
     {
-        UICamera = Game.CreateByGameObject(Game.LoadByName("Cameras/UICamera")).GetComponent<Camera>();
+        UICamera = GameScript.CreateByGameObject(GameScript.LoadByName("Cameras/UICamera")).GetComponent<Camera>();
         GameState = GameState.StartGameMenu;
 
         LoadClouds();        
@@ -27,7 +27,7 @@ public static class Model
     private static void ShowLevelSelectionUI()
     {
         UICamera.gameObject.SetActive(true);
-        LevelSelectionCanvas = Game.CreateByGameObject(Game.LoadByName("LevelSelectionCanvas")).GetComponent<LevelSelectionCanvasScript>();
+        LevelSelectionCanvas = GameScript.CreateByGameObject(GameScript.LoadByName("LevelSelectionCanvas")).GetComponent<LevelSelectionCanvasScript>();
     }
 
     public static void StartNewGame(string pathToLevelBlocks)
@@ -38,7 +38,7 @@ public static class Model
 
     private static void LoadClouds()
     {
-        var test = Game.LoadByName("clouds/TestCloud");
+        var test = GameScript.LoadByName("clouds/TestCloud");
         Clouds.Add(test);
     }
 }

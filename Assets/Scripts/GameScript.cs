@@ -8,10 +8,9 @@ public class GameScript : MonoBehaviour
         Model.StartGame();
     }
 
-    public GameObject LoadByName(string name0) => Resources.Load<GameObject>(name0);
-    public GameObject[] LoadAllByName(string name0) => Resources.LoadAll<GameObject>(name0);
-    public GameObject CreateByGameObject(GameObject obj) => Instantiate(obj);
-    public GameObject CreateGrid() => CreateByGameObject(LoadByName("Grid"));
-    public GameObject CreatePlayer() => CreateByGameObject(LoadByName("Player/Player"));
-    public void Destroy(GameObject obj) => Object.Destroy(obj);
+    public static GameObject LoadByName(string name0) => Resources.Load<GameObject>(name0);
+    public static GameObject[] LoadAllByName(string name0) => Resources.LoadAll<GameObject>(name0);
+    public static GameObject CreateByGameObject(GameObject obj) => Instantiate(obj);
+    public static GameObject CreateGrid() => CreateByGameObject(LoadByName("Grid"));
+    public static GameObject CreatePlayer() => CreateByGameObject(LoadByName("Player/Player"));
 }

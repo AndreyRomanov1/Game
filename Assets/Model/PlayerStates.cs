@@ -1,4 +1,4 @@
-﻿public enum PlayerState
+﻿public enum PlayerStates
 {
     Nothing = 0, // Просто стоит на земле
     CrouchedToJump = 1, // Зажат пробел, готовится к прыжку
