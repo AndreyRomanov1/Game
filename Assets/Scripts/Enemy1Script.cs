@@ -55,7 +55,9 @@ public class Enemy1Script : MonoBehaviour, IDamageable
             var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
             var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
 
-            var shootingError = expectedVectorRotation - currentVectorRotation;
+            var shootingError = Math.Abs(expectedVectorRotation - currentVectorRotation) < 180 ? expectedVectorRotation - currentVectorRotation :
+                currentVectorRotation - expectedVectorRotation;
+
             Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
 
             if (Math.Abs(shootingError) <= PermissibleShootingError)
