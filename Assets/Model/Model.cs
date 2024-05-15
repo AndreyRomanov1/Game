@@ -11,7 +11,6 @@ public static class Model
     public static GameScript Game;
     public static LevelSelectionCanvasScript LevelSelectionCanvas;
     public static GameState GameState;
-    public static readonly List<GameObject> Clouds = new();
 
     // Сколько блоков было пройдено всего, максимальная длинна в блоках забега, список оружий игрока, флаг пройдено ли обучение, различная статистика
 
@@ -20,7 +19,6 @@ public static class Model
         UICamera = GameScript.CreateByGameObject(GameScript.LoadByName("Cameras/UICamera")).GetComponent<Camera>();
         GameState = GameState.StartGameMenu;
 
-        LoadClouds();        
         ShowLevelSelectionUI();
     }
 
@@ -36,9 +34,5 @@ public static class Model
         CurrentGame.ResetGame(pathToLevelBlocks);
     }
 
-    private static void LoadClouds()
-    {
-        var test = GameScript.LoadByName("clouds/TestCloud");
-        Clouds.Add(test);
-    }
+    
 }
