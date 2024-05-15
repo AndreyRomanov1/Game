@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private Transform rightWallCheck;
     public LayerMask groundMask;
     public GameObject currentGun;
+    public Transform mainTarget;
+    public List<Transform> targets;
 
     private PlayerStates playerState = PlayerStates.Nothing;
 
@@ -92,6 +95,10 @@ public class PlayerScript : MonoBehaviour, IDamageable
             .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
             .gameObject;
 
+        mainTarget = transform.Find("bone_1").Find("Target");
+        targets = new List<Transform>{mainTarget};
+        targets.AddRange(mainTarget.GetComponentsInChildren<Transform>());
+        
         SetGun(currentGun); //TODO:Вынести создание пушки из PlayerScript
     }
 

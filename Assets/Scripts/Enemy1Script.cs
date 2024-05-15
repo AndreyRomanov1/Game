@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Enemy1Script : MonoBehaviour, IDamageable
@@ -17,13 +18,13 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     public LayerMask detectedLayers;
 
     private PistolScript gun;
-    private GameObject player;
+    private PlayerScript player;
     private SpriteRenderer healthIndicator;
 
     void Start()
     {
         gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<PistolScript>();
-        player = CurrentGame.Player.gameObject;
+        player = CurrentGame.Player;
         healthIndicator = transform.Find("нимб").GetComponent<SpriteRenderer>();
         healthPoints = MaxHealthPoints;
 
@@ -35,56 +36,77 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         yield return new WaitForFixedUpdate();
         while (true)
         {
-            if (IsPlayerOnLine())
-                break;
+            if (IsPlayerInSight())
+            {
+                var guidanceCoroutine = StartCoroutine(Guidance());
+                var shootingCoroutine = StartCoroutine(Shooting());
+                yield return guidanceCoroutine;
+                StopCoroutine(shootingCoroutine);
+            }
             yield return new WaitForFixedUpdate();
             // Debug.Log("Не на линии");
         }
-
-        StartCoroutine(StartShooting());
     }
 
-    private IEnumerator StartShooting() // TODO Не искать игрока в неактивной игре
+    private IEnumerator Guidance() // TODO Не искать игрока в неактивной игре
     {
         // yield return new WaitForSeconds(DelayBeforeFiring); // Я убрал, вроде стало получше, если будет слишком жёстко, вернём
-        Debug.Log("Start shoot");
+        // Debug.Log("Start shoot");
 
-        while (IsPlayerOnLine(out var hit))
+        while (IsPlayerInSight(out var hit))
         {
-            var hitLine = hit.transform.position - pivot.transform.position;
+            var hitLine = hit.point - (Vector2)pivot.transform.position;
             var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
             var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
 
-            var shootingError = Math.Abs(expectedVectorRotation - currentVectorRotation) < 180 ? expectedVectorRotation - currentVectorRotation :
-                currentVectorRotation - expectedVectorRotation;
+            var shootingError = Math.Abs(expectedVectorRotation - currentVectorRotation) < 180 
+                ? expectedVectorRotation - currentVectorRotation 
+                : currentVectorRotation - expectedVectorRotation;
 
-            Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
+            // Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
 
-            if (Math.Abs(shootingError) <= PermissibleShootingError)
-                Shoot();
-            else
+            if (Math.Abs(shootingError) > PermissibleShootingError)
             {
                 var rotation = shootingError > PermissibleShootingError ? HandSwingSpeed : -HandSwingSpeed;
                 pivot.transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
-                // pivot.transform.rotation.Set(0f, 0f, currentVectorRotation + rotation, 0f);
                 // Debug.Log($"{pivot.transform.rotation}: {currentVectorRotation} + {rotation}");
             }
 
             yield return new WaitForFixedUpdate();
         }
-
-        StartCoroutine(PlayerSearch());
     }
 
-    private bool IsPlayerOnLine() => IsPlayerOnLine(out _);
-
-    private bool IsPlayerOnLine(out RaycastHit2D hit)
+    private IEnumerator Shooting()
     {
+        while (true)
+        {
+            var hitLine = Quaternion.Euler(0, 0, pivot.transform.rotation.eulerAngles.z) * new Vector3(-1, 0);
+            // Debug.Log($"{hitLine} {(gunPosition.transform.position - pivot.transform.position).normalized}");
+            if (IsPlayerOnLine(pivot.transform.position, hitLine.normalized))
+                Shoot();
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    private bool IsPlayerInSight() => IsPlayerInSight(out _);
+    private bool IsPlayerInSight(out RaycastHit2D hit)
+    {
+        hit = default;
         var startPoint = pivot.transform.position;
-        var vector = (player.transform.position - startPoint).normalized;
-        hit = Physics2D.Raycast(startPoint, vector, ShootingDistance, detectedLayers);
+        foreach (var vector in player.targets.Select(target => (target.position - startPoint).normalized))
+        {
+            return IsPlayerOnLine(startPoint, vector, out hit);
+        }
+
         // Debug.Log(LayerMask.LayerToName(hit.transform.gameObject.layer));
-        return hit.transform is not null && hit.transform.gameObject == player;
+        return false;
+    }
+
+    private bool IsPlayerOnLine(Vector2 startPoint, Vector2 direction) => IsPlayerOnLine(startPoint, direction, out _);
+    private bool IsPlayerOnLine(Vector2 startPoint, Vector2 direction, out RaycastHit2D hit)
+    {
+        hit = Physics2D.Raycast(startPoint, direction, ShootingDistance, detectedLayers);
+        return hit.transform is not null && hit.transform.gameObject == player.gameObject;
     }
 
     private void Shoot()
@@ -97,7 +119,7 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         healthPoints -= damage;
         if (healthPoints <= 0)
             Die();
-        var colorValue = (healthPoints / MaxHealthPoints);
+        var colorValue = healthPoints / MaxHealthPoints;
         healthIndicator.color = new Color(1f, colorValue, colorValue);
     }
 

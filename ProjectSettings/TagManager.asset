@@ -9,6 +9,7 @@ TagManager:
   - StartLevelButton
   - InfinityLevelButton
   - GroundCheck
+  - Target
   layers:
   - Default
   - TransparentFX
