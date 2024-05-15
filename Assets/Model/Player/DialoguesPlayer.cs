@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,12 +9,19 @@ public class DialoguesPlayer
     private readonly GameObject dialoguesAnchor;
     private int dialogueNumber;
     private GameObject activeDialogue;
+    private IController activeController;
+    private readonly Dictionary<string, IController> dialogues;
 
     public DialoguesPlayer(PlayerScript player)
     {
         this.player = player;
 
         dialoguesAnchor = GameObject.Find("DialoguesAnchor");
+        dialogues = new Dictionary<string, IController>
+        {
+            ["JumpEducation"] = new JumpEducationController(this),
+            ["ShootEducation"] = new ShootEducationController(this),
+        };
     }
 
     public IEnumerator DialoguesCoroutine()
@@ -21,36 +29,37 @@ public class DialoguesPlayer
         yield return new WaitForFixedUpdate();
         while (true)
         {
-            if (activeDialogue != null && Input.GetKey(KeyCode.Space))
-                ResetDialogueCloud();
+            if (activeDialogue != null && Input.GetKeyDown(KeyCode.Space))
+                activeController.NextDialogues();
             yield return null;
         }
     }
 
     public void DialogueHandler(string triggerName)
     {
-        switch (triggerName)
-        {
-            case "1":
-                break;
-            default:
-                Debug.Log(triggerName);
-                SetDialogueCloud(Model.Clouds[0]); // Тестовое облако
-
-                break;
-        }
+        Debug.Log(triggerName);
+        if (dialogues.TryGetValue(triggerName, out activeController))
+            activeController.NextDialogues();
+        else
+            Debug.Log("Не нашёл контроллер для такого триггера");
     }
 
-    private void SetDialogueCloud(GameObject cloud)
+    public void SetDialogueCloud(GameObject cloud)
     {
         ResetDialogueCloud();
         activeDialogue = Object.Instantiate(cloud, dialoguesAnchor.transform);
         Model.GameState = GameState.Dialogue;
     }
-    private void ResetDialogueCloud()
+
+    public void ResetDialogueCloud()
     {
         if (activeDialogue != null)
             Object.Destroy(activeDialogue);
         Model.GameState = GameState.ActiveGame;
     }
+
+    public static GameObject[] LoadSortedClouds(string path) => GameScript
+        .LoadAllByName($"Clouds/{path}")
+        .OrderBy(t => t.name)
+        .ToArray();
 }

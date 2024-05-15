@@ -44,7 +44,7 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         StartCoroutine(StartShooting());
     }
 
-    private IEnumerator StartShooting()
+    private IEnumerator StartShooting() // TODO Не искать игрока в неактивной игре
     {
         // yield return new WaitForSeconds(DelayBeforeFiring); // Я убрал, вроде стало получше, если будет слишком жёстко, вернём
         Debug.Log("Start shoot");
