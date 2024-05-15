@@ -1,6 +1,4 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.UIElements;
 
