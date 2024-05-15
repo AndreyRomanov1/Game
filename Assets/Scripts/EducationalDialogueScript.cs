@@ -4,7 +4,7 @@ public class EducationalDialogueScript : MonoBehaviour
 {
     void Start()
     {
-        Model.GameState = GameState.EducationalDialogue;
+        Model.GameState = GameState.Dialogue;
     }
 
     void Update()
