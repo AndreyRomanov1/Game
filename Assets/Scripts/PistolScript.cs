@@ -13,6 +13,7 @@ public class PistolScript : MonoBehaviour
     public LayerMask baseMask;
 
     public LayerMask mask;
+    private BulletTrajectoryRenderScript trajectoryRender;
     private bool isNeedShoot = false;
     private float timeBetweenShots;
     private Coroutine currentMode;
@@ -21,6 +22,7 @@ public class PistolScript : MonoBehaviour
 
     private void Start()
     {
+        trajectoryRender = GetComponent<BulletTrajectoryRenderScript>();
         timeBetweenShots = 1 / rateOfFire;
         DetectMode();
     }
@@ -62,7 +64,7 @@ public class PistolScript : MonoBehaviour
 
     private IEnumerator ShootByClick()
     {
-        Debug.Log("Персонаж готов стрелять");
+        yield return new WaitForFixedUpdate();
         while (true)
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouse))
@@ -77,8 +79,10 @@ public class PistolScript : MonoBehaviour
 
     private IEnumerator ShootBySignal()
     {
+        yield return new WaitForFixedUpdate();
         while (true)
         {
+            trajectoryRender?.ShowTrajectory();
             if (isNeedShoot)
             {
                 Shoot();

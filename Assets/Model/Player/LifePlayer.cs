@@ -18,7 +18,8 @@ public class LifePlayer
     {
         healthPoints -= damage;
         if (healthPoints <= 0)
-            // Die();
+            Die();
+        
         healthPointsBar.fillAmount = healthPoints / MaxHealthPoints;
     }
     private static void Die()

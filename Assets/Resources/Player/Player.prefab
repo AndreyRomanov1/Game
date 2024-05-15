@@ -2226,7 +2226,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   currentGun: {fileID: 2635800586428807801, guid: 1eabdbf8a0d2a0c4088d8d352d170221, type: 3}
-  target: {fileID: 0}
+  mainTarget: {fileID: 0}
+  targets: []
 --- !u!95 &4461436287432537355
 Animator:
   serializedVersion: 5
@@ -2305,8 +2306,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4338506919359046841, guid: fd547684b4e28da48888294cfc54d35d, type: 3}
+      propertyPath: count
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4338506919359046841, guid: fd547684b4e28da48888294cfc54d35d, type: 3}
+      propertyPath: deltaTime
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4338506919359046841, guid: fd547684b4e28da48888294cfc54d35d, type: 3}
       propertyPath: trajectoryStoppers.m_Bits
-      value: 256
+      value: 2304
       objectReference: {fileID: 0}
     - target: {fileID: 6367348959750532261, guid: fd547684b4e28da48888294cfc54d35d, type: 3}
       propertyPath: m_Name
