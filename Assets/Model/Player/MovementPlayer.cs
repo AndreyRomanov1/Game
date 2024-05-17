@@ -45,6 +45,7 @@ public class MovementPlayer
         while (true)
         {
             MovementLogic();
+            player.Print();
             yield return null;
         }
     }
