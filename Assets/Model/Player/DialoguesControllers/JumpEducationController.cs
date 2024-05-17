@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class JumpEducationController : IController
 {
@@ -10,7 +11,7 @@ public class JumpEducationController : IController
     public JumpEducationController(DialoguesPlayer dialogues)
     {
         this.dialogues = dialogues;
-        clouds = DialoguesPlayer.LoadSortedClouds("JumpEducation");
+        clouds = DialoguesPlayer.LoadSortedClouds("JumpEducation").OrderBy(t => int.Parse(t.name)).ToArray();
     }
 
     public void NextDialogues()
@@ -22,7 +23,6 @@ public class JumpEducationController : IController
         }
         else
         {
-            Debug.Log("Следующий кадр диалога");
             dialogues.SetDialogueCloud(clouds[cloudNumber]);
             cloudNumber++;
         }
