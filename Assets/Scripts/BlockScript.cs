@@ -15,7 +15,7 @@ public class BlockScript : MonoBehaviour
     public BlockScript exitBlockScript;
 
     public Tilemap tilemap;
-    private const string EnemySpawnTileName = "tileset-sliced_119_1";
+    private const string EnemySpawnTileName = "камень с врагом";
     private const string SomeEnemiesSpawnTileName = "камень с врагами"; // TODO Поменять когда изменятся текстуры
     private const string BarrelSpawnTileName = "камень с бочкой";
 
