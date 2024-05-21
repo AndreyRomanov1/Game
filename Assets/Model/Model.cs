@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class Model
 {
@@ -25,7 +23,8 @@ public static class Model
     private static void ShowLevelSelectionUI()
     {
         UICamera.gameObject.SetActive(true);
-        LevelSelectionCanvas = GameScript.CreateByGameObject(GameScript.LoadByName("LevelSelectionCanvas")).GetComponent<LevelSelectionCanvasScript>();
+        LevelSelectionCanvas = GameScript.CreateByGameObject(GameScript.LoadByName("LevelSelectionCanvas"))
+            .GetComponent<LevelSelectionCanvasScript>();
     }
 
     public static void StartNewGame(string pathToLevelBlocks)
@@ -33,6 +32,4 @@ public static class Model
         UICamera.gameObject.SetActive(false);
         CurrentGame.ResetGame(pathToLevelBlocks);
     }
-
-    
 }

@@ -1,31 +1,21 @@
-﻿using System.Linq;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public class ShootEducationController : IController
 {
-    private readonly DialoguesPlayer dialogues;
     private int cloudNumber;
-    private readonly GameObject[] clouds;
+    private readonly DialogueCloud[] clouds = Dialogues.LoadSortedClouds("ShootEducation");
     private int MaxCloudNumber => clouds.Length;
-
-
-    public ShootEducationController(DialoguesPlayer dialogues)
-    {
-        this.dialogues = dialogues;
-        clouds = DialoguesPlayer.LoadSortedClouds("ShootEducation").OrderBy(t => int.Parse(t.name)).ToArray();
-    }
 
     public void NextDialogues()
     {
         if (cloudNumber >= MaxCloudNumber)
         {
             Debug.Log("Конец диалога");
-            dialogues.ResetDialogueCloud();
+            Dialogues.ResetDialogueCloud();
         }
         else
         {
-            dialogues.SetDialogueCloud(clouds[cloudNumber]);
+            Dialogues.SetDialogueCloud(clouds[cloudNumber]);
             cloudNumber++;
         }
     }

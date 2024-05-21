@@ -3,27 +3,21 @@ using UnityEngine;
 
 public class JumpEducationController : IController
 {
-    private readonly DialoguesPlayer dialogues;
     private int cloudNumber;
-    private readonly GameObject[] clouds;
+    private readonly DialogueCloud[] clouds = Dialogues.LoadSortedClouds("JumpEducation");
     private int MaxCloudNumber => clouds.Length;
-
-    public JumpEducationController(DialoguesPlayer dialogues)
-    {
-        this.dialogues = dialogues;
-        clouds = DialoguesPlayer.LoadSortedClouds("JumpEducation").OrderBy(t => int.Parse(t.name)).ToArray();
-    }
 
     public void NextDialogues()
     {
+        Debug.Log(string.Join(" ", clouds.Select(t => t.ToString())));
         if (cloudNumber >= MaxCloudNumber)
         {
             Debug.Log("Конец диалога");
-            dialogues.ResetDialogueCloud();
+            Dialogues.ResetDialogueCloud();
         }
         else
         {
-            dialogues.SetDialogueCloud(clouds[cloudNumber]);
+            Dialogues.SetDialogueCloud(clouds[cloudNumber]);
             cloudNumber++;
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class CurrentGame
 {
@@ -8,6 +9,8 @@ public static class CurrentGame
     public static Camera PlayerCamera;
 
     public static float GameSpeed => IsSlowGame ? 0.01f : 1f;
+
+    public static Dictionary<SpeakersEnum, ISpeakingCharacter> EnumToSpeaker;
 
     public static bool IsSlowGame => Player.PlayerState is
         PlayerStates.CrouchedToJump
@@ -23,6 +26,13 @@ public static class CurrentGame
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         Grid.InitGrid(pathToLevelBlocks);
+        EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
+        {
+            [SpeakersEnum.Player] = Player,
+            [SpeakersEnum.GreatCornEar] = Player
+        };
+        Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
+
     }
 
     public static void KillGame()

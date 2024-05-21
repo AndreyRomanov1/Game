@@ -1,11 +1,9 @@
-﻿    public enum BlockDirections
-    {
-        Up,
-        Right,
-        Down,
-        Start,
-        End,
-        Base
-    }
-
-    
+﻿public enum BlockDirections
+{
+    Up,
+    Right,
+    Down,
+    Start,
+    End,
+    Base
+}

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour, IDamageable
+public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 {
     public float riftDurationTime;
 
@@ -16,6 +16,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
     public GameObject currentGun;
     public Transform mainTarget;
     public List<Transform> targets;
+    private GameObject dialoguesAnchor;
 
     private PlayerStates playerState = PlayerStates.Nothing;
 
@@ -23,7 +24,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
     private MovementStatePlayer movementState;
     private AnimationsPlayer animations;
     private LifePlayer life;
-    public DialoguesPlayer Dialogues;
 
     public PlayerStates PlayerState
     {
@@ -36,7 +36,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
     }
 
     public bool IsGrounded => groundCheckers
-        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundMask));
+        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.15f, groundMask));
 
     public bool IsTouchedLeftWall =>
         Physics2D.OverlapCircle(leftWallCheck.position, 0.2f, groundMask);
@@ -51,7 +51,6 @@ public class PlayerScript : MonoBehaviour, IDamageable
         InitPlayerComponent();
         StartCoroutine(movement.MovementCoroutine());
         StartCoroutine(movementState.MovementStateCoroutine());
-        StartCoroutine(Dialogues.DialoguesCoroutine());
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -63,7 +62,7 @@ public class PlayerScript : MonoBehaviour, IDamageable
     }
 
     public void Print() =>
-        Debug.Log(
+         Debug.Log(
             $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
     private void SetGun(GameObject gun)
@@ -83,7 +82,8 @@ public class PlayerScript : MonoBehaviour, IDamageable
         movementState = new MovementStatePlayer(this);
         animations = new AnimationsPlayer(this);
         life = new LifePlayer(this);
-        Dialogues = new DialoguesPlayer(this);
+
+        dialoguesAnchor = GameObject.Find("DialoguesAnchor");
 
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
@@ -96,9 +96,9 @@ public class PlayerScript : MonoBehaviour, IDamageable
             .gameObject;
 
         mainTarget = transform.Find("bone_1").Find("Target");
-        targets = new List<Transform>{mainTarget};
+        targets = new List<Transform> { mainTarget };
         targets.AddRange(mainTarget.GetComponentsInChildren<Transform>());
-        
+
         SetGun(currentGun); //TODO:Вынести создание пушки из PlayerScript
     }
 
@@ -110,4 +110,13 @@ public class PlayerScript : MonoBehaviour, IDamageable
     }
 
     public void TakeDamage(float damage) => life.TakeDamage(damage);
+    public GameObject GetDialoguesAnchor() => dialoguesAnchor;
+
+    public void ShowIfNeed()
+    {
+    }
+
+    public void HideIfNeed()
+    {
+    }
 }

@@ -4,15 +4,36 @@ using UnityEngine;
 public class MovementStatePlayer
 {
     private readonly PlayerScript player;
+
     public MovementStatePlayer(PlayerScript player)
     {
         this.player = player;
     }
+
     public IEnumerator MovementStateCoroutine()
     {
         yield return new WaitForFixedUpdate();
         while (true)
         {
+            for (var k0 = 0; player.PlayerState == PlayerStates.Nothing && k0 < 10; k0++)
+            {
+                if (!player.IsGrounded)
+                    if (player.IsTouchedLeftWall)
+                        player.PlayerState = PlayerStates.HangingOnLeftWall;
+                    else if (player.IsTouchedRightWall)
+                        player.PlayerState = PlayerStates.HangingOnRightWall;
+                yield return null;
+            }
+
+            for (var k0 = 0;
+                 player.PlayerState is PlayerStates.HangingOnLeftWall or PlayerStates.HangingOnRightWall && k0 < 10;
+                 k0++)
+            {
+                if (player.IsGrounded)
+                    player.PlayerState = PlayerStates.Nothing;
+                yield return null;
+            }
+
             if (player.PlayerState == PlayerStates.Rift)
             {
                 player.Print();
@@ -58,6 +79,7 @@ public class MovementStatePlayer
                 Debug.Log("4 Конец прыжка");
                 player.Print();
             }
+
             yield return null;
         }
     }
