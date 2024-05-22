@@ -44,7 +44,8 @@ public class MovementPlayer
         yield return new WaitForFixedUpdate();
         while (true)
         {
-            MovementLogic();
+            if (Model.IsActiveGame)
+                MovementLogic();
             // player.Print();
             yield return null;
         }

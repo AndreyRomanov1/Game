@@ -20,23 +20,20 @@ public static class CurrentGame
 
     public static void ResetGame(string pathToLevelBlocks)
     {
+        KillGame();
         Model.GameState = GameState.ActiveGame;
 
         Grid = GameScript.CreateGrid().GetComponent<GridScript>();
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         Grid.InitGrid(pathToLevelBlocks);
-        EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
-        {
-            [SpeakersEnum.Player] = Player,
-            [SpeakersEnum.GreatCornEar] = Player
-        };
-        Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
 
     }
 
     public static void KillGame()
     {
+        if (Player == null || Grid == null)
+            return;
         Object.Destroy(Player.gameObject);
         Object.Destroy(Grid.gameObject);
     }
