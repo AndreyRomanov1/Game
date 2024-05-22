@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3299083685357325779}
   - component: {fileID: 880495733027274035}
   - component: {fileID: -4547166096003176462}
+  - component: {fileID: 4747564079018818796}
   - component: {fileID: -3258129527530718868}
   m_Layer: 0
   m_Name: "\u041F\u041F"
@@ -125,6 +126,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   count: 100
   deltaTime: 0.1
+--- !u!114 &4747564079018818796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2635800586428807801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0381fa2fbd48df932f57326ccc6958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShootSound: {fileID: 8300000, guid: 067855b1d9be5e8488b96b4fc04a5f98, type: 3}
+  ReloadSound: {fileID: 0}
 --- !u!120 &-3258129527530718868
 LineRenderer:
   serializedVersion: 2
@@ -228,4 +243,4 @@ LineRenderer:
   m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
-  m_ApplyActiveColorSpace: 1
+  m_ApplyActiveColorSpace: 0

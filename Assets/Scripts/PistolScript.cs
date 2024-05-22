@@ -17,6 +17,7 @@ public class PistolScript : MonoBehaviour
     private bool isNeedShoot = false;
     private float timeBetweenShots;
     private Coroutine currentMode;
+    private WeaponSoundScript soundSource;
 
     public void ShootSignal() => isNeedShoot = true;
 
@@ -24,6 +25,7 @@ public class PistolScript : MonoBehaviour
     {
         trajectoryRender = GetComponent<BulletTrajectoryRenderScript>();
         timeBetweenShots = 1 / rateOfFire;
+        soundSource = GetComponent<WeaponSoundScript>();
         DetectMode();
     }
 
@@ -108,6 +110,7 @@ public class PistolScript : MonoBehaviour
     private void Shoot()
     {
         var currentBullet = Instantiate(bullet).GetComponent<BulletScript>();
+        soundSource?.Shoot(transform.position);
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage);
     }
 }
