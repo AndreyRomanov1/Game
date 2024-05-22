@@ -12,6 +12,7 @@ public class MovementStatePlayer
 
     public IEnumerator MovementStateCoroutine()
     {
+        
         yield return new WaitForFixedUpdate();
         while (true)
         {

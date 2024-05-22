@@ -9,12 +9,8 @@ public class JumpEducationController : IController
 
     public void NextDialogues()
     {
-        Debug.Log(string.Join(" ", clouds.Select(t => t.ToString())));
         if (cloudNumber >= MaxCloudNumber)
-        {
-            Debug.Log("Конец диалога");
-            Dialogues.ResetDialogueCloud();
-        }
+            Dialogues.EndDialogue();
         else
         {
             Dialogues.SetDialogueCloud(clouds[cloudNumber]);

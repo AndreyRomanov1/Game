@@ -9,10 +9,7 @@ public class ShootEducationController : IController
     public void NextDialogues()
     {
         if (cloudNumber >= MaxCloudNumber)
-        {
-            Debug.Log("Конец диалога");
-            Dialogues.ResetDialogueCloud();
-        }
+            Dialogues.EndDialogue();
         else
         {
             Dialogues.SetDialogueCloud(clouds[cloudNumber]);

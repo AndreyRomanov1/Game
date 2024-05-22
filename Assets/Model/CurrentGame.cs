@@ -20,6 +20,7 @@ public static class CurrentGame
 
     public static void ResetGame(string pathToLevelBlocks)
     {
+        KillGame();
         Model.GameState = GameState.ActiveGame;
 
         Grid = GameScript.CreateGrid().GetComponent<GridScript>();
@@ -37,6 +38,8 @@ public static class CurrentGame
 
     public static void KillGame()
     {
+        if (Player == null || Grid == null)
+            return;
         Object.Destroy(Player.gameObject);
         Object.Destroy(Grid.gameObject);
     }

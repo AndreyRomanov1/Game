@@ -8,16 +8,12 @@ public static class Dialogues
     private static int dialogueNumber;
     private static GameObject activeDialogue;
     private static IController activeController;
-    private static readonly Dictionary<string, IController> DialogueController;
 
-    static Dialogues()
+    private static readonly Dictionary<string, IController> DialogueController = new()
     {
-        DialogueController = new Dictionary<string, IController>
-        {
-            ["JumpEducation"] = new JumpEducationController(),
-            ["ShootEducation"] = new ShootEducationController(),
-        };
-    }
+        ["JumpEducation"] = new JumpEducationController(),
+        ["ShootEducation"] = new ShootEducationController(),
+    };
 
     public static IEnumerator DialoguesCoroutine()
     {
@@ -34,7 +30,10 @@ public static class Dialogues
     {
         Debug.Log(triggerName);
         if (DialogueController.TryGetValue(triggerName, out activeController))
+        {
+            StartDialogue();
             activeController.NextDialogues();
+        }
         else
             Debug.Log("Не нашёл контроллер для такого триггера");
     }
@@ -46,7 +45,7 @@ public static class Dialogues
         Model.GameState = GameState.Dialogue;
     }
 
-    public static void ResetDialogueCloud()
+    private static void ResetDialogueCloud()
     {
         if (activeDialogue != null)
             Object.Destroy(activeDialogue);
@@ -62,4 +61,16 @@ public static class Dialogues
                     new DialogueCloud(CurrentGame.EnumToSpeaker[speakerAndClouds.Key], t2)))
             .OrderBy(cloud => int.Parse(cloud.Cloud.name))
             .ToArray();
+
+    public static void StartDialogue()
+    {
+        Time.timeScale = 0;
+    }
+
+    public static void EndDialogue()
+    {
+        Debug.Log("Конец диалога");
+        ResetDialogueCloud();
+        Time.timeScale = 1;
+    }
 }

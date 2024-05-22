@@ -1,45 +1,24 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelSelectionCanvasScript : MonoBehaviour
 {
-    public Canvas canvas;
     public Button startLevelButton;
     public Button infinityLevelButton;
-
-    private readonly Dictionary<string, string> buttonToLevel = new()
-    {
-        ["StartLevelButton"] = "StartBlocks",
-        ["InfinityLevelButton"] = "InfinityBlocks"
-    };
-
-    private readonly List<Button> buttons = new();
+    public Button exitButton;
 
     private void Start()
     {
-        canvas = GetComponent<Canvas>();
         InitButtons();
-        ShowCanvas();
     }
 
     private void InitButtons()
     {
         startLevelButton = GameObject.Find("StartLevelButton").GetComponent<Button>();
-        startLevelButton.onClick.AddListener(() => OnClick("StartBlocks"));
-        buttons.Add(startLevelButton);
+        startLevelButton.onClick.AddListener(() => LevelSelectionUIController.StartNewGame("StartBlocks"));
         infinityLevelButton = GameObject.Find("InfinityLevelButton").GetComponent<Button>();
-        infinityLevelButton.onClick.AddListener(() => OnClick("InfinityBlocks"));
-        buttons.Add(infinityLevelButton);
+        infinityLevelButton.onClick.AddListener(() => LevelSelectionUIController.StartNewGame("InfinityBlocks"));
+        // exitButton = GameObject.Find("ExitButton").GetComponent<Button>();
+        // exitButton.onClick.AddListener(UI.ExitGame);
     }
-
-    private void OnClick(string pathToLevelBlocks)
-    {
-        Debug.Log(pathToLevelBlocks);
-        HideCanvas();
-        Model.StartNewGame(pathToLevelBlocks);
-    }
-
-    private void HideCanvas() => canvas.gameObject.SetActive(false);
-    private void ShowCanvas() => canvas.gameObject.SetActive(true);
 }
