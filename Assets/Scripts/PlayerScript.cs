@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
@@ -17,6 +18,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public Transform mainTarget;
     public List<Transform> targets;
     private GameObject dialoguesAnchor;
+
+    public ISpeakingCharacter Helper;
 
     private PlayerStates playerState = PlayerStates.Nothing;
 
@@ -62,7 +65,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     }
 
     public void Print() =>
-         Debug.Log(
+        Debug.Log(
             $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
     private void SetGun(GameObject gun)
@@ -84,6 +87,15 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         life = new LifePlayer(this);
 
         dialoguesAnchor = GameObject.Find("DialoguesAnchor");
+        var helperAnchor = GameObject.Find("HelperAnchor");
+        var helperGameObject = Resources.Load("Healper/Префаб/GreatCornEar");
+        Helper = Instantiate(helperGameObject, helperAnchor.transform).GetComponent<GreatCornEarScript>();
+        CurrentGame.EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
+        {
+            [SpeakersEnum.Player] = this,
+            [SpeakersEnum.GreatCornEar] = Helper
+        };
+        Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
 
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)

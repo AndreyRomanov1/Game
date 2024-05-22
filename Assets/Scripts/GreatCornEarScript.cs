@@ -6,7 +6,7 @@ public class GreatCornEarScript : MonoBehaviour, ISpeakingCharacter
 
     private void Start()
     {
-        dialoguesAnchor = GameObject.Find("DialoguesAnchor");
+        dialoguesAnchor = GameObject.Find("GreatCornEar(Clone)/DialoguesAnchor");
     }
 
     public GameObject GetDialoguesAnchor() => dialoguesAnchor;

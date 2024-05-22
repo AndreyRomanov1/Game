@@ -27,12 +27,6 @@ public static class CurrentGame
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         Grid.InitGrid(pathToLevelBlocks);
-        EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
-        {
-            [SpeakersEnum.Player] = Player,
-            [SpeakersEnum.GreatCornEar] = Player
-        };
-        Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
 
     }
 

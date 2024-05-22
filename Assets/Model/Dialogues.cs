@@ -41,6 +41,10 @@ public static class Dialogues
     public static void SetDialogueCloud(DialogueCloud dialogueCloud)
     {
         ResetDialogueCloud();
+        Debug.Log(dialogueCloud.Cloud);
+        Debug.Log(dialogueCloud.Speaker);
+        Debug.Log(dialogueCloud.Speaker.GetDialoguesAnchor());
+        Debug.Log(dialogueCloud.Speaker.GetDialoguesAnchor().transform);
         activeDialogue = Object.Instantiate(dialogueCloud.Cloud, dialogueCloud.Speaker.GetDialoguesAnchor().transform);
         Model.GameState = GameState.Dialogue;
     }
@@ -64,6 +68,7 @@ public static class Dialogues
 
     public static void StartDialogue()
     {
+        Debug.Log("Старт диалога");
         Time.timeScale = 0;
     }
 
