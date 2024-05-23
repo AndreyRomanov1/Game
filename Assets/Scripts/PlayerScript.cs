@@ -39,7 +39,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     }
 
     public bool IsGrounded => groundCheckers
-        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.15f, groundMask));
+        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.18f, groundMask));
 
     public bool IsTouchedLeftWall =>
         Physics2D.OverlapCircle(leftWallCheck.position, 0.2f, groundMask);
