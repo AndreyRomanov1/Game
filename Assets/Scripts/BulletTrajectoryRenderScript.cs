@@ -16,7 +16,7 @@ public class BulletTrajectoryRenderScript : MonoBehaviour
     {
         lineRendererComponent = GetComponent<LineRenderer>();
         trajectoryStoppers = GetComponent<PistolScript>().mask;
-        Debug.Log(lineRendererComponent);
+        // Debug.Log(lineRendererComponent);
     }
 
     public void ShowTrajectory()

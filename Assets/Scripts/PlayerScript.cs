@@ -28,6 +28,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     private AnimationsPlayer animations;
     private LifePlayer life;
 
+    private GameObject triggerPrefab;
+
     public PlayerStates PlayerState
     {
         get => playerState;
@@ -68,12 +70,13 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         Debug.Log(
             $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
-    private void SetGun(GameObject gun)
+    public void SetGun(GameObject gun)
     {
+        Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
 
-        Instantiate(gun, gunPosition.transform);
+        currentGun = Instantiate(gun, gunPosition.transform);
     }
 
     private void InitPlayerComponent()
@@ -85,6 +88,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         movementState = new MovementStatePlayer(this);
         animations = new AnimationsPlayer(this);
         life = new LifePlayer(this);
+
+        Instantiate(Resources.Load("Sound/Background Music"), transform);
 
         dialoguesAnchor = GameObject.Find("DialoguesAnchor");
         var helperAnchor = GameObject.Find("HelperAnchor");
@@ -111,7 +116,10 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         targets = new List<Transform> { mainTarget };
         targets.AddRange(mainTarget.GetComponentsInChildren<Transform>());
 
-        SetGun(currentGun); //TODO:Вынести создание пушки из PlayerScript
+        triggerPrefab = Resources.Load("Other Elements/CollectionTrigger").GameObject();
+
+        currentGun = Instantiate(currentGun, gunPosition.transform);
+        // SetGun(currentGun);
     }
 
     public void FlipPlayerToDirection(Directions flipDirection)

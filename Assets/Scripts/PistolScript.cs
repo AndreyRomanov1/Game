@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PistolScript : MonoBehaviour
+public class PistolScript : MonoBehaviour, IPickable
 {
     public WeaponState weaponType;
     public GameObject bullet;
@@ -112,5 +112,10 @@ public class PistolScript : MonoBehaviour
         var currentBullet = Instantiate(bullet).GetComponent<BulletScript>();
         soundSource?.Shoot(transform.position);
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage);
+    }
+
+    public void PickUp(PlayerScript player)
+    {
+        player.SetGun(gameObject);
     }
 }
