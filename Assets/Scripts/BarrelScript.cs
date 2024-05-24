@@ -3,15 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = System.Random;
 
 public class BarrelScript : MonoBehaviour, IDamageable
 {
-    public int cost = 0;
-    
     private float HP;
     private float maxHP = 100;
 
     private SpriteRenderer spriteRenderer;
+
+    private readonly Dictionary<Func<Vector2, GameObject, GameObject>, int> spawnRate = new()
+        {
+            { Tools.SpawnCollectionObject, 4 },
+            { Tools.SpawnEnemy, 1 },
+            { (_, _) => null, 5 }
+        };
 
     private void Start()
     {
@@ -23,8 +29,17 @@ public class BarrelScript : MonoBehaviour, IDamageable
     {
         HP -= damage;
         if (HP <= 0)
-            Destroy(this.GameObject());
+            DestroyObject();
         var colorValue = (HP / maxHP);
         spriteRenderer.color = new Color(1f, colorValue, colorValue);
+    }
+
+    private void DestroyObject()
+    {
+        var random = new Random();
+        var func = random.ProbabilisticRandom(spawnRate);
+        func(transform.position, null);
+        
+        Destroy(gameObject);
     }
 }

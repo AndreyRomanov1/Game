@@ -19,16 +19,17 @@ public class CollectionTriggerScript : MonoBehaviour
     private GameObject ContainedObject;
     private bool isPlayerInTrigger = false;
 
-    private void Start()
+    public void Start()
     {
         player = CurrentGame.Player;
-        random = new Random();
+        CreateRandom();
         StartCoroutine(WaitAnotherAction());
         StartCoroutine(CheckInteraction());
     }
 
     public GameObject CreateTrigger(GameObject contained)
     {
+        CreateRandom();
         if (contained is null) 
             Destroy(gameObject);
         Debug.Log($"{ContainedObject?.name} -> {contained?.name}");
@@ -41,6 +42,7 @@ public class CollectionTriggerScript : MonoBehaviour
 
     public GameObject CreateTrigger(Vector3 position)
     {
+        CreateRandom();
         var folder = random.ProbabilisticRandom(foldersChance);
         var elements = Resources.LoadAll<GameObject>(folder);
         // Debug.Log($"{string.Join(" ", guns.Select(x => x.name).ToArray())}");
@@ -74,6 +76,9 @@ public class CollectionTriggerScript : MonoBehaviour
             yield return null;
         }
     }
+
+    private void CreateRandom() =>
+        random ??= new Random();
 
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -52,32 +52,35 @@ public class BlockScript : MonoBehaviour
             {
                 case EnemySpawnTileName:
                 {
-                    var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
+                    // var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                    SpawnEnemy(prefab, position);
+                    // SpawnEnemy(prefab, position);
+                    Tools.SpawnEnemy(position, gameObject);
                     break;
                 }
                 case SomeEnemiesSpawnTileName:
                 {
-                    var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
+                    // var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                    SpawnEnemy(prefab, position);
+                    // SpawnEnemy(prefab, position);
+                    Tools.SpawnEnemy(position, gameObject);
                     break;
                 }
                 case BarrelSpawnTileName:
                 {
-                    var prefab = Resources.Load<GameObject>("Enemies/Barrel");
+                    var prefab = Resources.Load<GameObject>("Enemies/Objects/Barrel");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                    SpawnEnemy(prefab, position);
+                    Tools.SpawnObject(prefab, position, gameObject);
+                    // SpawnEnemy(prefab, position);
                     break;
                 }
             }
         }
     }
 
-    private void SpawnEnemy(GameObject prefab, Vector2 position)
-    {
-        var enemy = Instantiate(prefab, transform, true);
-        enemy.transform.position = position;
-    }
+    // private void SpawnEnemy(GameObject prefab, Vector2 position)
+    // {
+    //     var enemy = Instantiate(prefab, transform, true);
+    //     enemy.transform.position = position;
+    // }
 }
