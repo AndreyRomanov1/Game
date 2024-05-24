@@ -72,11 +72,13 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     public void SetGun(GameObject gun)
     {
+        Debug.Log(currentGun.name);
         Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
 
         currentGun = Instantiate(gun, gunPosition.transform);
+        currentGun.transform.localPosition = new Vector3(0, 0);
     }
 
     private void InitPlayerComponent()

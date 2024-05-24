@@ -116,6 +116,7 @@ public class PistolScript : MonoBehaviour, IPickable
 
     public void PickUp(PlayerScript player)
     {
+        transform.position = new Vector3(0, 0);
         player.SetGun(gameObject);
     }
 }
