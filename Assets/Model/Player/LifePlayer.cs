@@ -1,4 +1,5 @@
-﻿using Image = UnityEngine.UI.Image;
+﻿using System;
+using Image = UnityEngine.UI.Image;
 
 public class LifePlayer
 {
@@ -14,6 +15,13 @@ public class LifePlayer
         healthPointsBar = player.tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar")
             .GetComponent<Image>();
     }
+
+    public void Heal(float count)
+    {
+        healthPoints = Math.Min(healthPoints + count, MaxHealthPoints);
+        healthPointsBar.fillAmount = healthPoints / MaxHealthPoints;
+    }
+    
     public void TakeDamage(float damage)
     {
         healthPoints -= damage;

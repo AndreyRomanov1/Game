@@ -9,8 +9,12 @@ using Random = System.Random;
 
 public class CollectionTriggerScript : MonoBehaviour
 {
-    private static readonly string gunFolder = "Weapons/Guns";
+    private static readonly Dictionary<string, int> foldersChance = new()
+    {
+        { "Weapons/Guns",  3}, { "Heals", 7 }
+    };
 
+    private Random random;
     private PlayerScript player;
     private GameObject ContainedObject;
     private bool isPlayerInTrigger = false;
@@ -18,6 +22,7 @@ public class CollectionTriggerScript : MonoBehaviour
     private void Start()
     {
         player = CurrentGame.Player;
+        random = new Random();
         StartCoroutine(WaitAnotherAction());
         StartCoroutine(CheckInteraction());
     }
@@ -36,12 +41,12 @@ public class CollectionTriggerScript : MonoBehaviour
 
     public GameObject CreateTrigger(Vector3 position)
     {
-        var guns = Resources.LoadAll<GameObject>(gunFolder);
-        var rand = new Random();
+        var folder = random.ProbabilisticRandom(foldersChance);
+        var elements = Resources.LoadAll<GameObject>(folder);
         // Debug.Log($"{string.Join(" ", guns.Select(x => x.name).ToArray())}");
-        var num = rand.Next(guns.Length);
+        var num = random.Next(elements.Length);
         Debug.Log(num);
-        var gun = Instantiate(guns[num]);
+        var gun = Instantiate(elements[num]);
         gun.transform.position = position;
         return CreateTrigger(gun);
     }

@@ -23,10 +23,10 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     private PlayerStates playerState = PlayerStates.Nothing;
 
-    private MovementPlayer movement;
-    private MovementStatePlayer movementState;
-    private AnimationsPlayer animations;
-    private LifePlayer life;
+    public MovementPlayer movement;
+    public MovementStatePlayer movementState;
+    public AnimationsPlayer animations;
+    public LifePlayer life;
 
     private GameObject triggerPrefab;
 
