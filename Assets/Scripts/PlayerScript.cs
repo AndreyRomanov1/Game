@@ -72,13 +72,18 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     public void SetGun(GameObject gun)
     {
-        Debug.Log(currentGun.name);
+        // Debug.Log(currentGun.name);
+        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Nothing);
         Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
 
-        currentGun = Instantiate(gun, gunPosition.transform);
-        currentGun.transform.localPosition = new Vector3(0, 0);
+        // currentGun = Instantiate(gun, gunPosition.transform);
+        currentGun = gun;
+        currentGun.transform.parent = gunPosition.transform;
+        currentGun.transform.localPosition = Vector3.zero;
+        currentGun.transform.localEulerAngles = Vector3.zero;
+        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Player);
     }
 
     private void InitPlayerComponent()
