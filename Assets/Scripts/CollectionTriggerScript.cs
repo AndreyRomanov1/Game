@@ -11,7 +11,7 @@ public class CollectionTriggerScript : MonoBehaviour
 {
     private static readonly Dictionary<string, int> foldersChance = new()
     {
-        { "Weapons/Guns",  3}, { "Heals", 7 }
+        { "Weapons/Guns", 2 }, { "Heals", 8 }
     };
 
     private Random random;

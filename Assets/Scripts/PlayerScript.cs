@@ -79,7 +79,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
-        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Nothing);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponState.Nothing);
         Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
@@ -89,7 +89,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         currentGun.transform.parent = gunPosition.transform;
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localEulerAngles = Vector3.zero;
-        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Player);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponState.Player);
     }
 
     private void InitPlayerComponent()
@@ -161,7 +161,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     private void InitButtonDict()
     {
         var buttonsFolder = transform.Find("Tools").Find("Buttons");
-        foreach (var buttonName in ButtonObjects.Keys)
+        foreach (var buttonName in ButtonObjects.Keys.ToArray())
             ButtonObjects[buttonName] = buttonsFolder.Find($"{ButtonsEnum.EnumToName[buttonName]}_button").gameObject;
     }
 }
