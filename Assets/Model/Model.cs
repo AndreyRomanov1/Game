@@ -1,14 +1,8 @@
-﻿using UnityEngine;
-
-public static class Model
+﻿public static class Model
 {
-    public const int BlockWidth = 64;
-    public const int BlockHeight = 48;
-
     public static GameScript Game;
 
     private static GameStates gameState;
-
     public static GameStates GameState
     {
         get => gameState;
@@ -20,8 +14,6 @@ public static class Model
     }
 
     public static bool IsActiveGame => GameState == GameStates.ActiveGame;
-
-    // Сколько блоков было пройдено всего, максимальная длинна в блоках забега, список оружий игрока, флаг пройдено ли обучение, различная статистика
 
     public static void StartGame()
     {

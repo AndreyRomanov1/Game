@@ -36,7 +36,7 @@ public static class Tools
     {
         var obj = parent is not null
             ? Object.Instantiate(prefab, parent.transform, true)
-            : Object.Instantiate(prefab);
+            : GameScript.CreateByGameObjectInCurrentGame(prefab);
         obj.SetActive(true);
         obj.transform.position = position;
         // Debug.Log($"{position} -> {obj.transform.position}");

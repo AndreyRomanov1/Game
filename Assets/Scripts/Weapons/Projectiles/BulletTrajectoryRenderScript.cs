@@ -1,22 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BulletTrajectoryRenderScript : MonoBehaviour
 {
     public int count = 10;
     public float deltaTime = 0.1f;
-    
+
     private LayerMask trajectoryStoppers;
     private LineRenderer lineRendererComponent;
 
-    void Start()
+    private void Start()
     {
         lineRendererComponent = GetComponent<LineRenderer>();
-        trajectoryStoppers = GetComponent<BaseGunScript>().mask;
-        // Debug.Log(lineRendererComponent);
+        trajectoryStoppers = GetComponent<BaseWeaponScript>().mask;
     }
 
     public void ShowTrajectory()
@@ -24,9 +19,9 @@ public class BulletTrajectoryRenderScript : MonoBehaviour
         var result = new Vector3[count];
         lineRendererComponent.positionCount = count;
         var direction = transform.rotation * new Vector3(1, 0);
-        
+
         result[0] = transform.position;
-        
+
         for (var i = 1; i < count; i++)
         {
             var time = deltaTime * i;
@@ -39,7 +34,7 @@ public class BulletTrajectoryRenderScript : MonoBehaviour
                 break;
             }
         }
-        
+
         lineRendererComponent.SetPositions(result);
     }
 

@@ -19,18 +19,18 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public List<Transform> targets;
     private GameObject dialoguesAnchor;
 
-    public ISpeakingCharacter Helper;
+    private ISpeakingCharacter helper;
 
     private PlayerStates playerState = PlayerStates.Nothing;
 
-    public MovementPlayer movement;
-    public MovementStatePlayer movementState;
-    public AnimationsPlayer animations;
-    public LifePlayer life;
+    private MovementPlayer movement;
+    private MovementStatePlayer movementState;
+    private AnimationsPlayer animations;
+    public LifePlayer Life;
 
     private GameObject triggerPrefab;
 
-    private Dictionary<Buttons, GameObject> ButtonObjects = new()
+    private readonly Dictionary<Buttons, GameObject> buttonObjects = new()
     {
         { Buttons.F, null },
         { Buttons.Space, null }
@@ -63,6 +63,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         InitPlayerComponent();
         StartCoroutine(movement.MovementCoroutine());
         StartCoroutine(movementState.MovementStateCoroutine());
+        Dialogues.Reset();
+        StartCoroutine(Dialogues.DialoguesCoroutine());
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -80,17 +82,16 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
-        currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Nothing);
-        Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponStateEnum.Nothing);
+        Instantiate(triggerPrefab, transform).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
 
-        // currentGun = Instantiate(gun, gunPosition.transform);
         currentGun = gun;
         currentGun.transform.parent = gunPosition.transform;
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localEulerAngles = Vector3.zero;
-        currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Player);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponStateEnum.Player);
     }
 
     private void InitPlayerComponent()
@@ -101,22 +102,20 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         movement = new MovementPlayer(this);
         movementState = new MovementStatePlayer(this);
         animations = new AnimationsPlayer(this);
-        life = new LifePlayer(this);
+        Life = new LifePlayer(this);
 
         Instantiate(Resources.Load("Sound/Background Music"), transform);
 
         dialoguesAnchor = GameObject.Find("DialoguesAnchor");
         var helperAnchor = GameObject.Find("HelperAnchor");
         var helperGameObject = Resources.Load("Healper/Префаб/GreatCornEar");
-        Helper = Instantiate(helperGameObject, helperAnchor.transform).GetComponent<GreatCornEarScript>();
+        helper = Instantiate(helperGameObject, helperAnchor.transform).GetComponent<GreatCornEarScript>();
         CurrentGame.EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
         {
             [SpeakersEnum.Player] = this,
-            [SpeakersEnum.GreatCornEar] = Helper
+            [SpeakersEnum.GreatCornEar] = helper
         };
-        Dialogues.Reset();
 
-        Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
 
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
             .Select(x => x.transform)
@@ -124,8 +123,11 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         leftWallCheck = GameObject.Find("LeftWallCheck").transform;
         rightWallCheck = GameObject.Find("RightWallCheck").transform;
 
-        gunPosition = transform.Find("bone_1").Find("bone_9")
-            .Find("Pivot").Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1").Find("Gun position")
+        gunPosition = transform
+            .Find("bone_1").Find("bone_9")
+            .Find("Pivot")
+            .Find("GG плечо").Find("bone_1").Find("GG локоть").Find("bone_1")
+            .Find("Gun position")
             .gameObject;
 
         mainTarget = transform.Find("bone_1").Find("Target");
@@ -135,7 +137,6 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         triggerPrefab = Resources.Load("Other Elements/CollectionTrigger").GameObject();
 
         currentGun = Instantiate(currentGun, gunPosition.transform);
-        // SetGun(currentGun);
         InitButtonDict();
     }
 
@@ -146,7 +147,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         tools.transform.localEulerAngles = new Vector3(0, angle, 0);
     }
 
-    public void TakeDamage(float damage) => life.TakeDamage(damage);
+    public void TakeDamage(float damage) => Life.TakeDamage(damage);
     public GameObject GetDialoguesAnchor() => dialoguesAnchor;
 
     public void ShowIfNeed()
@@ -157,14 +158,14 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     {
     }
 
-    public void ShowButtonIcon(Buttons button) => ButtonObjects[button].SetActive(true);
+    public void ShowButtonIcon(Buttons button) => buttonObjects[button].SetActive(true);
 
-    public void HideButtonIcon(Buttons button) => ButtonObjects[button].SetActive(false);
+    public void HideButtonIcon(Buttons button) => buttonObjects[button].SetActive(false);
 
     private void InitButtonDict()
     {
         var buttonsFolder = transform.Find("Tools").Find("Buttons");
-        foreach (var buttonName in ButtonObjects.Keys.ToArray())
-            ButtonObjects[buttonName] = buttonsFolder.Find($"{ButtonsEnum.EnumToName[buttonName]}_button").gameObject;
+        foreach (var buttonName in buttonObjects.Keys.ToArray())
+            buttonObjects[buttonName] = buttonsFolder.Find($"{ButtonsEnum.EnumToName[buttonName]}_button").gameObject;
     }
 }

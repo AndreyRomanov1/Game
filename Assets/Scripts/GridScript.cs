@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class GridScript : MonoBehaviour
@@ -12,6 +11,8 @@ public class GridScript : MonoBehaviour
     private readonly Random random = new();
     public string pathToBlocks;
 
+    private const int BlockWidth = 64;
+    private const int BlockHeight = 48;
 
     private BlockGameObject startBlock;
     private BlockGameObject endBlock;
@@ -41,7 +42,7 @@ public class GridScript : MonoBehaviour
 
     public void InitGrid(string pathToBlocks0)
     {
-        this.pathToBlocks = pathToBlocks0;
+        pathToBlocks = pathToBlocks0;
         LoadBlockPrefabs();
         InitStartBlock();
         GenerateNextLevelBlock();
@@ -71,18 +72,18 @@ public class GridScript : MonoBehaviour
     {
         var playerPosition = CurrentGame.Player.transform.position;
         var playerBlockPosition = playerBlockScript.transform.position;
-        if (playerPosition.x > playerBlockPosition.x + Model.BlockWidth
+        if (playerPosition.x > playerBlockPosition.x + BlockWidth
             && playerBlockScript.exitDirection == BlockDirections.Right)
             playerBlockScript = playerBlockScript.exitBlockScript;
-        if (playerPosition.x < playerBlockPosition.x - Model.BlockWidth
+        if (playerPosition.x < playerBlockPosition.x - BlockWidth
             && playerBlockScript.entranceDirection == BlockDirections.Right)
             playerBlockScript = playerBlockScript.entranceBlockScript;
-        if (playerPosition.y > playerBlockPosition.y + Model.BlockHeight)
+        if (playerPosition.y > playerBlockPosition.y + BlockHeight)
             if (playerBlockScript.exitDirection == BlockDirections.Up)
                 playerBlockScript = playerBlockScript.exitBlockScript;
             else if (playerBlockScript.entranceDirection == BlockDirections.Up)
                 playerBlockScript = playerBlockScript.entranceBlockScript;
-        if (playerPosition.y < playerBlockPosition.y - Model.BlockHeight)
+        if (playerPosition.y < playerBlockPosition.y - BlockHeight)
             if (playerBlockScript.exitDirection == BlockDirections.Down)
                 playerBlockScript = playerBlockScript.exitBlockScript;
             else if (playerBlockScript.entranceDirection == BlockDirections.Down)
@@ -116,8 +117,8 @@ public class GridScript : MonoBehaviour
         }
 
         var prefabList = directions[lastExistingBlockScript.exitDirection][lastExistingBlockScript.exitNumber];
-        var nextBlockPrefab = prefabList.Count == 0 
-            ? endBlock 
+        var nextBlockPrefab = prefabList.Count == 0
+            ? endBlock
             : prefabList[random.Next(prefabList.Count)];
         if (nextBlockPrefab == endBlock)
             stopGeneration = true;
@@ -135,11 +136,11 @@ public class GridScript : MonoBehaviour
 
     private Vector3 GetDirectionToNextBlock()
     {
-        var x = lastExistingBlockScript.exitDirection == BlockDirections.Right ? Model.BlockWidth : 0;
+        var x = lastExistingBlockScript.exitDirection == BlockDirections.Right ? BlockWidth : 0;
         var y = lastExistingBlockScript.exitDirection switch
         {
-            BlockDirections.Up => Model.BlockHeight,
-            BlockDirections.Down => -Model.BlockHeight,
+            BlockDirections.Up => BlockHeight,
+            BlockDirections.Down => -BlockHeight,
             _ => 0
         };
         return new Vector3(x, y);

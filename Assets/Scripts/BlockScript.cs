@@ -3,8 +3,6 @@ using UnityEngine.Tilemaps;
 
 public class BlockScript : MonoBehaviour
 {
-    public GridScript generator;
-
     public BlockDirections entranceDirection;
     public BlockDirectionsNumbers entranceNumber;
     public BlockDirections exitDirection;
@@ -16,14 +14,13 @@ public class BlockScript : MonoBehaviour
 
     public Tilemap tilemap;
     private const string EnemySpawnTileName = "камень с врагом";
-    private const string SomeEnemiesSpawnTileName = "камень с врагами"; // TODO Поменять когда изменятся текстуры
+    private const string SomeEnemiesSpawnTileName = "камень с врагами";
     private const string BarrelSpawnTileName = "камень с бочкой";
 
     public void Init(GridScript generator0, Vector3 position0, BlockScript entranceBlock0,
         BlockDirections entranceDirection0, BlockDirectionsNumbers entranceNumber0,
         BlockDirections exitDirection0, BlockDirectionsNumbers exitNumber0)
     {
-        generator = generator0;
         transform.position = position0;
         entranceBlockScript = entranceBlock0;
         entranceDirection = entranceDirection0;
@@ -52,17 +49,13 @@ public class BlockScript : MonoBehaviour
             {
                 case EnemySpawnTileName:
                 {
-                    // var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                    // SpawnEnemy(prefab, position);
                     Tools.SpawnEnemy(position, gameObject);
                     break;
                 }
                 case SomeEnemiesSpawnTileName:
                 {
-                    // var prefab = Resources.Load<GameObject>("Enemies/Враг 1");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
-                    // SpawnEnemy(prefab, position);
                     Tools.SpawnEnemy(position, gameObject);
                     break;
                 }
@@ -71,16 +64,9 @@ public class BlockScript : MonoBehaviour
                     var prefab = Resources.Load<GameObject>("Enemies/Objects/Barrel");
                     var position = tilemap.GetCellCenterWorld(new Vector3Int(x, y + 1, 0));
                     Tools.SpawnObject(prefab, position, gameObject);
-                    // SpawnEnemy(prefab, position);
                     break;
                 }
             }
         }
     }
-
-    // private void SpawnEnemy(GameObject prefab, Vector2 position)
-    // {
-    //     var enemy = Instantiate(prefab, transform, true);
-    //     enemy.transform.position = position;
-    // }
 }
