@@ -70,6 +70,7 @@ public static class Dialogues
 
     public static void StartDialogue()
     {
+        Model.GameState = GameStates.Dialogue;
         Debug.Log("Старт диалога");
         foreach (var speakingCharacter in activeController.GetDialogueParticipants())
             speakingCharacter.ShowIfNeed();
@@ -77,6 +78,7 @@ public static class Dialogues
 
     public static void EndDialogue()
     {
+        Model.GameState = GameStates.ActiveGame;
         Debug.Log("Конец диалога");
         foreach (var speakingCharacter in activeController.GetDialogueParticipants())
             speakingCharacter.HideIfNeed();

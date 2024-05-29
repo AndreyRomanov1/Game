@@ -3,7 +3,6 @@ using UnityEngine;
 public class RocketScript : BaseProjectileScript
 {
     private GameObject explosion;
-    private LayerMask explosionMask;
     private float explosionRadius;
     private WeaponStateEnum weaponState;
 
@@ -13,7 +12,7 @@ public class RocketScript : BaseProjectileScript
     }
 
     public void Shoot(Transform transformParent, float speed0, float lifetime0,
-        LayerMask mask0, LayerMask expMask,
+        LayerMask mask0,
         float weaponDamage = 50f, float expRadius = 15f, WeaponStateEnum state = WeaponStateEnum.Nothing)
     {
         transform.position = transformParent.position;
@@ -23,7 +22,6 @@ public class RocketScript : BaseProjectileScript
         mask = mask0;
         damage = weaponDamage;
 
-        explosionMask = expMask;
         explosionRadius = expRadius;
         weaponState = state;
 
@@ -40,8 +38,9 @@ public class RocketScript : BaseProjectileScript
         // movementCollider.enabled = false;
         // explosionCollider.enabled = true;
 
-        GameScript.CreateByGameObjectInCurrentGame(explosion).GetComponent<ExplosionScript>().Init(transform.position, damage, explosionRadius,
-            explosionMask, weaponState);
+        GameScript.CreateByGameObjectInCurrentGame(explosion)
+            .GetComponent<ExplosionScript>()
+            .Init(transform.position, damage, explosionRadius, weaponState);
         Destroy(gameObject);
     }
 }

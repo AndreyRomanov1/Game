@@ -9,7 +9,6 @@ public class BazookaScript : BaseGunScript
     protected override float damage { get; set; } = 50;
     
     protected float explosionRadius = 4f;
-    protected LayerMask explosionMask;
 
     protected override void SelfStart()
     {
@@ -18,8 +17,9 @@ public class BazookaScript : BaseGunScript
 
     protected override void Shoot()
     {
+        Debug.Log(Time.timeScale);
         var currentBullet = GameScript.CreateByGameObjectInCurrentGame(bullet).GetComponent<RocketScript>();
         soundSource?.Shoot(transform.position);
-        currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, explosionMask, damage, explosionRadius);
+        currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage, explosionRadius);
     }
 }
