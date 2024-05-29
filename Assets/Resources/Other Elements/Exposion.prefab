@@ -82,4 +82,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExplosionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295

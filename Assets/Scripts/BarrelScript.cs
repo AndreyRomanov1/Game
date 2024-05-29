@@ -8,7 +8,7 @@ using Random = System.Random;
 public class BarrelScript : MonoBehaviour, IDamageable
 {
     private float HP;
-    private float maxHP = 100;
+    private float maxHP = 40;
 
     private SpriteRenderer spriteRenderer;
 

@@ -16,7 +16,7 @@ public static class CurrentGame
     public static void StartCurrentGame(string pathToLevelBlocks)
     {
         KillCurrentGame();
-        Model.GameState = GameState.ActiveGame;
+        Model.GameState = GameStates.ActiveGame;
 
         Grid = GameScript.CreateGrid().GetComponent<GridScript>();
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
@@ -26,7 +26,7 @@ public static class CurrentGame
 
     public static void KillCurrentGame()
     {
-        if (Player == null || Grid == null)
+        if (Player is null || Grid is null)
             return;
         Object.Destroy(Player.gameObject);
         Object.Destroy(Grid.gameObject);

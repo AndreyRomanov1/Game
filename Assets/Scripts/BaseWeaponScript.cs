@@ -6,7 +6,7 @@ public abstract class BaseWeaponScript: MonoBehaviour, IPickable
 {
     public LayerMask mask { get; private set; }
     
-    public WeaponState weaponType;
+    public WeaponStateEnum weaponType;
     public GameObject bullet;
     public float bulletSpeed;
     public float rateOfFire;
@@ -34,16 +34,16 @@ public abstract class BaseWeaponScript: MonoBehaviour, IPickable
     {
         var parentLayer = transform.parent.gameObject.layer;
         if (parentLayer == LayerMask.NameToLayer("Player"))
-            SetMode(WeaponState.Player);
+            SetMode(WeaponStateEnum.Player);
         else if (parentLayer == LayerMask.NameToLayer("Enemies"))
-            SetMode(WeaponState.Enemy);
+            SetMode(WeaponStateEnum.Enemy);
         else if (parentLayer == LayerMask.NameToLayer("Default"))
-            SetMode(WeaponState.Nothing);
+            SetMode(WeaponStateEnum.Nothing);
 
         
     }
 
-    public void SetMode(WeaponState mode)
+    public void SetMode(WeaponStateEnum mode)
     {
         if (currentMode is not null)
             StopCoroutine(currentMode);
@@ -51,15 +51,15 @@ public abstract class BaseWeaponScript: MonoBehaviour, IPickable
         mask = baseMask;
         switch (weaponType)
         {
-            case WeaponState.Player:
+            case WeaponStateEnum.Player:
                 mask |= LayerMask.GetMask("Enemies");
                 currentMode = StartCoroutine(ShootByClick());
                 break;
-            case WeaponState.Enemy:
+            case WeaponStateEnum.Enemy:
                 mask |= LayerMask.GetMask("Player");
                 currentMode = StartCoroutine(ShootBySignal());
                 break;
-            case WeaponState.Nothing:
+            case WeaponStateEnum.Nothing:
                 currentMode = StartCoroutine(WaitForEvent());
                 break;
         }

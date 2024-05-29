@@ -4,21 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class RocketScript: BaseProjectileScript
 {
-    private GameObject explosion;
+    private Object explosion;
     private LayerMask explosionMask;
     private float explosionRadius;
+    private WeaponStateEnum weaponState;
     
     private void Start()
     {
-        explosion = Resources.Load("Other Elements/Exposion").GameObject();
+        explosion = Resources.Load("Other Elements/Exposion");
     }
     
     public void Shoot(Transform transformParent, float speed0, float lifetime,
         LayerMask mask0, LayerMask expMask,
-        float weaponDamage = 50f, float expRadius = 15f)
+        float weaponDamage = 50f, float expRadius = 15f, WeaponStateEnum state = WeaponStateEnum.Nothing)
     {
         transform.position = transformParent.position;
         transform.rotation = Quaternion.Euler(0f, 0f, transformParent.eulerAngles.z);
@@ -29,6 +31,7 @@ public class RocketScript: BaseProjectileScript
 
         explosionMask = expMask;
         explosionRadius = expRadius;
+        weaponState = state;
 
         StartCoroutine(FixedUpdateCoroutine());
     }
@@ -43,7 +46,8 @@ public class RocketScript: BaseProjectileScript
         // movementCollider.enabled = false;
         // explosionCollider.enabled = true;
         
-        Instantiate(explosion).GetComponent<ExplosionScript>().Init(transform.position, explosionRadius, explosionMask);
+        Instantiate(explosion).GetComponent<ExplosionScript>().Init(transform.position, damage, explosionRadius, 
+            explosionMask, weaponState);
         Destroy(gameObject);
     }
     

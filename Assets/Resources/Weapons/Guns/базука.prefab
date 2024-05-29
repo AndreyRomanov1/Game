@@ -187,17 +187,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 0
   bullet: {fileID: 2124877345654037562, guid: 84ab05b293be9704d954c2d524212da3, type: 3}
-  bulletSpeed: 2
-  rateOfFire: 0.3
+  bulletSpeed: 5
+  rateOfFire: 0.5
   bulletLifetime: 50
   damage: 50
   baseMask:
     serializedVersion: 2
     m_Bits: 256
-  explosionRadius: 4
+  explosionRadius: 3
   explosionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
 --- !u!114 &-7381528742826205013
 MonoBehaviour:
   m_ObjectHideFlags: 0
