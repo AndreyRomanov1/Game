@@ -82,7 +82,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
-        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponStateEnum.Nothing);
+        currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Nothing);
         Instantiate(triggerPrefab, transform).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
@@ -91,7 +91,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         currentGun.transform.parent = gunPosition.transform;
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localEulerAngles = Vector3.zero;
-        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponStateEnum.Player);
+        currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Player);
     }
 
     private void InitPlayerComponent()
