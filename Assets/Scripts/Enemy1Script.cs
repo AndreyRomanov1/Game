@@ -48,13 +48,16 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         }
     }
 
-    private IEnumerator Guidance() // TODO Не искать игрока в неактивной игре
+    private IEnumerator Guidance()
     {
         // yield return new WaitForSeconds(DelayBeforeFiring); // Я убрал, вроде стало получше, если будет слишком жёстко, вернём
         // Debug.Log("Start shoot");
 
         while (IsPlayerInSight(out var hit))
         {
+            if (Model.GameState != GameState.ActiveGame)
+                yield return null;
+            
             var hitLine = hit.point - (Vector2)pivot.transform.position;
             var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
             var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;

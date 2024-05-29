@@ -8,11 +8,11 @@ using UnityEngine;
 
 public class MovementPlayer
 {
-    private const float JumpBoost = 240f;
-    private const float MaxJumpForce = 5;
+    private const float JumpBoost = 120f;
+    private const float MaxJumpForce = 10;
     private const float MinJumpForce = 0.7f;
-    private const float RiftBoost = 300f;
-    private const float MaxRiftForce = 4;
+    private const float RiftBoost = 150f;
+    private const float MaxRiftForce = 8;
     private const float MinRiftForce = 0.7f;
 
     private const float MaxRiftDurationTime = 1.2f;

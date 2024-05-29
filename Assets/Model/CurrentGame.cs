@@ -7,15 +7,10 @@ public static class CurrentGame
     public static PlayerScript Player;
 
     public static Camera PlayerCamera;
-
-    public static float GameSpeed => IsSlowGame ? 0.01f : 1f;
+    
 
     public static Dictionary<SpeakersEnum, ISpeakingCharacter> EnumToSpeaker;
-
-    public static bool IsSlowGame => Player.PlayerState is
-        PlayerStates.CrouchedToJump
-        or PlayerStates.CrouchedToJumpFromLeftWall
-        or PlayerStates.CrouchedToJumpFromRightWall;
+    
     // Здоровье, сколько прошёл блоков от начала забега. Список сгенерированных блоков 
 
     public static void ResetGame(string pathToLevelBlocks)

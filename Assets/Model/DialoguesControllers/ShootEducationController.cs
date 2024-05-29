@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 public class ShootEducationController : IController
 {
@@ -16,4 +17,7 @@ public class ShootEducationController : IController
             cloudNumber++;
         }
     }
+
+    public HashSet<ISpeakingCharacter> GetDialogueParticipants()
+        => clouds.Select(t => t.Speaker).ToHashSet();
 }

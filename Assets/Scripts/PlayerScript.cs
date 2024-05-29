@@ -36,6 +36,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         set
         {
             animations.PlayAnimation(playerState, value);
+            TimeController.ChangePlayerState(playerState, value);
             playerState = value;
         }
     }

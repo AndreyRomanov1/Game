@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -33,11 +31,11 @@ public static class Tools
         obj.GetComponent<CollectionTriggerScript>().CreateTrigger(position);
         return obj;
     }
-    
+
     public static GameObject SpawnObject(GameObject prefab, Vector2 position, GameObject parent = null)
     {
-        var obj = parent is not null 
-            ? Object.Instantiate(prefab, parent.transform, true) 
+        var obj = parent is not null
+            ? Object.Instantiate(prefab, parent.transform, true)
             : Object.Instantiate(prefab);
         obj.SetActive(true);
         obj.transform.position = position;

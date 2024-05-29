@@ -1,19 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TrajectoryRenderScript : MonoBehaviour
 {
-    public int count = 10;
-    public float deltaTime = 0.1f;
+    private const int Count = 100;
+    private const float DeltaTime = 0.1f;
     public LayerMask trajectoryStoppers;
-    
+
     private LineRenderer lineRendererComponent;
     private Rigidbody2D physics;
 
-    void Start()
+    private void Start()
     {
         lineRendererComponent = GetComponent<LineRenderer>();
         physics = GetComponentInParent<Rigidbody2D>();
@@ -21,18 +17,18 @@ public class TrajectoryRenderScript : MonoBehaviour
 
     public void ShowTrajectory(Vector2 force)
     {
-        var result = new Vector3[count];
-        lineRendererComponent.positionCount = count;
+        var result = new Vector3[Count];
+        lineRendererComponent.positionCount = Count;
 
         var boost = force / physics.mass;
         var velocity = boost * Time.fixedDeltaTime;
         result[0] = transform.position;
-        
-        for (var i = 1; i < count; i++)
+
+        for (var i = 1; i < Count; i++)
         {
-            var time = deltaTime * i;
-            result[i] = transform.position +
-                        (Vector3)(velocity * time + Physics2D.gravity * (time * time * physics.gravityScale) / 2f);
+            var time = DeltaTime * i;
+            result[i] = transform.position
+                        + (Vector3)(velocity * time + Physics2D.gravity * (time * time * physics.gravityScale) / 2f);
 
             if (Tools.FindObjectOnLine(result[i - 1], result[i],
                     trajectoryStoppers, out var other))
@@ -41,7 +37,7 @@ public class TrajectoryRenderScript : MonoBehaviour
                 break;
             }
         }
-        
+
         lineRendererComponent.SetPositions(result);
     }
 
