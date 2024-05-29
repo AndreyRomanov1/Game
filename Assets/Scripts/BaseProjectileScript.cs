@@ -32,7 +32,7 @@ public abstract class BaseProjectileScript: MonoBehaviour
         var lastPos = transform.position;
         for (var time = 0f; time < _lifetime; time += Time.fixedDeltaTime)
         {
-            var displacement = transform.right * (CurrentGame.GameSpeed * _speed * Time.fixedDeltaTime);
+            var displacement = transform.right * (_speed * Time.fixedDeltaTime);
             transform.Translate(displacement, Space.World);
 
             if (Tools.FindObjectOnLine(lastPos, transform.position, _mask, out var collision))
