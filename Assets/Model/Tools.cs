@@ -39,7 +39,7 @@ public static class Tools
             : Object.Instantiate(prefab);
         obj.SetActive(true);
         obj.transform.position = position;
-        Debug.Log($"{position} -> {obj.transform.position}");
+        // Debug.Log($"{position} -> {obj.transform.position}");
         return obj;
     }
 }

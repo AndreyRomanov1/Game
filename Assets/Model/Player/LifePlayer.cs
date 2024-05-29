@@ -32,7 +32,7 @@ public class LifePlayer
     }
     private static void Die()
     {
-        CurrentGame.KillGame();
+        CurrentGame.KillCurrentGame();
         Model.StartGame();
     }
 }

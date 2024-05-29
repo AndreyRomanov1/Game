@@ -46,7 +46,9 @@ public class MovementPlayer
         {
             if (Model.IsActiveGame)
                 MovementLogic();
-            // player.Print();
+            
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+                player.Print();
             yield return null;
         }
     }

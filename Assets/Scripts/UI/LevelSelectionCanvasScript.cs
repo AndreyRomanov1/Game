@@ -18,7 +18,7 @@ public class LevelSelectionCanvasScript : MonoBehaviour
         startLevelButton.onClick.AddListener(() => LevelSelectionUIController.StartNewGame("StartBlocks"));
         infinityLevelButton = GameObject.Find("InfinityLevelButton").GetComponent<Button>();
         infinityLevelButton.onClick.AddListener(() => LevelSelectionUIController.StartNewGame("InfinityBlocks"));
-        // exitButton = GameObject.Find("ExitButton").GetComponent<Button>();
-        // exitButton.onClick.AddListener(UI.ExitGame);
+        exitButton = GameObject.Find("ExitGameButton").GetComponent<Button>();
+        exitButton.onClick.AddListener(UI.ExitGame);
     }
 }
