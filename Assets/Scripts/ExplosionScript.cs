@@ -23,6 +23,8 @@ public class ExplosionScript: MonoBehaviour
         collider.contactCaptureLayers = ExplosionMask;
         collider.callbackLayers = ExplosionMask;
         explosionInitiator = initiator;
+        StartCoroutine(LetDestroy());
+
     }
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -32,12 +34,11 @@ public class ExplosionScript: MonoBehaviour
         if (other.gameObject.layer ==WeaponState.StateToLayerConnectedObject(explosionInitiator))
             damage /= 2;
         other.GetComponent<IDamageable>().TakeDamage(damage);
-        StartCoroutine(WaitNextUpdateCoroutine());
     }
 
-    private IEnumerator WaitNextUpdateCoroutine()
+    private IEnumerator LetDestroy()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.3f);
         Destroy(gameObject);
     }
 }

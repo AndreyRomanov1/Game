@@ -1,18 +1,19 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using MouseButton = UnityEngine.UIElements.MouseButton;
 
-public abstract class BaseWeaponScript: MonoBehaviour, IPickable
+public abstract class BaseGunScript: MonoBehaviour, IPickable
 {
-    public LayerMask mask { get; private set; }
+    public LayerMask mask { get; private set; } 
+    public WeaponStateEnum weaponType { get; private set; }
     
-    public WeaponStateEnum weaponType;
-    public GameObject bullet;
-    public float bulletSpeed;
-    public float rateOfFire;
-    public float bulletLifetime;
-    public float damage;
-    public LayerMask baseMask;
+    public GameObject bullet { get; set; }
+    protected abstract float bulletSpeed { get; set; }
+    protected abstract float rateOfFire { get; set; }
+    protected abstract float bulletLifetime { get; set; }
+    protected abstract float damage { get; set; }
+    public LayerMask baseMask { get; set; }
 
     protected BulletTrajectoryRenderScript trajectoryRender;
     protected bool isNeedShoot = false;
@@ -27,7 +28,15 @@ public abstract class BaseWeaponScript: MonoBehaviour, IPickable
         trajectoryRender = GetComponent<BulletTrajectoryRenderScript>();
         timeBetweenShots = 1 / rateOfFire;
         soundSource = GetComponent<WeaponSoundScript>();
+        baseMask = LayerMask.GetMask("Block");
+        
         DetectMode();
+        SelfStart();
+    }
+
+    protected virtual void SelfStart()
+    {
+        bullet = Resources.Load("Weapons/Bullets/Bullet").GameObject();
     }
 
     protected void DetectMode()
@@ -39,8 +48,6 @@ public abstract class BaseWeaponScript: MonoBehaviour, IPickable
             SetMode(WeaponStateEnum.Enemy);
         else if (parentLayer == LayerMask.NameToLayer("Default"))
             SetMode(WeaponStateEnum.Nothing);
-
-        
     }
 
     public void SetMode(WeaponStateEnum mode)

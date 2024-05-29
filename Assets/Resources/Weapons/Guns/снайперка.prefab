@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3243598785315075728}
   - component: {fileID: 674611619266271213}
-  - component: {fileID: -6392008394106851532}
+  - component: {fileID: -6498161108375064069}
   - component: {fileID: -7381528742826205013}
   - component: {fileID: 2222930839964355732}
   - component: {fileID: -7939470693917206121}
@@ -173,7 +173,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &-6392008394106851532
+--- !u!114 &-6498161108375064069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,18 +182,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4393465235544274999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7716f5a293832248a7ca0d41ca33946, type: 3}
+  m_Script: {fileID: 11500000, guid: 3417b374dc2d4ca797444f6c3e557d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
-  bullet: {fileID: 2124877345654037562, guid: 4401196a10abcde438a38c1eb87b3819, type: 3}
   bulletSpeed: 60
   rateOfFire: 0.25
   bulletLifetime: 10
   damage: 100
-  baseMask:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &-7381528742826205013
 MonoBehaviour:
   m_ObjectHideFlags: 0

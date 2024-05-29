@@ -17,13 +17,13 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     public GameObject gunPrefab;
     public LayerMask detectedLayers;
 
-    private BaseWeaponScript gun;
+    private BaseGunScript gun;
     private PlayerScript player;
     private SpriteRenderer healthIndicator;
 
     void Start()
     {
-        gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<BaseWeaponScript>();
+        gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<BaseGunScript>();
         player = CurrentGame.Player;
         healthIndicator = transform.Find("нимб").GetComponent<SpriteRenderer>();
         healthPoints = MaxHealthPoints;
