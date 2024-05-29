@@ -30,9 +30,4 @@ public static class Model
         Game.StartCoroutine(Pause.PauseCoroutine());
         Game.StartCoroutine(TimeController.TimeSlowerCoroutine());
     }
-
-    public static void StartNewGame(string pathToLevelBlocks)
-    {
-        CurrentGame.ResetGame(pathToLevelBlocks);
-    }
 }

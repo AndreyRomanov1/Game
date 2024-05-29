@@ -21,6 +21,6 @@ public static class LevelSelectionUIController
     {
         Hide();
         Debug.Log(pathToLevelBlocks);
-        Model.StartNewGame(pathToLevelBlocks);
+        CurrentGame.StartCurrentGame(pathToLevelBlocks);
     }
 }

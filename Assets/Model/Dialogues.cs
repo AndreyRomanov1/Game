@@ -9,11 +9,7 @@ public static class Dialogues
     private static GameObject activeDialogue;
     private static IController activeController;
 
-    private static readonly Dictionary<string, IController> DialogueController = new()
-    {
-        ["JumpEducation"] = new JumpEducationController(),
-        ["ShootEducation"] = new ShootEducationController(),
-    };
+    private static Dictionary<string, IController> DialogueController;
 
     public static IEnumerator DialoguesCoroutine()
     {
@@ -24,6 +20,16 @@ public static class Dialogues
                 activeController.NextDialogues();
             yield return null;
         }
+    }
+    public static void Reset()
+    {
+        Debug.Log("Reset Dialogues");
+        Debug.Log(CurrentGame.EnumToSpeaker);
+        DialogueController = new Dictionary<string, IController>
+        {
+            ["JumpEducation"] = new JumpEducationController(),
+            ["ShootEducation"] = new ShootEducationController(),
+        };
     }
 
     public static void DialogueHandler(string triggerName)
@@ -57,8 +63,8 @@ public static class Dialogues
             .Select(speakerAndPath =>
                 (speakerAndPath.Key, GameScript.LoadAllByName("Clouds/" + path + "/" + speakerAndPath.Value)))
             .SelectMany(speakerAndClouds =>
-                speakerAndClouds.Item2.Select(t2 =>
-                    new DialogueCloud(CurrentGame.EnumToSpeaker[speakerAndClouds.Key], t2)))
+                speakerAndClouds.Item2.Select(speakerAndCloud =>
+                    new DialogueCloud(CurrentGame.EnumToSpeaker[speakerAndClouds.Key], speakerAndCloud)))
             .OrderBy(cloud => int.Parse(cloud.Cloud.name))
             .ToArray();
 

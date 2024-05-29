@@ -13,19 +13,18 @@ public static class CurrentGame
     
     // Здоровье, сколько прошёл блоков от начала забега. Список сгенерированных блоков 
 
-    public static void ResetGame(string pathToLevelBlocks)
+    public static void StartCurrentGame(string pathToLevelBlocks)
     {
-        KillGame();
-        Model.GameState = GameStates.ActiveGame;
+        KillCurrentGame();
+        Model.GameState = GameState.ActiveGame;
 
         Grid = GameScript.CreateGrid().GetComponent<GridScript>();
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         Grid.InitGrid(pathToLevelBlocks);
-
     }
 
-    public static void KillGame()
+    public static void KillCurrentGame()
     {
         if (Player == null || Grid == null)
             return;

@@ -114,6 +114,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
             [SpeakersEnum.Player] = this,
             [SpeakersEnum.GreatCornEar] = Helper
         };
+        Dialogues.Reset();
+
         Model.Game.StartCoroutine(Dialogues.DialoguesCoroutine());
 
         groundCheckers = GameObject.FindGameObjectsWithTag("GroundCheck")
