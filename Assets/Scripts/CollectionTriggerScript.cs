@@ -11,7 +11,7 @@ public class CollectionTriggerScript : MonoBehaviour
 {
     private static readonly Dictionary<string, int> foldersChance = new()
     {
-        { "Weapons/Guns",  3}, { "Heals", 7 }
+        { "Weapons/Guns", 2 }, { "Heals", 8 }
     };
 
     private Random random;
@@ -84,12 +84,14 @@ public class CollectionTriggerScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log($"Contact object: {other.tag}");
+        player.ShowButtonIcon(Buttons.F);
         if (other.CompareTag("Player"))
             isPlayerInTrigger = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        player.HideButtonIcon(Buttons.F);
         if (other.CompareTag("Player"))
             isPlayerInTrigger = false;   
     }

@@ -30,6 +30,12 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     private GameObject triggerPrefab;
 
+    private Dictionary<Buttons, GameObject> ButtonObjects = new()
+    {
+        { Buttons.F, null },
+        { Buttons.Space, null }
+    };
+
     public PlayerStates PlayerState
     {
         get => playerState;
@@ -74,7 +80,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
-        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Nothing);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponState.Nothing);
         Instantiate(triggerPrefab).GetComponent<CollectionTriggerScript>().CreateTrigger(currentGun);
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
@@ -84,7 +90,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         currentGun.transform.parent = gunPosition.transform;
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localEulerAngles = Vector3.zero;
-        currentGun.GetComponent<PistolScript>().SetMode(WeaponState.Player);
+        currentGun.GetComponent<BaseWeaponScript>().SetMode(WeaponState.Player);
     }
 
     private void InitPlayerComponent()
@@ -128,6 +134,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
         currentGun = Instantiate(currentGun, gunPosition.transform);
         // SetGun(currentGun);
+        InitButtonDict();
     }
 
     public void FlipPlayerToDirection(Directions flipDirection)
@@ -146,5 +153,16 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     public void HideIfNeed()
     {
+    }
+
+    public void ShowButtonIcon(Buttons button) => ButtonObjects[button].SetActive(true);
+
+    public void HideButtonIcon(Buttons button) => ButtonObjects[button].SetActive(false);
+
+    private void InitButtonDict()
+    {
+        var buttonsFolder = transform.Find("Tools").Find("Buttons");
+        foreach (var buttonName in ButtonObjects.Keys.ToArray())
+            ButtonObjects[buttonName] = buttonsFolder.Find($"{ButtonsEnum.EnumToName[buttonName]}_button").gameObject;
     }
 }
