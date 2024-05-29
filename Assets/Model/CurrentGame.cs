@@ -3,32 +3,27 @@ using UnityEngine;
 
 public static class CurrentGame
 {
-    public static GridScript Grid;
+    private static readonly GameObject CurrentGamePrefab = GameScript.LoadByName("CurrentGame");
+    public static GameObject CurrentGameObject;
     public static PlayerScript Player;
-
     public static Camera PlayerCamera;
-    
 
     public static Dictionary<SpeakersEnum, ISpeakingCharacter> EnumToSpeaker;
-    
-    // Здоровье, сколько прошёл блоков от начала забега. Список сгенерированных блоков 
 
     public static void StartCurrentGame(string pathToLevelBlocks)
     {
         KillCurrentGame();
+        CurrentGameObject = GameScript.CreateByGameObject(CurrentGamePrefab, Model.Game.gameObject);
         Model.GameState = GameStates.ActiveGame;
 
-        Grid = GameScript.CreateGrid().GetComponent<GridScript>();
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
-        Grid.InitGrid(pathToLevelBlocks);
+        GameScript.CreateGrid().GetComponent<GridScript>().InitGrid(pathToLevelBlocks);
     }
 
     public static void KillCurrentGame()
     {
-        if (Player is null || Grid is null)
-            return;
-        Object.Destroy(Player.gameObject);
-        Object.Destroy(Grid.gameObject);
+        if (CurrentGameObject != null)
+            Object.Destroy(CurrentGameObject);
     }
 }

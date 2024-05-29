@@ -1,1 +1,3 @@
-public class PistolScript : BaseWeaponScript {}
+public class PistolScript : BaseWeaponScript
+{
+}

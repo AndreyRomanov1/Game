@@ -7,7 +7,7 @@ public class BazookaScript : BaseWeaponScript
     
     protected override void Shoot()
     {
-        var currentBullet = Instantiate(bullet).GetComponent<RocketScript>();
+        var currentBullet = GameScript.CreateByGameObjectInCurrentGame(bullet).GetComponent<RocketScript>();
         soundSource?.Shoot(transform.position);
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, explosionMask, damage, explosionRadius);
     }

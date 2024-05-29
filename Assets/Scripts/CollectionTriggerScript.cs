@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 using Random = System.Random;
 
@@ -16,7 +13,7 @@ public class CollectionTriggerScript : MonoBehaviour
 
     private Random random;
     private PlayerScript player;
-    private GameObject ContainedObject;
+    private GameObject containedObject;
     private bool isPlayerInTrigger = false;
 
     public void Start()
@@ -30,13 +27,13 @@ public class CollectionTriggerScript : MonoBehaviour
     public GameObject CreateTrigger(GameObject contained)
     {
         CreateRandom();
-        if (contained is null) 
+        if (contained is null)
             Destroy(gameObject);
-        Debug.Log($"{ContainedObject?.name} -> {contained?.name}");
-        ContainedObject = contained;
+        Debug.Log($"{containedObject?.name} -> {contained?.name}");
+        containedObject = contained;
         transform.position = contained.transform.position;
-        ContainedObject.gameObject.transform.parent = transform;
-        ContainedObject.transform.localPosition = new Vector3(0, 0, 0);
+        containedObject.gameObject.transform.parent = transform;
+        containedObject.transform.localPosition = new Vector3(0, 0, 0);
         return gameObject;
     }
 
@@ -48,19 +45,19 @@ public class CollectionTriggerScript : MonoBehaviour
         // Debug.Log($"{string.Join(" ", guns.Select(x => x.name).ToArray())}");
         var num = random.Next(elements.Length);
         Debug.Log(num);
-        var gun = Instantiate(elements[num]);
+        var gun = GameScript.CreateByGameObjectInCurrentGame(elements[num]);
         gun.transform.position = position;
         return CreateTrigger(gun);
     }
 
-    IEnumerator WaitAnotherAction()
+    private IEnumerator WaitAnotherAction()
     {
         yield return null;
-        if (ContainedObject is null)
-            CreateTrigger(new Vector3(0,0));
+        if (containedObject is null)
+            CreateTrigger(new Vector3(0, 0));
     }
 
-    IEnumerator CheckInteraction()
+    private IEnumerator CheckInteraction()
     {
         yield return null;
         while (true)
@@ -69,7 +66,7 @@ public class CollectionTriggerScript : MonoBehaviour
             if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.F))
             {
                 // Debug.Log("Нажал подобрать");
-                ContainedObject.GetComponent<IPickable>().PickUp(player);
+                containedObject.GetComponent<IPickable>().PickUp(player);
                 Destroy(gameObject);
             }
 
@@ -93,6 +90,6 @@ public class CollectionTriggerScript : MonoBehaviour
     {
         player.HideButtonIcon(Buttons.F);
         if (other.CompareTag("Player"))
-            isPlayerInTrigger = false;   
+            isPlayerInTrigger = false;
     }
 }

@@ -21,7 +21,7 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     private PlayerScript player;
     private SpriteRenderer healthIndicator;
 
-    void Start()
+    private void Start()
     {
         gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<BaseWeaponScript>();
         player = CurrentGame.Player;

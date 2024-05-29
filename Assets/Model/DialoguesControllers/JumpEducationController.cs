@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class JumpEducationController : IController
 {
@@ -18,6 +19,6 @@ public class JumpEducationController : IController
         }
     }
 
-    public HashSet<ISpeakingCharacter> GetDialogueParticipants()
-        => clouds.Select(t => t.Speaker).ToHashSet();
+    public HashSet<ISpeakingCharacter> GetDialogueParticipants() => 
+        clouds.Select(t => t.Speaker).ToHashSet();
 }

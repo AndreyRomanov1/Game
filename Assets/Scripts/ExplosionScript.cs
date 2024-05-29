@@ -5,9 +5,9 @@ using UnityEngine.Serialization;
 
 public class ExplosionScript: MonoBehaviour
 {
-    public LayerMask ExplosionMask;
+    public LayerMask explosionMask;
     
-    private CircleCollider2D collider;
+    private CircleCollider2D collider0;
     private float explosionDamage;
     private WeaponStateEnum explosionInitiator;
 
@@ -16,12 +16,12 @@ public class ExplosionScript: MonoBehaviour
     {
         transform.position = position;
         explosionDamage = damage;
-        collider = GetComponent<CircleCollider2D>();
+        collider0 = GetComponent<CircleCollider2D>();
         if (layerMask != default)
-            ExplosionMask = layerMask;
-        collider.radius = radius;
-        collider.contactCaptureLayers = ExplosionMask;
-        collider.callbackLayers = ExplosionMask;
+            explosionMask = layerMask;
+        collider0.radius = radius;
+        collider0.contactCaptureLayers = explosionMask;
+        collider0.callbackLayers = explosionMask;
         explosionInitiator = initiator;
     }
     
