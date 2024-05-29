@@ -30,10 +30,10 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     private GameObject triggerPrefab;
 
-    private readonly Dictionary<Buttons, GameObject> buttonObjects = new()
+    private readonly Dictionary<ButtonsEnum, GameObject> buttonObjects = new()
     {
-        { Buttons.F, null },
-        { Buttons.Space, null }
+        { ButtonsEnum.F, null },
+        { ButtonsEnum.Space, null }
     };
 
     public PlayerStates PlayerState
@@ -158,14 +158,14 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     {
     }
 
-    public void ShowButtonIcon(Buttons button) => buttonObjects[button].SetActive(true);
+    public void ShowButtonIcon(ButtonsEnum buttonEnum) => buttonObjects[buttonEnum].SetActive(true);
 
-    public void HideButtonIcon(Buttons button) => buttonObjects[button].SetActive(false);
+    public void HideButtonIcon(ButtonsEnum buttonEnum) => buttonObjects[buttonEnum].SetActive(false);
 
     private void InitButtonDict()
     {
         var buttonsFolder = transform.Find("Tools").Find("Buttons");
         foreach (var buttonName in buttonObjects.Keys.ToArray())
-            buttonObjects[buttonName] = buttonsFolder.Find($"{ButtonsEnum.EnumToName[buttonName]}_button").gameObject;
+            buttonObjects[buttonName] = buttonsFolder.Find($"{Buttons.EnumToName[buttonName]}_button").gameObject;
     }
 }

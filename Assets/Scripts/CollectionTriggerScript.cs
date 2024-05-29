@@ -81,14 +81,14 @@ public class CollectionTriggerScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log($"Contact object: {other.tag}");
-        player.ShowButtonIcon(Buttons.F);
+        player.ShowButtonIcon(ButtonsEnum.F);
         if (other.CompareTag("Player"))
             isPlayerInTrigger = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        player.HideButtonIcon(Buttons.F);
+        player.HideButtonIcon(ButtonsEnum.F);
         if (other.CompareTag("Player"))
             isPlayerInTrigger = false;
     }
