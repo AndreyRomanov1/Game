@@ -20,14 +20,14 @@ public static class TimeController
         }
     }
 
-    public static void ChangeGameState(GameState oldState, GameState newState)
+    public static void ChangeGameState(GameStates oldStates, GameStates newStates)
     {
-        if (newState is GameState.Dialogue or GameState.Pause or GameState.StartGameMenu)
+        if (newStates is GameStates.Dialogue or GameStates.Pause or GameStates.StartGameMenu)
             Time.timeScale = 0;
-        else if (newState == GameState.ActiveGame)
+        else if (newStates == GameStates.ActiveGame)
             Time.timeScale = 1;
         else
-            Debug.Log($"Неизвестный для времени переход состояний игры {oldState} => {newState}");
+            Debug.Log($"Неизвестный для времени переход состояний игры {oldStates} => {newStates}");
     }
 
     public static void ChangePlayerState(PlayerStates oldState, PlayerStates newState)

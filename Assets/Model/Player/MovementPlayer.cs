@@ -53,7 +53,7 @@ public class MovementPlayer
 
     private void MovementLogic()
     {
-        if (Model.GameState == GameState.ActiveGame
+        if (Model.GameState == GameStates.ActiveGame
             && movementStateActions.TryGetValue(player.PlayerState, out var action))
             action();
     }

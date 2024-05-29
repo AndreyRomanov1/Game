@@ -28,34 +28,23 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         healthIndicator = transform.Find("нимб").GetComponent<SpriteRenderer>();
         healthPoints = MaxHealthPoints;
 
-        StartCoroutine(PlayerSearch());
+        // StartCoroutine(PlayerSearch());
+        StartCoroutine(GuidingHandsCoroutine());
+        StartCoroutine(ShootingCoroutine());
     }
 
-    private IEnumerator PlayerSearch()
-    {
-        yield return new WaitForFixedUpdate();
-        while (true)
-        {
-            if (IsPlayerInSight())
-            {
-                var guidanceCoroutine = StartCoroutine(Guidance());
-                var shootingCoroutine = StartCoroutine(Shooting());
-                yield return guidanceCoroutine;
-                StopCoroutine(shootingCoroutine);
-            }
-            yield return new WaitForFixedUpdate();
-            // Debug.Log("Не на линии");
-        }
-    }
-
-    private IEnumerator Guidance()
+    private IEnumerator GuidingHandsCoroutine()
     {
         // yield return new WaitForSeconds(DelayBeforeFiring); // Я убрал, вроде стало получше, если будет слишком жёстко, вернём
         // Debug.Log("Start shoot");
 
-        while (IsPlayerInSight(out var hit))
+        while (true)
         {
-            if (Model.GameState != GameState.ActiveGame)
+            yield return new WaitForFixedUpdate();
+            if (!IsPlayerInSight(out var hit))
+                continue;
+            
+            if (Model.GameState != GameStates.ActiveGame)
                 yield return null;
             
             var hitLine = hit.point - (Vector2)pivot.transform.position;
@@ -74,12 +63,10 @@ public class Enemy1Script : MonoBehaviour, IDamageable
                 pivot.transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
                 // Debug.Log($"{pivot.transform.rotation}: {currentVectorRotation} + {rotation}");
             }
-
-            yield return new WaitForFixedUpdate();
         }
     }
 
-    private IEnumerator Shooting()
+    private IEnumerator ShootingCoroutine()
     {
         while (true)
         {
@@ -98,7 +85,8 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         var startPoint = pivot.transform.position;
         foreach (var vector in player.targets.Select(target => (target.position - startPoint).normalized))
         {
-            return IsPlayerOnLine(startPoint, vector, out hit);
+            if (IsPlayerOnLine(startPoint, vector, out hit))
+                return true;
         }
 
         // Debug.Log(LayerMask.LayerToName(hit.transform.gameObject.layer));

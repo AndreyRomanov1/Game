@@ -10,16 +10,16 @@ public static class Pause
         {
             switch (Model.GameState)
             {
-                case GameState.ActiveGame when Input.GetKeyUp(KeyCode.Escape):
+                case GameStates.ActiveGame when Input.GetKeyUp(KeyCode.Escape):
                     Debug.Log($"P1 {Model.GameState} {Input.GetKeyUp(KeyCode.Escape)}");
 
-                    Model.GameState = GameState.Pause;
+                    Model.GameState = GameStates.Pause;
                     PauseUIController.Show();
                     CurrentGame.PlayerCamera.gameObject.SetActive(false);
                     break;
-                case GameState.Pause when Input.GetKeyUp(KeyCode.Escape):
+                case GameStates.Pause when Input.GetKeyUp(KeyCode.Escape):
                     Debug.Log($"P2 {Model.GameState} {Input.GetKeyUp(KeyCode.Escape)}");
-                    Model.GameState = GameState.ActiveGame;
+                    Model.GameState = GameStates.ActiveGame;
                     PauseUIController.Hide();
                     CurrentGame.PlayerCamera.gameObject.SetActive(true);
                     break;

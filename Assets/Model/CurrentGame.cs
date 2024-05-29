@@ -16,7 +16,7 @@ public static class CurrentGame
     public static void ResetGame(string pathToLevelBlocks)
     {
         KillGame();
-        Model.GameState = GameState.ActiveGame;
+        Model.GameState = GameStates.ActiveGame;
 
         Grid = GameScript.CreateGrid().GetComponent<GridScript>();
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();

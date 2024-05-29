@@ -7,9 +7,9 @@ public static class Model
 
     public static GameScript Game;
 
-    private static GameState gameState;
+    private static GameStates gameState;
 
-    public static GameState GameState
+    public static GameStates GameState
     {
         get => gameState;
         set
@@ -19,13 +19,13 @@ public static class Model
         }
     }
 
-    public static bool IsActiveGame => GameState == GameState.ActiveGame;
+    public static bool IsActiveGame => GameState == GameStates.ActiveGame;
 
     // Сколько блоков было пройдено всего, максимальная длинна в блоках забега, список оружий игрока, флаг пройдено ли обучение, различная статистика
 
     public static void StartGame()
     {
-        GameState = GameState.StartGameMenu;
+        GameState = GameStates.StartGameMenu;
         LevelSelectionUIController.Show();
         Game.StartCoroutine(Pause.PauseCoroutine());
         Game.StartCoroutine(TimeController.TimeSlowerCoroutine());

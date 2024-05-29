@@ -42,14 +42,14 @@ public static class Dialogues
     {
         ResetDialogueCloud();
         activeDialogue = Object.Instantiate(dialogueCloud.Cloud, dialogueCloud.Speaker.GetDialoguesAnchor().transform);
-        Model.GameState = GameState.Dialogue;
+        Model.GameState = GameStates.Dialogue;
     }
 
     private static void ResetDialogueCloud()
     {
         if (activeDialogue != null)
             Object.Destroy(activeDialogue);
-        Model.GameState = GameState.ActiveGame;
+        Model.GameState = GameStates.ActiveGame;
     }
 
     public static DialogueCloud[] LoadSortedClouds(string path) =>

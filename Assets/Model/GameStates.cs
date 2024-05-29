@@ -1,4 +1,4 @@
-﻿public enum GameState
+﻿public enum GameStates
 {
     StartGameMenu = 0,
     Dialogue = 1,
