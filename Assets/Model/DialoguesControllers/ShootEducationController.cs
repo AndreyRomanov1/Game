@@ -18,6 +18,6 @@ public class ShootEducationController : IController
         }
     }
 
-    public HashSet<ISpeakingCharacter> GetDialogueParticipants()
-        => clouds.Select(t => t.Speaker).ToHashSet();
+    public HashSet<ISpeakingCharacter> GetDialogueParticipants() => 
+        clouds.Select(t => t.Speaker).ToHashSet();
 }

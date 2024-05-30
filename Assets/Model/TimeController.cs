@@ -11,23 +11,26 @@ public static class TimeController
         yield return new WaitForFixedUpdate();
         while (true)
         {
+            yield return null;
             if (decelerationTime == 0)
-                yield return null;
+                continue;
             var t = decelerationTime;
             decelerationTime = 0;
             yield return new WaitForSeconds(t);
             Time.timeScale = 1;
+
         }
     }
 
-    public static void ChangeGameState(GameStates oldStates, GameStates newStates)
+    public static void ChangeGameState(GameStates oldState, GameStates newState)
     {
-        if (newStates is GameStates.Dialogue or GameStates.Pause or GameStates.StartGameMenu)
+        if (newState is GameStates.Dialogue or GameStates.Pause or GameStates.StartGameMenu)
             Time.timeScale = 0;
-        else if (newStates == GameStates.ActiveGame)
+        else if (newState == GameStates.ActiveGame)
             Time.timeScale = 1;
         else
-            Debug.Log($"Неизвестный для времени переход состояний игры {oldStates} => {newStates}");
+            Debug.Log($"Неизвестный для времени переход состояний игры {oldState} => {newState}");
+
     }
 
     public static void ChangePlayerState(PlayerStates oldState, PlayerStates newState)
@@ -38,7 +41,7 @@ public static class TimeController
                 or PlayerStates.CrouchedToJumpFromLeftWall
                 or PlayerStates.CrouchedToJumpFromRightWall)
             {
-                Time.timeScale = 0.2f;
+                Time.timeScale = 0.4f;
                 decelerationTime = 1;
             }
             else
@@ -48,7 +51,7 @@ public static class TimeController
 
     public static void EnemyHasDetectedPlayerHandler()
     {
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.4f;
         decelerationTime = 1;
     }
 }

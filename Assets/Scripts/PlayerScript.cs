@@ -77,7 +77,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     public void Print() =>
         Debug.Log(
-            $"{PlayerState} {IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
+            $"{PlayerState} {Model.GameState} Time:{Time.timeScale} Касание:{IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} Пробел: {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
     public void SetGun(GameObject gun)
     {

@@ -14,11 +14,11 @@ public static class CurrentGame
     {
         KillCurrentGame();
         CurrentGameObject = GameScript.CreateByGameObject(CurrentGamePrefab, Model.Game.gameObject);
-        Model.GameState = GameStates.ActiveGame;
 
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
         PlayerCamera = Player.GetComponentInChildren<Camera>();
         GameScript.CreateGrid().GetComponent<GridScript>().InitGrid(pathToLevelBlocks);
+        Model.GameState = GameStates.ActiveGame;
     }
 
     public static void KillCurrentGame()

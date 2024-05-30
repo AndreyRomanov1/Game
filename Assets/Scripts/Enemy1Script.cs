@@ -21,6 +21,8 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     private PlayerScript player;
     private SpriteRenderer healthIndicator;
 
+    private bool isPlayerWasSaw; 
+
     private void Start()
     {
         gun = Instantiate(gunPrefab, gunPosition.transform).GetComponent<BaseGunScript>();
@@ -46,6 +48,13 @@ public class Enemy1Script : MonoBehaviour, IDamageable
             
             if (Model.GameState != GameStates.ActiveGame)
                 yield return null;
+
+            if (!isPlayerWasSaw)
+            {
+                Debug.Log("Впервые увидел игрока");
+                isPlayerWasSaw = true;
+                TimeController.EnemyHasDetectedPlayerHandler();
+            }
             
             var hitLine = hit.point - (Vector2)pivot.transform.position;
             var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;

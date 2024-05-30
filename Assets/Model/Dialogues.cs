@@ -21,10 +21,10 @@ public static class Dialogues
             yield return null;
         }
     }
+
     public static void Reset()
     {
         Debug.Log("Reset Dialogues");
-        Debug.Log(CurrentGame.EnumToSpeaker);
         DialogueController = new Dictionary<string, IController>
         {
             ["JumpEducation"] = new JumpEducationController(),
@@ -48,14 +48,12 @@ public static class Dialogues
     {
         ResetDialogueCloud();
         activeDialogue = Object.Instantiate(dialogueCloud.Cloud, dialogueCloud.Speaker.GetDialoguesAnchor().transform);
-        Model.GameState = GameStates.Dialogue;
     }
 
     private static void ResetDialogueCloud()
     {
         if (activeDialogue != null)
             Object.Destroy(activeDialogue);
-        Model.GameState = GameStates.ActiveGame;
     }
 
     public static DialogueCloud[] LoadSortedClouds(string path) =>
@@ -78,10 +76,10 @@ public static class Dialogues
 
     public static void EndDialogue()
     {
-        Model.GameState = GameStates.ActiveGame;
         Debug.Log("Конец диалога");
         foreach (var speakingCharacter in activeController.GetDialogueParticipants())
             speakingCharacter.HideIfNeed();
+        Model.GameState = GameStates.ActiveGame;
         ResetDialogueCloud();
     }
 }
