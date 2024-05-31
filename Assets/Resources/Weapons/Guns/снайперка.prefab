@@ -185,10 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3417b374dc2d4ca797444f6c3e557d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 60
-  rateOfFire: 0.25
-  bulletLifetime: 10
-  damage: 100
 --- !u!114 &-7381528742826205013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,8 +211,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0381fa2fbd48df932f57326ccc6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShootSound: {fileID: 8300000, guid: 067855b1d9be5e8488b96b4fc04a5f98, type: 3}
-  ReloadSound: {fileID: 0}
+  ShootSound: {fileID: 8300000, guid: 60e63ee1eab949b46a73361feca9087b, type: 3}
+  ReloadSound: {fileID: 8300000, guid: 17b0345d08232b8418d8e4484dd246e6, type: 3}
 --- !u!120 &-7939470693917206121
 LineRenderer:
   serializedVersion: 2

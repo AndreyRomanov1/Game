@@ -12,7 +12,7 @@ public class LifePlayer
     {
         this.player = player;
         healthPoints = MaxHealthPoints;
-        healthPointsBar = player.tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar")
+        healthPointsBar = player.Tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar")
             .GetComponent<Image>();
     }
 

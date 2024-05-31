@@ -92,7 +92,7 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     {
         hit = default;
         var startPoint = pivot.transform.position;
-        foreach (var vector in player.targets.Select(target => (target.position - startPoint).normalized))
+        foreach (var vector in player.Targets.Select(target => (target.position - startPoint).normalized))
         {
             if (IsPlayerOnLine(startPoint, vector, out hit))
                 return true;

@@ -38,12 +38,12 @@ public class MovementStatePlayer
             if (player.PlayerState == PlayerStates.Rift)
             {
                 player.Print();
-                yield return new WaitForSeconds(player.riftDurationTime);
+                yield return new WaitForSeconds(player.RiftDurationTime);
                 if (!player.IsGrounded)
                     player.PlayerState = PlayerStates.Jump;
                 else
                 {
-                    player.physic.velocity = new Vector2(0, player.physic.velocity.y);
+                    player.Physic.velocity = new Vector2(0, player.Physic.velocity.y);
                     player.PlayerState = PlayerStates.Nothing;
                 }
 
@@ -70,7 +70,7 @@ public class MovementStatePlayer
                 while (!player.IsGrounded && !player.IsTouchedLeftWall && !player.IsTouchedRightWall)
                     yield return null; // Когда коснёмся поверхности, обнуляем X у скорости
                 Debug.Log("3 Коснулся земли или стены");
-                player.physic.velocity = new Vector2(0, player.physic.velocity.y);
+                player.Physic.velocity = new Vector2(0, player.Physic.velocity.y);
                 if (player.IsGrounded)
                     player.PlayerState = PlayerStates.Nothing;
                 else if (player.IsTouchedLeftWall)

@@ -62,15 +62,15 @@ public class MovementPlayer
 
     private void CrouchedToJumpFromWallMovementLogic()
     {
-        var velocity = player.physic.velocity;
-        player.physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
+        var velocity = player.Physic.velocity;
+        player.Physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
 
         var (state, vector) = GetWallMovementVector();
         if (Input.GetKey(KeyCode.Space))
             trajectory.ShowTrajectory(vector);
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            player.physic.AddForce(vector);
+            player.Physic.AddForce(vector);
             player.PlayerState = state;
             trajectory.ClearTrajectory();
         }
@@ -78,8 +78,8 @@ public class MovementPlayer
 
     private void HangingOnWallMovementLogic()
     {
-        var velocity = player.physic.velocity;
-        player.physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
+        var velocity = player.Physic.velocity;
+        player.Physic.velocity = new Vector2(velocity.x, velocity.y * 0.1f);
 
         if (Input.GetKeyDown(KeyCode.Space) && player.IsTouchedLeftWall)
             player.PlayerState = PlayerStates.CrouchedToJumpFromLeftWall;
@@ -99,7 +99,7 @@ public class MovementPlayer
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            player.physic.AddForce(vector);
+            player.Physic.AddForce(vector);
             player.PlayerState = state;
             trajectory.ClearTrajectory();
         }
@@ -165,7 +165,7 @@ public class MovementPlayer
             vector = vector.normalized * MaxRiftForce;
         else if (vector.magnitude < MinRiftForce)
             vector = Vector2.zero;
-        player.riftDurationTime = MaxRiftDurationTime * (vector.magnitude / MaxRiftForce);
+        player.RiftDurationTime = MaxRiftDurationTime * (vector.magnitude / MaxRiftForce);
         return vector * RiftBoost;
     }
 

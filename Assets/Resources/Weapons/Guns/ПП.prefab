@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0381fa2fbd48df932f57326ccc6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShootSound: {fileID: 8300000, guid: 067855b1d9be5e8488b96b4fc04a5f98, type: 3}
+  ShootSound: {fileID: 8300000, guid: f8ee1ebe6d4a6d74885ffed44de5127b, type: 3}
   ReloadSound: {fileID: 0}
 --- !u!120 &-3258129527530718868
 LineRenderer:

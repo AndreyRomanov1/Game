@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 {
-    public float riftDurationTime;
-
-    public GameObject tools;
-    public Rigidbody2D physic;
+    public float RiftDurationTime { get; set; }
+    public GameObject Tools { get; private set; }
+    public Rigidbody2D Physic { get; private set;  }
+    public Transform MainTarget { get; private set; }
+    public List<Transform> Targets { get; private set; }
 
     private Transform[] groundCheckers;
     private Transform leftWallCheck;
     private Transform rightWallCheck;
     public LayerMask groundMask;
     public GameObject currentGun;
-    public Transform mainTarget;
-    public List<Transform> targets;
+    
     private GameObject dialoguesAnchor;
 
     private ISpeakingCharacter helper;
@@ -96,8 +96,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     private void InitPlayerComponent()
     {
-        physic = GetComponent<Rigidbody2D>();
-        tools = transform.Find("Tools").gameObject;
+        Physic = GetComponent<Rigidbody2D>();
+        Tools = transform.Find("Tools").gameObject;
 
         movement = new MovementPlayer(this);
         movementState = new MovementStatePlayer(this);
@@ -130,9 +130,9 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
             .Find("Gun position")
             .gameObject;
 
-        mainTarget = transform.Find("bone_1").Find("Target");
-        targets = new List<Transform> { mainTarget };
-        targets.AddRange(mainTarget.GetComponentsInChildren<Transform>());
+        MainTarget = transform.Find("bone_1").Find("Target");
+        Targets = new List<Transform> { MainTarget };
+        Targets.AddRange(MainTarget.GetComponentsInChildren<Transform>());
 
         triggerPrefab = Resources.Load("Other Elements/CollectionTrigger").GameObject();
 
@@ -144,7 +144,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     {
         var angle = 180 * (int)flipDirection;
         transform.localEulerAngles = new Vector3(0, angle, 0);
-        tools.transform.localEulerAngles = new Vector3(0, angle, 0);
+        Tools.transform.localEulerAngles = new Vector3(0, angle, 0);
     }
 
     public void TakeDamage(float damage) => Life.TakeDamage(damage);

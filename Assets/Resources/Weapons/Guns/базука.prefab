@@ -185,19 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7205ac4e51e143cfbadee6d4d401d44e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
-  bullet: {fileID: 2124877345654037562, guid: 84ab05b293be9704d954c2d524212da3, type: 3}
-  bulletSpeed: 5
-  rateOfFire: 0.5
-  bulletLifetime: 50
-  damage: 50
-  baseMask:
-    serializedVersion: 2
-    m_Bits: 256
-  explosionRadius: 3
-  explosionMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &-7381528742826205013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,8 +211,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0381fa2fbd48df932f57326ccc6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShootSound: {fileID: 8300000, guid: 067855b1d9be5e8488b96b4fc04a5f98, type: 3}
-  ReloadSound: {fileID: 0}
+  ShootSound: {fileID: 8300000, guid: 527bb3752283d2c4c83c29b187dfc31c, type: 3}
+  ReloadSound: {fileID: 8300000, guid: fbfc4eab5ae1594458740bfeb37e03a8, type: 3}
 --- !u!120 &-7939470693917206121
 LineRenderer:
   serializedVersion: 2
