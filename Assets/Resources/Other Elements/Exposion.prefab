@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7495829680875896151}
   - component: {fileID: 2366219201966194936}
   - component: {fileID: 2498673750544582440}
+  - component: {fileID: -8479668103697546484}
   - component: {fileID: -7901369432878766355}
   - component: {fileID: 7892132482334976545}
   m_Layer: 0
@@ -82,9 +83,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b4426a04f0442ca351e2389104acd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+--- !u!114 &-8479668103697546484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765768370687155713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206d38c1055144f5a7f849335a2559e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 8300000, guid: fd4f256da7e43e64db98fd6795e20721, type: 3}
 --- !u!198 &-7901369432878766355
 ParticleSystem:
   m_ObjectHideFlags: 0
