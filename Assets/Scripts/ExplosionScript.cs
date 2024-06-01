@@ -16,7 +16,6 @@ public class ExplosionScript: MonoBehaviour
         collider0.radius = radius;
         explosionInitiator = initiator;
         StartCoroutine(LetDestroy());
-
     }
     
     private void OnTriggerEnter2D(Collider2D other)

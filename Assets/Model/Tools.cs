@@ -19,7 +19,6 @@ public static class Tools
             .LoadAll<GameObject>("Enemies")
             .Where(obj => obj.layer == LayerMask.NameToLayer("Enemies"))
             .ToArray();
-        // Debug.Log(string.Join(" ", enemies.Select(x => x.name)));
         var chosenEnemy = enemies[random.Next(enemies.Length)];
         return SpawnObject(chosenEnemy, position, parent);
     }
@@ -39,7 +38,13 @@ public static class Tools
             : GameScript.CreateByGameObjectInCurrentGame(prefab);
         obj.SetActive(true);
         obj.transform.position = position;
-        // Debug.Log($"{position} -> {obj.transform.position}");
         return obj;
+    }
+
+    public static bool IsPointInPlayerCamera(Vector2 point)
+    {
+        var cameraRect = CurrentGame.PlayerCamera.pixelRect;
+        return point.x >= cameraRect.x && point.x <= cameraRect.x + cameraRect.width
+            &&  point.y >= cameraRect.y && point.y <= cameraRect.y + cameraRect.height;
     }
 }

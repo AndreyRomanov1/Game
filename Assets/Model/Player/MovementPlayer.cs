@@ -49,6 +49,8 @@ public class MovementPlayer
             
             if (Input.GetKeyUp(KeyCode.LeftShift))
                 player.Print();
+            if (Input.GetKeyUp(KeyCode.LeftControl))
+                Debug.Log(Tools.IsPointInPlayerCamera(Input.mousePosition));
             yield return null;
         }
     }
