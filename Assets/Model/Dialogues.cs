@@ -29,6 +29,7 @@ public static class Dialogues
         {
             ["JumpEducation"] = new JumpEducationController(),
             ["ShootEducation"] = new ShootEducationController(),
+            ["EndEducation"] = new EndEducationController(),
         };
     }
 

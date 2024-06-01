@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-
-public static class PauseUIController
+﻿public static class PauseUIController
 {
     
     private static readonly PauseCanvasScript PauseCanvas = GameScript.CreateByGameObject(GameScript.LoadByName("UI/PauseCanvas"))
         .GetComponent<PauseCanvasScript>();
     public static void Show()
     {
+        UI.HideAllCanvas();
         UI.UICamera.gameObject.SetActive(true);
         PauseCanvas.gameObject.SetActive(true);
     }
@@ -19,13 +18,13 @@ public static class PauseUIController
 
     public static void EndPause()
     {
-        Hide();
+        UI.HideAllCanvas();
         Pause.EndPause();
     }
 
     public static void ExitCurrentGame()
     {
-        Hide();
+        UI.HideAllCanvas();
         CurrentGame.KillCurrentGame();
         LevelSelectionUIController.Show();
     }

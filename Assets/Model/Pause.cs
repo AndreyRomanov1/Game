@@ -35,7 +35,7 @@ public static class Pause
     {
         Debug.Log($"P2 {Model.GameState} {Input.GetKeyUp(KeyCode.Escape)}");
         Model.GameState = GameStates.ActiveGame;
-        PauseUIController.Hide();
+        UI.HideAllCanvas();
         CurrentGame.PlayerCamera.gameObject.SetActive(true);
     }
 }

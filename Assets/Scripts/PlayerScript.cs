@@ -48,7 +48,11 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     }
 
     public bool IsGrounded => groundCheckers
-        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.18f, groundMask));
+        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundMask))
+    || CheckCollisionWithTag("Block") && IsGrounded2(0.7f);
+    
+    public bool IsGrounded2(float r) =>groundCheckers
+        .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, r, groundMask));
 
     public bool IsTouchedLeftWall =>
         Physics2D.OverlapCircle(leftWallCheck.position, 0.2f, groundMask);
@@ -66,18 +70,16 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         Dialogues.Reset();
         StartCoroutine(Dialogues.DialoguesCoroutine());
     }
-
-    private void OnCollisionStay2D(Collision2D collision)
+    public bool CheckCollisionWithTag(string tagToCheck)
     {
-        if (collision.gameObject.CompareTag("Block"))
-        {
-            // Debug.Log("COLLISION");
-        }
+        var colliders = Physics2D.OverlapBoxAll(transform.position, transform.localScale, 0f);
+
+        return colliders.Any(collider => collider.CompareTag(tagToCheck));
     }
 
     public void Print() =>
         Debug.Log(
-            $"{PlayerState} {Model.GameState} Time:{Time.timeScale} Касание:{IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} Пробел: {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
+            $"{PlayerState} {Model.GameState} {CheckCollisionWithTag("Block")} Time:{Time.timeScale} Касание:{IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} Пробел: {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
 
     public void SetGun(GameObject gun)
     {

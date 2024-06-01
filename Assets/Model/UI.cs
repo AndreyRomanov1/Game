@@ -9,4 +9,12 @@ public static class UI
     {
         Application.Quit();
     }
+
+    public static void HideAllCanvas()
+    {
+        LevelSelectionUIController.Hide();
+        LoseUIController.Hide();
+        PauseUIController.Hide();
+        WinUIController.Hide();
+    }
 }

@@ -7,6 +7,7 @@ public static class LevelSelectionUIController
 
     public static void Show()
     {
+        UI.HideAllCanvas();
         UI.UICamera.gameObject.SetActive(true);
         LevelSelectionCanvas.gameObject.SetActive(true);
     }
@@ -19,7 +20,7 @@ public static class LevelSelectionUIController
 
     public static void StartNewGame(string pathToLevelBlocks)
     {
-        Hide();
+        UI.HideAllCanvas();
         Debug.Log(pathToLevelBlocks);
         CurrentGame.StartCurrentGame(pathToLevelBlocks);
     }
