@@ -1,13 +1,16 @@
+using System;
 using UnityEngine;
 
-public class WeaponSoundScript: MonoBehaviour
+public class WeaponSoundScript: SoundController
 {
-    [SerializeField] private AudioClip ShootSound;
-    [SerializeField] private AudioClip ReloadSound;
+    [SerializeField] protected AudioClip ShootSound;
+    [SerializeField] protected AudioClip ReloadSound;
+    
 
-    public void Shoot(Vector3 shootPosition) => 
-        AudioSource.PlayClipAtPoint(ShootSound, shootPosition);
+    public void Shoot() => 
+        source.PlayOneShot(ShootSound);
 
-    public void Reload(Vector3 gunPosition) =>
-        AudioSource.PlayClipAtPoint(ReloadSound, gunPosition);
+    public void Reload() =>
+        source.PlayOneShot(ReloadSound);
 }
+

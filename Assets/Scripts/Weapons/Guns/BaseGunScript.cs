@@ -112,7 +112,7 @@ public abstract class BaseGunScript: MonoBehaviour, IPickable
     protected virtual void Shoot()
     {
         var currentBullet = GameScript.CreateByGameObjectInCurrentGame(bullet).GetComponent<BaseProjectileScript>();
-        soundSource?.Shoot(transform.position);
+        soundSource?.Shoot();
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage);
     }
 
