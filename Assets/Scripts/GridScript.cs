@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -105,6 +106,12 @@ public class GridScript : MonoBehaviour
         playerBlockScript = blockScript;
         firstBlockScript = blockScript;
         lastExistingBlockScript = blockScript;
+
+        if (!Model.IsEducation)
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
+                    new Vector3(2, 1));
         Debug.Log("Начальный блок сгенерирован");
     }
 

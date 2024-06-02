@@ -29,15 +29,31 @@ public class CollectionTriggerScript : MonoBehaviour
         CreateRandom();
         if (contained is null)
             Destroy(gameObject);
-        Debug.Log($"{containedObject?.name} -> {contained?.name}");
+        // Debug.Log($"{containedObject?.name} -> {contained?.name}");
         containedObject = contained;
         transform.position = contained.transform.position;
+        containedObject.gameObject.transform.parent = transform;
+        Debug.Log($"{containedObject.gameObject.transform.parent.name}");
+
+        containedObject.transform.localPosition = new Vector3(0, 0, 0);
+        return gameObject;
+    }
+    
+    public GameObject CreateTrigger(GameObject contained, Vector3 position)
+    {
+        CreateRandom();
+        if (contained is null)
+            Destroy(gameObject);
+        // Debug.Log($"{containedObject?.name} -> {contained?.name}");
+        containedObject = contained;
+        transform.position = position;
+        // Debug.Log($"2  {containedObject}, {containedObject.gameObject}, {containedObject.gameObject.transform}, {containedObject.gameObject.transform.parent}:  {transform}");
         containedObject.gameObject.transform.parent = transform;
         containedObject.transform.localPosition = new Vector3(0, 0, 0);
         return gameObject;
     }
 
-    public GameObject CreateTrigger(Vector3 position)
+    public GameObject CreateRandomTrigger(Vector3 position)
     {
         CreateRandom();
         var folder = random.ProbabilisticRandom(foldersChance);
@@ -54,7 +70,7 @@ public class CollectionTriggerScript : MonoBehaviour
     {
         yield return null;
         if (containedObject is null)
-            CreateTrigger(new Vector3(0, 0));
+            CreateRandomTrigger(new Vector3(0, 0));
     }
 
     private IEnumerator CheckInteraction()

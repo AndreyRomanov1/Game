@@ -27,7 +27,7 @@ public static class Tools
     {
         var collectionObject = Resources.Load<GameObject>("Other Elements/CollectionTrigger");
         var obj = SpawnObject(collectionObject, position, parent);
-        obj.GetComponent<CollectionTriggerScript>().CreateTrigger(position);
+        obj.GetComponent<CollectionTriggerScript>().CreateRandomTrigger(position);
         return obj;
     }
 

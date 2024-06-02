@@ -67,7 +67,7 @@ public abstract class BaseGunScript: MonoBehaviour, IPickable
                 currentMode = StartCoroutine(ShootBySignal());
                 break;
             case WeaponStateEnum.Nothing:
-                currentMode = StartCoroutine(WaitForEvent());
+                // currentMode = StartCoroutine(WaitForEvent());
                 break;
         }
     }
