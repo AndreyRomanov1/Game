@@ -28,6 +28,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     private AnimationsPlayer animations;
     public LifePlayer Life;
 
+    public GameObject TimeFreeze;
+
     private GameObject triggerPrefab;
 
     private readonly Dictionary<ButtonsEnum, GameObject> buttonObjects = new()
@@ -141,6 +143,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
         triggerPrefab = Resources.Load("Other Elements/CollectionTrigger").GameObject();
 
+        TimeFreeze = GameObject.Find("TimeFreeze");
+        TimeFreeze.SetActive(false);
         // currentGun = Instantiate(currentGun, gunPosition.transform);
         InitButtonDict();
     }
