@@ -10,6 +10,8 @@ TagManager:
   - InfinityLevelButton
   - GroundCheck
   - Target
+  - ExitGameButton
+  - ExitCurrentGameButton
   layers:
   - Default
   - TransparentFX

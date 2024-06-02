@@ -2,8 +2,25 @@
 
 public static class UI
 {
-    public static readonly Camera UICamera = GameScript.CreateByGameObject(GameScript.LoadByName("Cameras/UICamera"))
-            .GetComponent<Camera>();
+    private static readonly Camera UICamera = GameScript.CreateByGameObject(GameScript.LoadByName("Cameras/UICamera"))
+        .GetComponent<Camera>();
+
+    public static readonly MainCanvasScript MainCanvas = GameScript
+        .CreateByGameObject(GameScript.LoadByName("UI/MainCanvas"))
+        .GetComponent<MainCanvasScript>();
+
+    public static readonly GameObject LevelSelectionGameObject = MainCanvas.transform.Find("LevelSelection").gameObject;
+    public static readonly GameObject PauseGameObject = MainCanvas.transform.Find("Pause").gameObject;
+    public static readonly GameObject LostGameGameObject = MainCanvas.transform.Find("LostGame").gameObject;
+    public static readonly GameObject WinEducationGameObject = MainCanvas.transform.Find("WinEducation").gameObject;
+
+    public static void Show(GameObject uiGameObject)
+    {
+        HideAllCanvas();
+        UICamera.gameObject.SetActive(true);
+        MainCanvas.gameObject.SetActive(true);
+        uiGameObject.SetActive(true);
+    }
 
     public static void ExitGame()
     {
@@ -12,9 +29,31 @@ public static class UI
 
     public static void HideAllCanvas()
     {
-        LevelSelectionUIController.Hide();
-        LoseUIController.Hide();
-        PauseUIController.Hide();
-        WinUIController.Hide();
+        UICamera.gameObject.SetActive(false);
+        LevelSelectionGameObject.SetActive(false);
+        PauseGameObject.SetActive(false);
+        LostGameGameObject.SetActive(false);
+        WinEducationGameObject.SetActive(false);
+        MainCanvas.gameObject.SetActive(false);
+    }
+
+    public static void StartNewGame(string pathToLevelBlocks)
+    {
+        HideAllCanvas();
+        Debug.Log(pathToLevelBlocks);
+        CurrentGame.StartCurrentGame(pathToLevelBlocks);
+    }
+
+    public static void EndPause()
+    {
+        UI.HideAllCanvas();
+        Pause.EndPause();
+    }
+
+    public static void ExitCurrentGame()
+    {
+        UI.HideAllCanvas();
+        CurrentGame.KillCurrentGame();
+        UI.Show(UI.LevelSelectionGameObject);
     }
 }

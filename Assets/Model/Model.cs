@@ -18,7 +18,8 @@
     public static void StartGame()
     {
         GameState = GameStates.StartGameMenu;
-        LevelSelectionUIController.Show();
+        UI.MainCanvas.Init();
+        UI.Show(UI.LevelSelectionGameObject);
         Game.StartCoroutine(Pause.PauseCoroutine());
         Game.StartCoroutine(TimeController.TimeSlowerCoroutine());
     }

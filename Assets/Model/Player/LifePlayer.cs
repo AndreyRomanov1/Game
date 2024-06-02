@@ -33,6 +33,7 @@ public class LifePlayer
     private static void Die()
     {
         CurrentGame.KillCurrentGame();
-        LoseUIController.Show();
+        
+        UI.Show(UI.LostGameGameObject);
     }
 }
