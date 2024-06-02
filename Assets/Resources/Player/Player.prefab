@@ -2371,8 +2371,53 @@ Transform:
   - {fileID: 7728210085898026817}
   - {fileID: 8238248190453877353}
   - {fileID: 9030408698558139345}
+  - {fileID: 7724253820420184866}
   m_Father: {fileID: 8000551077386233660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9036892398836259139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7724253820420184866}
+  - component: {fileID: 2266351942332054253}
+  m_Layer: 10
+  m_Name: ComicsAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7724253820420184866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9036892398836259139}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -22.61, y: -10.72, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3604027936349165102}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2266351942332054253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9036892398836259139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c14635bab27c44c82e8aa789a8e3da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9040506372195360644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2747,7 +2792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3053711849449387256, guid: ffada77c836becb488325d3f2c66113a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3053711849449387256, guid: ffada77c836becb488325d3f2c66113a, type: 3}
       propertyPath: m_LocalRotation.w

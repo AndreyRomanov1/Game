@@ -115,7 +115,8 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         CurrentGame.EnumToSpeaker = new Dictionary<SpeakersEnum, ISpeakingCharacter>
         {
             [SpeakersEnum.Player] = this,
-            [SpeakersEnum.GreatCornEar] = helper
+            [SpeakersEnum.GreatCornEar] = helper,
+            [SpeakersEnum.Comics] = GameObject.Find("ComicsAnchor").GetComponent<ComicsScript>()
         };
 
 
