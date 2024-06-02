@@ -62,14 +62,14 @@ public class MovementStatePlayer
             {
                 player.Print();
 
-                Debug.Log("1 Начало прыжка");
+                // Debug.Log("1 Начало прыжка");
                 var k = 0;
                 for (; k < 15 && (player.IsGrounded || player.IsTouchedLeftWall || player.IsTouchedRightWall); k++)
                     yield return null; // Ждём, пока достаточно далеко отлетим от стены
-                Debug.Log($"2 Оторвал ноги от земли или стены. Был возле стены {k} тиков");
+                // Debug.Log($"2 Оторвал ноги от земли или стены. Был возле стены {k} тиков");
                 while (!player.IsGrounded && !player.IsTouchedLeftWall && !player.IsTouchedRightWall)
                     yield return null; // Когда коснёмся поверхности, обнуляем X у скорости
-                Debug.Log("3 Коснулся земли или стены");
+                // Debug.Log("3 Коснулся земли или стены");
                 player.Physic.velocity = new Vector2(0, player.Physic.velocity.y);
                 if (player.IsGrounded)
                     player.PlayerState = PlayerStates.Nothing;
@@ -77,7 +77,7 @@ public class MovementStatePlayer
                     player.PlayerState = PlayerStates.HangingOnLeftWall;
                 else if (player.IsTouchedRightWall)
                     player.PlayerState = PlayerStates.HangingOnRightWall;
-                Debug.Log("4 Конец прыжка");
+                // Debug.Log("4 Конец прыжка");
                 player.Print();
             }
 

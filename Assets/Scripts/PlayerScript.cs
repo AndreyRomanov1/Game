@@ -77,10 +77,12 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         return colliders.Any(collider => collider.CompareTag(tagToCheck));
     }
 
-    public void Print() =>
-        Debug.Log(
-            $"{PlayerState} {Model.GameState} {CheckCollisionWithTag("Block")} Time:{Time.timeScale} Касание:{IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} Пробел: {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
-
+    // public void Print() =>
+    //     Debug.Log(
+    //         $"{PlayerState} {Model.GameState} {CheckCollisionWithTag("Block")} Time:{Time.timeScale} Касание:{IsGrounded} {IsTouchedRightWall} {IsTouchedLeftWall} Пробел: {Input.GetKeyDown(KeyCode.Space)} {Input.GetKeyUp(KeyCode.Space)} {Input.GetKey(KeyCode.Space)}");
+    public void Print() {}
+    
+    
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
