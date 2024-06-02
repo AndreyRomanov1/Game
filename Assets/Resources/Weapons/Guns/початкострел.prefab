@@ -94,9 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3243598785315075728}
   - component: {fileID: 674611619266271213}
-  - component: {fileID: -6392008394106851532}
   - component: {fileID: -7381528742826205013}
   - component: {fileID: 2222930839964355732}
+  - component: {fileID: -3000051273753073113}
   - component: {fileID: -7939470693917206121}
   - component: {fileID: 4339601470717010897}
   m_Layer: 0
@@ -116,7 +116,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.19865076, y: 0.2323327, z: 0.316659}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 0.316659}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1538945336224553752}
@@ -174,18 +174,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6392008394106851532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4393465235544274999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7716f5a293832248a7ca0d41ca33946, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-7381528742826205013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +202,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShootSound: {fileID: 8300000, guid: b6e6574bb1271fb4e961d3157c663d4e, type: 3}
   ReloadSound: {fileID: 0}
+--- !u!114 &-3000051273753073113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393465235544274999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41bc849ade924442a3d9e40a5d9c956d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!120 &-7939470693917206121
 LineRenderer:
   serializedVersion: 2

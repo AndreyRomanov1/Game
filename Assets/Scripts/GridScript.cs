@@ -112,6 +112,11 @@ public class GridScript : MonoBehaviour
                 .GetComponent<CollectionTriggerScript>()
                 .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
                     new Vector3(2, 1));
+        else
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/початкострел")).GameObject(),
+                    new Vector3(64, -1));
         Debug.Log("Начальный блок сгенерирован");
     }
 
