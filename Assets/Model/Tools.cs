@@ -44,7 +44,11 @@ public static class Tools
     public static bool IsPointInPlayerCamera(Vector2 point)
     {
         var cameraRect = CurrentGame.PlayerCamera.pixelRect;
-        return point.x >= cameraRect.x && point.x <= cameraRect.x + cameraRect.width
-            &&  point.y >= cameraRect.y && point.y <= cameraRect.y + cameraRect.height;
+        // Debug.Log($"{point} {cameraRect}" );
+        var x = (Vector2)CurrentGame.PlayerCamera.ScreenToWorldPoint(new Vector2(cameraRect.x, cameraRect.y));
+        var x1 = (Vector2)CurrentGame.PlayerCamera.ScreenToWorldPoint(new Vector2(cameraRect.x+cameraRect.width, cameraRect.y + cameraRect.height));
+        // Debug.Log($"{point} {cameraRect} {x} {x1}");
+
+        return point.x >= x.x && point.x <= x1.x &&  point.y >= x.y && point.y <= x1.y;
     }
 }

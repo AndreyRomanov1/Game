@@ -43,6 +43,7 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         while (true)
         {
             yield return new WaitForFixedUpdate();
+
             if (!IsPlayerInSight(out var hit))
                 continue;
             
