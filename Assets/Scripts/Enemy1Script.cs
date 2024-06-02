@@ -43,35 +43,51 @@ public class Enemy1Script : MonoBehaviour, IDamageable
         while (true)
         {
             yield return new WaitForFixedUpdate();
-            if (!IsPlayerInSight(out var hit))
-                continue;
             
             if (Model.GameState != GameStates.ActiveGame)
-                yield return null;
-
-            if (!isPlayerWasSaw)
-            {
-                Debug.Log("Впервые увидел игрока");
-                isPlayerWasSaw = true;
-                TimeController.EnemyHasDetectedPlayerHandler();
-            }
+                continue;
             
-            var hitLine = hit.point - (Vector2)pivot.transform.position;
-            var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
-            var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
+            if (IsPlayerInSight(out var hit))
+                SeePlayerAction(hit);
+            else
+                DontSeePlayerAction();
+        }
+    }
 
-            var shootingError = Math.Abs(expectedVectorRotation - currentVectorRotation) < 180 
-                ? expectedVectorRotation - currentVectorRotation 
-                : currentVectorRotation - expectedVectorRotation;
 
-            // Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
+    private void SeePlayerAction( RaycastHit2D hit)
+    {
+        if (!isPlayerWasSaw)
+        {
+            Debug.Log("Впервые увидел игрока");
+            isPlayerWasSaw = true;
+            TimeController.EnemyHasDetectedPlayerHandler();
+        }
+            
+        var hitLine = hit.point - (Vector2)pivot.transform.position;
+        var expectedVectorRotation = Mathf.Atan2(hitLine.y, hitLine.x) * Mathf.Rad2Deg + 180;
 
-            if (Math.Abs(shootingError) > PermissibleShootingError)
-            {
-                var rotation = shootingError > PermissibleShootingError ? HandSwingSpeed : -HandSwingSpeed;
-                pivot.transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
-                // Debug.Log($"{pivot.transform.rotation}: {currentVectorRotation} + {rotation}");
-            }
+        FlipToAngle(expectedVectorRotation);
+    }
+
+    private void DontSeePlayerAction() =>
+        FlipToAngle(0);
+    
+    private void FlipToAngle(float expectedVectorRotation)
+    {
+        var currentVectorRotation = pivot.transform.rotation.eulerAngles.z;
+
+        var shootingError = Math.Abs(expectedVectorRotation - currentVectorRotation) < 180 
+            ? expectedVectorRotation - currentVectorRotation 
+            : currentVectorRotation - expectedVectorRotation;
+
+        // Debug.Log($"{shootingError}:  {expectedVectorRotation}   -   {currentVectorRotation}");
+
+        if (Math.Abs(shootingError) > PermissibleShootingError)
+        {
+            var rotation = shootingError > PermissibleShootingError ? HandSwingSpeed : -HandSwingSpeed;
+            pivot.transform.rotation = Quaternion.Euler(0f, 0f, currentVectorRotation + rotation);
+            // Debug.Log($"{pivot.transform.rotation}: {currentVectorRotation} + {rotation}");
         }
     }
 
