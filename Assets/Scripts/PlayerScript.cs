@@ -138,7 +138,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
         triggerPrefab = Resources.Load("Other Elements/CollectionTrigger").GameObject();
 
-        currentGun = Instantiate(currentGun, gunPosition.transform);
+        // currentGun = Instantiate(currentGun, gunPosition.transform);
         InitButtonDict();
     }
 

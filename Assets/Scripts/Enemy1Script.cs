@@ -106,7 +106,8 @@ public class Enemy1Script : MonoBehaviour, IDamageable
     private bool IsPlayerOnLine(Vector2 startPoint, Vector2 direction, out RaycastHit2D hit)
     {
         hit = Physics2D.Raycast(startPoint, direction, ShootingDistance, detectedLayers);
-        return hit.transform is not null && hit.transform.gameObject == player.gameObject;
+        var isPlayerSeeEnemy = Tools.IsPointInPlayerCamera(transform.position);
+        return hit.transform is not null && hit.transform.gameObject == player.gameObject && isPlayerSeeEnemy;
     }
 
     private void Shoot()

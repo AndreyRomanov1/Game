@@ -2541,7 +2541,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
-  currentGun: {fileID: 4393465235544274999, guid: d4181897da102d24d876faa3fae4a37b, type: 3}
+  currentGun: {fileID: 4393465235544274999, guid: 48e5772503f27a94fa2a02c697c48792, type: 3}
 --- !u!95 &4461436287432537355
 Animator:
   serializedVersion: 5
