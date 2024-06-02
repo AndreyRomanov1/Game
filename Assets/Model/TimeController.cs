@@ -51,7 +51,7 @@ public static class TimeController
 
     public static void EnemyHasDetectedPlayerHandler()
     {
-        Time.timeScale = 0.4f;
-        decelerationTime = 1;
+        Time.timeScale = 0.3f;
+        decelerationTime = 2;
     }
 }

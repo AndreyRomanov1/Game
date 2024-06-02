@@ -2585,8 +2585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundMask:
     serializedVersion: 2
-    m_Bits: 256
-  currentGun: {fileID: 0}
+    m_Bits: 2304
 --- !u!95 &4461436287432537355
 Animator:
   serializedVersion: 5
