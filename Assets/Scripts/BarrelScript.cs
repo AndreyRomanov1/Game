@@ -36,9 +36,12 @@ public class BarrelScript : MonoBehaviour, IDamageable
 
     private void DestroyObject()
     {
-        var random = new Random();
-        var func = random.ProbabilisticRandom(spawnRate);
-        func(transform.position, null);
+        if (!Model.IsEducation)
+        {
+            var random = new Random();
+            var func = random.ProbabilisticRandom(spawnRate);
+            func(transform.position, null);
+        }
         
         Destroy(gameObject);
     }

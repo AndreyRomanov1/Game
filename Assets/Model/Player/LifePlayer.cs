@@ -24,6 +24,10 @@ public class LifePlayer
     
     public void TakeDamage(float damage)
     {
+        if (Model.IsEducation)
+            damage *= 0.1f;
+        else
+            damage *= 0.8f;
         healthPoints -= damage;
         if (healthPoints <= 0)
             Die();
