@@ -13,6 +13,8 @@
         }
     }
 
+    public static bool IsEducation;
+
     public static bool IsActiveGame => GameState == GameStates.ActiveGame;
 
     public static void StartGame()
