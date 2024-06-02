@@ -80,7 +80,8 @@ public abstract class BaseGunScript: MonoBehaviour, IPickable
             if (Input.GetMouseButton((int)MouseButton.LeftMouse))
             {
                 Shoot();
-                yield return new WaitForSeconds(timeBetweenShots);
+                // Debug.Log($"{timeBetweenShots} * {Time.timeScale} = {timeBetweenShots * Time.timeScale}");
+                yield return new WaitForSeconds(timeBetweenShots * Time.timeScale);
             }
             else
                 yield return new WaitForFixedUpdate();
