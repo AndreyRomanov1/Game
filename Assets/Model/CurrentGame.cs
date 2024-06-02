@@ -13,6 +13,8 @@ public static class CurrentGame
     public static void StartCurrentGame(string pathToLevelBlocks)
     {
         KillCurrentGame();
+        Model.IsEducation = pathToLevelBlocks == "StartBlocks";
+
         CurrentGameObject = GameScript.CreateByGameObject(CurrentGamePrefab, Model.Game.gameObject);
 
         Player = GameScript.CreatePlayer().GetComponent<PlayerScript>();
