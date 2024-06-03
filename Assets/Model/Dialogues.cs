@@ -16,7 +16,8 @@ public static class Dialogues
         yield return new WaitForFixedUpdate();
         while (true)
         {
-            if (activeDialogue != null && Input.GetKeyDown(KeyCode.Space))
+            if (activeDialogue != null && (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Mouse0) ||
+                                           Input.GetKeyUp(KeyCode.Mouse1)))
                 activeController.NextDialogues();
             yield return null;
         }

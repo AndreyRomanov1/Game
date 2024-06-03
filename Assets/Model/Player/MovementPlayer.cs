@@ -41,16 +41,23 @@ public class MovementPlayer
 
     public IEnumerator MovementCoroutine()
     {
+        var h = 0;
         yield return new WaitForFixedUpdate();
         while (true)
         {
             if (Model.IsActiveGame)
                 MovementLogic();
-            
+
             if (Input.GetKeyUp(KeyCode.LeftShift))
                 player.Print();
-            if (Input.GetKeyUp(KeyCode.LeftControl))
-                Debug.Log(Tools.IsPointInPlayerCamera(Input.mousePosition));
+            if (Input.GetKeyUp(KeyCode.K) && h < 5) // Костыль когда застрял в блоке
+            {
+                player.Physic.AddForce(new Vector2(300, 400));
+                h = 100;
+            }
+            h--;
+            if (h < -100)
+                h = 0;
             yield return null;
         }
     }
@@ -101,6 +108,7 @@ public class MovementPlayer
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
+            Debug.Log(vector);
             player.Physic.AddForce(vector);
             player.PlayerState = state;
             trajectory.ClearTrajectory();

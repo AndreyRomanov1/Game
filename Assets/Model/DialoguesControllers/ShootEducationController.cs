@@ -9,6 +9,7 @@ public class ShootEducationController : IController
 
     public void NextDialogues()
     {
+        CurrentGame.Player.HideButtonIcon(ButtonsEnum.Space);
         if (cloudNumber >= MaxCloudNumber)
             Dialogues.EndDialogue();
         else
