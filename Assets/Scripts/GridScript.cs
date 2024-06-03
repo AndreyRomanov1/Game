@@ -110,7 +110,7 @@ public class GridScript : MonoBehaviour
         if (!Model.IsEducation)
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
                 .GetComponent<CollectionTriggerScript>()
-                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/снайперка")).GameObject(),
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
                     new Vector3(2, 1));
         else
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
