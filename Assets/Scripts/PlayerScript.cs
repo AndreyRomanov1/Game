@@ -51,7 +51,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
 
     public bool IsGrounded => groundCheckers
         .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundMask))
-    || CheckCollisionWithTag("Block") && IsGrounded2(0.7f);
+    || CheckCollisionWithTag("Block") && IsGrounded2(1f);
     
     public bool IsGrounded2(float r) =>groundCheckers
         .Any(groundCheck => Physics2D.OverlapCircle(groundCheck.position, r, groundMask));
