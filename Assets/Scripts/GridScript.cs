@@ -108,10 +108,16 @@ public class GridScript : MonoBehaviour
         lastExistingBlockScript = blockScript;
 
         if (!Model.IsEducation)
+        {
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
                 .GetComponent<CollectionTriggerScript>()
                 .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
                     new Vector3(2, 1));
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/ПП")).GameObject(),
+                    new Vector3(4, 1));
+        }
         else
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
                 .GetComponent<CollectionTriggerScript>()

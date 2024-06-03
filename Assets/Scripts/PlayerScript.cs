@@ -86,10 +86,12 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     public void SetGun(GameObject gun)
     {
         // Debug.Log(currentGun.name);
-        // currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Nothing);
         if (currentGun is not null)
+        {
+            currentGun.GetComponent<BaseGunScript>().SetMode(WeaponStateEnum.Nothing);
             Instantiate(triggerPrefab, CurrentGame.CurrentGameObject.transform).GetComponent<CollectionTriggerScript>()
                 .CreateTrigger(currentGun);
+        }
         while (gunPosition.transform.childCount > 0)
             Destroy(gunPosition.transform.GetChild(0));
 

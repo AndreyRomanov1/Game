@@ -36,7 +36,7 @@ public class BazookaScript : BaseGunScript
         while (true)
         {
             yield return new WaitUntil(() => needToReload);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
             soundSource.Reload();
             needToReload = false;
         }
