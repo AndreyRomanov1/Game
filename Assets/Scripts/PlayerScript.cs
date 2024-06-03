@@ -147,6 +147,9 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         TimeFreeze.SetActive(false);
         // currentGun = Instantiate(currentGun, gunPosition.transform);
         InitButtonDict();
+        
+        if (Model.IsEducation)
+            ShowButtonIcon(ButtonsEnum.Space);
     }
 
     public void FlipPlayerToDirection(Directions flipDirection)
