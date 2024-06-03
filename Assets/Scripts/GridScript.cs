@@ -113,10 +113,43 @@ public class GridScript : MonoBehaviour
                 .GetComponent<CollectionTriggerScript>()
                 .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
                     new Vector3(2, 1));
+            
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/пистолет")).GameObject(),
+                    new Vector3(22, 30));
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
                 .GetComponent<CollectionTriggerScript>()
                 .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/ПП")).GameObject(),
-                    new Vector3(4, 1));
+                    new Vector3(25, 30));
+            
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/снайперка")).GameObject(),
+                    new Vector3(28, 30));
+            
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/базука")).GameObject(),
+                    new Vector3(31, 30));
+            
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Weapons/Guns/початкострел")).GameObject(),
+                    new Vector3(34, 30));
+            
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Heals/SmalFirstAidKit")).GameObject(),
+                    new Vector3(10, 30));
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Heals/MediumFirstAidKit")).GameObject(),
+                    new Vector3(12, 30));
+            Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
+                .GetComponent<CollectionTriggerScript>()
+                .CreateTrigger(Instantiate(Resources.Load("Heals/LargeFirstAidKit")).GameObject(),
+                    new Vector3(14, 30));
         }
         else
             Instantiate(Resources.Load("Other Elements/CollectionTrigger"), transform)
