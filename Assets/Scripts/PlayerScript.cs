@@ -27,6 +27,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
     private MovementStatePlayer movementState;
     private AnimationsPlayer animations;
     public LifePlayer Life;
+    public SoundPlayer sound;
 
     public GameObject TimeFreeze;
 
@@ -111,6 +112,7 @@ public class PlayerScript : MonoBehaviour, IDamageable, ISpeakingCharacter
         movementState = new MovementStatePlayer(this);
         animations = new AnimationsPlayer(this);
         Life = new LifePlayer(this);
+        sound = GetComponent<SoundPlayer>();
 
         Instantiate(Resources.Load("Sound/Background Music"), transform);
 

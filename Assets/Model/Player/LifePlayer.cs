@@ -24,6 +24,7 @@ public class LifePlayer
     
     public void TakeDamage(float damage)
     {
+        player.sound.Damage();
         if (Model.IsEducation)
             damage *= 0.1f;
         else
@@ -36,6 +37,7 @@ public class LifePlayer
     }
     private static void Die()
     {
+        GameSounds.EndGame();
         CurrentGame.KillCurrentGame();
         
         UI.Show(UI.LostGameGameObject);

@@ -24,6 +24,7 @@ public static class UI
 
     public static void ExitGame()
     {
+        GameSounds.ButtonPress();
         Application.Quit();
     }
 
@@ -40,6 +41,7 @@ public static class UI
     public static void StartNewGame(string pathToLevelBlocks)
     {
         HideAllCanvas();
+        GameSounds.ButtonPress();
         Debug.Log(pathToLevelBlocks);
         CurrentGame.StartCurrentGame(pathToLevelBlocks);
     }
@@ -52,6 +54,7 @@ public static class UI
 
     public static void ExitCurrentGame()
     {
+        GameSounds.ButtonPress();
         UI.HideAllCanvas();
         CurrentGame.KillCurrentGame();
         UI.Show(UI.LevelSelectionGameObject);

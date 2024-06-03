@@ -15,10 +15,12 @@ public class CollectionTriggerScript : MonoBehaviour
     private PlayerScript player;
     private GameObject containedObject;
     private bool isPlayerInTrigger = false;
+    private CollectionTriggerSound sound;
 
     public void Start()
     {
         player = CurrentGame.Player;
+        sound = GetComponent<CollectionTriggerSound>();
         CreateRandom();
         StartCoroutine(WaitAnotherAction());
         StartCoroutine(CheckInteraction());
@@ -82,6 +84,7 @@ public class CollectionTriggerScript : MonoBehaviour
             if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.F))
             {
                 // Debug.Log("Нажал подобрать");
+                sound.CollectionSound();
                 containedObject.GetComponent<IPickable>().PickUp(player);
                 Destroy(gameObject);
             }
