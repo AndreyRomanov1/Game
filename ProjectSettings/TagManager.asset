@@ -12,6 +12,7 @@ TagManager:
   - Target
   - ExitGameButton
   - ExitCurrentGameButton
+  - DestroyedObject
   layers:
   - Default
   - TransparentFX

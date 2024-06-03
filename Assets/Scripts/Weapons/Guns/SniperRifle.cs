@@ -10,11 +10,13 @@ public class SniperRifle: BaseGunScript
     protected override float damage { get; set; } = 100;
     
     private bool needToReload = false;
+    private Animator animator;
 
     protected override void SelfStart()
     {
         bullet = Resources.Load("Weapons/Bullets/снайперский_патрон").GameObject();
         StartCoroutine(ReloadCoroutine());
+        animator = GetComponent<Animator>();
     }
     
     protected override void Shoot()
@@ -23,6 +25,7 @@ public class SniperRifle: BaseGunScript
         soundSource?.Shoot();
         currentBullet.Shoot(transform, bulletSpeed, bulletLifetime, mask, damage);
         needToReload = true;
+        animator.Play("ReloadSniperRifl");
     }
 
     private IEnumerator ReloadCoroutine()
@@ -30,7 +33,7 @@ public class SniperRifle: BaseGunScript
         while (true)
         {
             yield return new WaitUntil(() => needToReload);
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(3.4f);
             soundSource.Reload();
             needToReload = false;
         }

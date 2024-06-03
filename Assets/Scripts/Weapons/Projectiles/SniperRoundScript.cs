@@ -8,7 +8,8 @@ public class SniperRoundScript: BaseProjectileScript
     protected override void CollisionLogic(GameObject other)
     {
         other.GetComponent<IDamageable>()?.TakeDamage(damage);
-        if (LayerMask.LayerToName(other.layer) == "Enemies" && numberEnemyPenetrated < maxNumberEnemiesPenetrated)
+        if ((LayerMask.LayerToName(other.layer) == "Enemies" || other.CompareTag("DestroyedObject"))
+            && numberEnemyPenetrated < maxNumberEnemiesPenetrated)
             numberEnemyPenetrated++;
         else
             Destroy();
