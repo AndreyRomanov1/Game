@@ -43,7 +43,7 @@ public static class UI
         HideAllCanvas();
         GameSounds.ButtonPress();
         Debug.Log(pathToLevelBlocks);
-        CurrentGame.StartCurrentGame(pathToLevelBlocks);
+        Model.StartCurrentGame(pathToLevelBlocks);
     }
 
     public static void EndPause()

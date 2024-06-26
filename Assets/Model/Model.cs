@@ -2,7 +2,10 @@
 {
     public static GameScript Game;
 
+    public static CurrentGameScript CurrentGame;
+
     private static GameStates gameState;
+
     public static GameStates GameState
     {
         get => gameState;
@@ -24,5 +27,11 @@
         UI.Show(UI.LevelSelectionGameObject);
         Game.StartCoroutine(Pause.PauseCoroutine());
         Game.StartCoroutine(TimeController.TimeSlowerCoroutine());
+    }
+
+    public static void StartCurrentGame(string pathToLevelBlocks)
+    {
+        CurrentGame.KillCurrentGame();
+        CurrentGame = new CurrentGameScript(pathToLevelBlocks);
     }
 }

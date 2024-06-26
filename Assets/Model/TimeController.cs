@@ -18,8 +18,8 @@ public static class TimeController
             decelerationTime = 0;
             yield return new WaitForSeconds(t);
             Time.timeScale = 1;
-            if (CurrentGame.Player != null && CurrentGame.Player.TimeFreeze != null)
-                CurrentGame.Player.TimeFreeze.SetActive(false);
+            if (CurrentGame.Player != null && CurrentGame.Player.timeFreeze != null)
+                CurrentGame.Player.timeFreeze.SetActive(false);
         }
     }
 
@@ -31,8 +31,8 @@ public static class TimeController
             Time.timeScale = 1;
         else
             Debug.Log($"Неизвестный для времени переход состояний игры {oldState} => {newState}");
-        if (CurrentGame.Player != null && CurrentGame.Player.TimeFreeze != null)
-            CurrentGame.Player.TimeFreeze.SetActive(false);
+        if (CurrentGame.Player != null && CurrentGame.Player.timeFreeze != null)
+            CurrentGame.Player.timeFreeze.SetActive(false);
     }
 
     public static void ChangePlayerState(PlayerStates oldState, PlayerStates newState)
@@ -43,15 +43,15 @@ public static class TimeController
                 or PlayerStates.CrouchedToJumpFromLeftWall
                 or PlayerStates.CrouchedToJumpFromRightWall)
             {
-                if (CurrentGame.Player != null && CurrentGame.Player.TimeFreeze != null)
-                    CurrentGame.Player.TimeFreeze.SetActive(true);
+                if (CurrentGame.Player != null && CurrentGame.Player.timeFreeze != null)
+                    CurrentGame.Player.timeFreeze.SetActive(true);
                 Time.timeScale = 0.4f;
                 decelerationTime = 1;
             }
             else
             {
-                if (CurrentGame.Player != null && CurrentGame.Player.TimeFreeze != null)
-                    CurrentGame.Player.TimeFreeze.SetActive(false);
+                if (CurrentGame.Player != null && CurrentGame.Player.timeFreeze != null)
+                    CurrentGame.Player.timeFreeze.SetActive(false);
                 Time.timeScale = 1;
             }
         }
@@ -59,8 +59,8 @@ public static class TimeController
 
     public static void EnemyHasDetectedPlayerHandler()
     {
-        if (CurrentGame.Player != null && CurrentGame.Player.TimeFreeze != null)
-            CurrentGame.Player.TimeFreeze.SetActive(true);
+        if (CurrentGame.Player != null && CurrentGame.Player.timeFreeze != null)
+            CurrentGame.Player.timeFreeze.SetActive(true);
         Time.timeScale = 0.3f;
         decelerationTime = 2;
     }

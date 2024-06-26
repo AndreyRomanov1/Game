@@ -1,19 +1,17 @@
-﻿using System;
-using Image = UnityEngine.UI.Image;
+using System;
+using UnityEngine;
 
-public class LifePlayer
+public class PlayerLifeScript : MonoBehaviour, IDamageable
 {
-    private PlayerScript player;
     private const float MaxHealthPoints = 200f;
     private float healthPoints;
-    private readonly Image healthPointsBar;
+    private UnityEngine.UI.Image healthPointsBar;
 
-    public LifePlayer(PlayerScript player)
-    {
-        this.player = player;
+    public void Start()
+    {        
         healthPoints = MaxHealthPoints;
-        healthPointsBar = player.Tools.transform.Find("Main Camera").Find("StatesInspector").Find("HP bar")
-            .GetComponent<Image>();
+        healthPointsBar = transform.Find("Tools").Find("Main Camera").Find("StatesInspector").Find("HP bar")
+            .GetComponent<UnityEngine.UI.Image>();
     }
 
     public void Heal(float count)
@@ -21,7 +19,7 @@ public class LifePlayer
         healthPoints = Math.Min(healthPoints + count, MaxHealthPoints);
         healthPointsBar.fillAmount = healthPoints / MaxHealthPoints;
     }
-    
+
     public void TakeDamage(float damage)
     {
         player.sound.Damage();
@@ -32,14 +30,15 @@ public class LifePlayer
         healthPoints -= damage;
         if (healthPoints <= 0)
             Die();
-        
+
         healthPointsBar.fillAmount = healthPoints / MaxHealthPoints;
     }
+
     private static void Die()
     {
         GameSounds.EndGame();
         CurrentGame.KillCurrentGame();
-        
+
         UI.Show(UI.LostGameGameObject);
     }
 }

@@ -1,17 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationsPlayer
+public class PlayerAnimationsScript : MonoBehaviour
 {
-    private readonly PlayerScript player;
-    private readonly Dictionary<(PlayerStates oldState, PlayerStates newState), Action> stateTransitionAnimations;
+    private Dictionary<(PlayerStates oldState, PlayerStates newState), Action> stateTransitionAnimations;
+    private GameObject Tools { get; set; }
 
-
-    public AnimationsPlayer(PlayerScript player)
+    public void Start()
     {
-        this.player = player;
-        var animator = player.GetComponent<Animator>();
+        var animator = GetComponent<Animator>();
 
         stateTransitionAnimations = new Dictionary<(PlayerStates oldState, PlayerStates newState), Action>
         {
@@ -30,6 +28,7 @@ public class AnimationsPlayer
             [(PlayerStates.HangingOnLeftWall, PlayerStates.Nothing)] = () => animator.Play("lending on ground"),
             [(PlayerStates.HangingOnRightWall, PlayerStates.Nothing)] = () => animator.Play("lending on ground"),
         };
+        Tools = transform.Find("Tools").gameObject;
     }
 
     public void PlayAnimation(PlayerStates oldStates, PlayerStates newStates)
@@ -42,7 +41,14 @@ public class AnimationsPlayer
 
     private void FlipPlayer()
     {
-        var direction = player.transform.localEulerAngles.y == 0 ? Directions.Left : Directions.Right;
-        player.FlipPlayerToDirection(direction);
+        var direction = transform.localEulerAngles.y == 0 ? Directions.Left : Directions.Right;
+        FlipPlayerToDirection(direction);
+    }
+
+    private void FlipPlayerToDirection(Directions flipDirection)
+    {
+        var angle = 180 * (int)flipDirection;
+        transform.localEulerAngles = new Vector3(0, angle, 0);
+        Tools.transform.localEulerAngles = new Vector3(0, angle, 0);
     }
 }
